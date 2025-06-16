@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:save_heaven/splash_screen.dart';
 
-class Adoption extends StatelessWidget {
-  const Adoption({super.key});
+class SaveHeaven extends StatelessWidget {
+  const SaveHeaven({super.key});
 
   @override
   Widget build(BuildContext context) {
