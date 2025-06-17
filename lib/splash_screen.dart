@@ -3,8 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/config/assets_manager.dart';
+import 'package:save_heaven/core/hive/adapters/app_config_adapter/app_config_model.dart';
+import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/features/on_boarding/screens/onboarding_screen.dart';
+import 'package:save_heaven/orphanage_nav_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -61,8 +64,14 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     });
   }
 
-  void _goToNextScreen() {
-    context.pushReplacement(OnboardingScreen());
+  void _goToNextScreen() async {
+    AppConfigModel appConfig = HiveBoxes.appConfigBox.getAt(0);
+
+    if (appConfig.isFirstTime) {
+      context.pushReplacement(OnboardingScreen());
+    } else {
+      context.pushReplacement(OrphanageNavScreen());
+    }
   }
 
   @override

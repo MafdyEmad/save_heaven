@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:save_heaven/core/config/app_theme.dart';
 import 'package:save_heaven/splash_screen.dart';
 
 class SaveHeaven extends StatelessWidget {
@@ -10,13 +11,7 @@ class SaveHeaven extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(440, 956),
       minTextAdapt: true,
-      child: MaterialApp(
-        theme: ThemeData(
-          scaffoldBackgroundColor: Colors.white,
-          appBarTheme: AppBarTheme(color: Colors.white),
-        ),
-        home: const SplashScreen(),
-      ),
+      builder: (context, child) => MaterialApp(theme: AppTheme.light, home: const SplashScreen()),
     );
   }
 }

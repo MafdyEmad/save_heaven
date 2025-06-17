@@ -6,6 +6,7 @@ class AppTheme {
   static final _primaryColor = AppPalette.primaryColor;
   static final _backGroundColor = AppPalette.backgroundColor;
   static ThemeData light = ThemeData.light().copyWith(
+    primaryColor: _primaryColor,
     cardTheme: CardThemeData(
       color: AppPalette.foregroundColor,
       elevation: 8,

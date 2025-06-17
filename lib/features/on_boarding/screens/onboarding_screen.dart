@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/config/assets_manager.dart';
+import 'package:save_heaven/core/hive/adapters/app_config_adapter/app_config_model.dart';
+import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/shared/features/home/presentation/screens/home_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -171,8 +174,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         backgroundColor: AppPalette.primaryColor,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
-                      onPressed: () {
-                        context.pushReplacement(const Scaffold());
+                      onPressed: () async {
+                        AppConfigModel updatedConfig = AppConfigModel(isFirstTime: false);
+                        await HiveBoxes.appConfigBox.putAt(0, updatedConfig);
+                        _navigateToNextScreen();
                       },
                       child: Text(
                         'Skip',
@@ -191,6 +196,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ],
       ),
     );
+  }
+
+  void _navigateToNextScreen() {
+    context.pushReplacement(const HomeScreen());
   }
 }
 

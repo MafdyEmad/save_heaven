@@ -11,6 +11,5 @@ class AssetsManager {
   static const String onBoardingImage1 = '$_imagesFolder/on_boarding_image_1.png';
   static const String onBoardingImage2 = '$_imagesFolder/on_boarding_image_2.png';
   static const String onBoardingImage3 = '$_imagesFolder/on_boarding_image_3.png';
-
-  static var onboarding2;
+  static const String drawer = '$_imagesFolder/drawer_icon.svg';
 }

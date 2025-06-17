@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "757719707890",
+    "project_id": "safe-heaven-56a05",
+    "storage_bucket": "safe-heaven-56a05.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:757719707890:android:74247cc9f54c49289d606b",
+        "android_client_info": {
+          "package_name": "com.example.save_heaven"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAWPIQzjOxuPNm1TDEIq1ArlndLcUKM68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

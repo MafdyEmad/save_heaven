@@ -1,1 +1,3 @@
-class CachingKeys {}
+class CachingKeys {
+  static const String posts = 'posts';
+}
