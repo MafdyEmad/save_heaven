@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:like_button/like_button.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
@@ -24,6 +25,7 @@ import 'package:save_heaven/shared/features/home/data/models/post_response.dart'
 import 'package:save_heaven/shared/features/home/presentation/cubit/home_cubit.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -143,8 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
           contentPadding: EdgeInsets.zero,
           leading: ClipOval(
             child: CachedNetworkImage(
-              // imageUrl:'${ApiEndpoints.base}${post.user.image}',
-              imageUrl: '',
+              imageUrl: ApiEndpoints.imageProvider + post.user.image,
               width: 50.w,
               height: 50.w,
               fit: BoxFit.cover,
@@ -156,7 +157,12 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Icon(Icons.more_horiz, color: Colors.grey),
           ),
           title: Text(post.user.name, style: context.textTheme.headlineMedium),
-          subtitle: Text('Orphanage Address', style: context.textTheme.headlineSmall),
+          subtitle: Text(
+            DateTime.now().difference(post.createdAt).inDays == 0
+                ? timeago.format(post.createdAt)
+                : DateFormat('yyyy-MM-dd').format(post.createdAt),
+            style: context.textTheme.headlineSmall,
+          ),
         ),
         _buildPostContent(post),
         _buildPostActions(post),
