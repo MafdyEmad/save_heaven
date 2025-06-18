@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/config/assets_manager.dart';
 import 'package:save_heaven/core/hive/adapters/app_config_adapter/app_config_model.dart';
+import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/features/auth/presentation/views/start_journey_view.dart';
 import 'package:save_heaven/features/on_boarding/screens/onboarding_screen.dart';
 import 'package:save_heaven/orphanage_nav_screen.dart';
 
@@ -70,7 +73,19 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     if (appConfig.isFirstTime) {
       context.pushReplacement(OnboardingScreen());
     } else {
-      context.pushReplacement(OrphanageNavScreen());
+      final secureBox = HiveBoxes.secureBox;
+      if (secureBox.isNotEmpty) {
+        final String token = secureBox.getAt(0);
+        final userId = JwtDecoder.decode(token)['userId'];
+        final UserHive user = HiveBoxes.userBox.get(userId);
+        if (user.role == 'Donor') {
+          context.pushReplacement(OrphanageNavScreen());
+        } else {
+          context.pushReplacement(Placeholder());
+        }
+        return;
+      }
+      context.pushReplacement(StartJourneyView());
     }
   }
 
@@ -85,7 +100,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     return Scaffold(
       body: Column(
         children: [
-          SlideTransition(position: _upperSlideAnimation, child: SvgPicture.asset(AssetsManager.splashUpper)),
+          SlideTransition(
+            position: _upperSlideAnimation,
+            child: SvgPicture.asset(AssetsManager.splashUpper, fit: BoxFit.fill, width: context.width),
+          ),
           Expanded(
             child: FadeTransition(
               opacity: _fadeAnimation,
@@ -95,29 +113,40 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ScaleTransition(scale: _logoScaleAnimation, child: Image.asset(AssetsManager.appIcon)),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'safe\nhaven',
-                          style: context.textTheme.titleLarge?.copyWith(
-                            color: AppPalette.primaryColor,
-                            fontSize: 60.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    SizedBox(
+                      width: 150,
+                      child: FittedBox(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Safe\nHaven',
+                              style: context.textTheme.titleLarge?.copyWith(
+                                color: AppPalette.primaryColor,
+                                fontSize: 60.sp,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            Text(
+                              'Love in every gesture',
+                              style: context.textTheme.headlineMedium?.copyWith(
+                                color: AppPalette.primaryColor,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          'love in every gesture',
-                          style: context.textTheme.bodySmall?.copyWith(color: AppPalette.primaryColor),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          SlideTransition(position: _lowerSlideAnimation, child: SvgPicture.asset(AssetsManager.splashLower)),
+          SlideTransition(
+            position: _lowerSlideAnimation,
+            child: SvgPicture.asset(AssetsManager.splashLower, fit: BoxFit.fill, width: context.width),
+          ),
         ],
       ),
     );

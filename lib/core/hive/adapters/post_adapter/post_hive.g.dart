@@ -8,7 +8,7 @@ part of 'post_hive.dart';
 
 class PostHiveAdapter extends TypeAdapter<PostHive> {
   @override
-  final int typeId = 3;
+  final int typeId = 1;
 
   @override
   PostHive read(BinaryReader reader) {

@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/config/assets_manager.dart';
+import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/features/auth/presentation/views/login_view.dart';
 import 'package:save_heaven/shared/features/home/presentation/screens/home_screen.dart';
 
 class OrphanageNavScreen extends StatefulWidget {
@@ -38,7 +40,12 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppPalette.primaryColor,
-        onPressed: () {},
+        onPressed: () {
+          final token = HiveBoxes.secureBox.getAt(0);
+          HiveBoxes.secureBox.delete(token);
+          HiveBoxes.secureBox.clear();
+          context.pushAndRemoveUntil(const LoginView());
+        },
         shape: CircleBorder(),
         child: Icon(Icons.add, color: Colors.white),
       ),
@@ -47,7 +54,7 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
         children: [
           Positioned.fill(
             child: CustomPaint(
-              painter: _BottomAppBarBorderPainter(color: Colors.grey, strokeWidth: 2, notchMargin: 10),
+              painter: _BottomAppBarBorderPainter(color: Color(0xffd8dadd), strokeWidth: 1, notchMargin: 10),
             ),
           ),
           BottomAppBar(
@@ -63,23 +70,23 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.home, color: index == 0 ? AppPalette.primaryColor : Colors.grey),
+                    icon: Icon(Icons.home, color: index == 0 ? AppPalette.primaryColor : Color(0xffd8dadd)),
                     onPressed: () => changeScreen(0),
                   ),
                   IconButton(
-                    icon: Icon(Icons.chat, color: index == 1 ? AppPalette.primaryColor : Colors.grey),
+                    icon: Icon(Icons.chat, color: index == 1 ? AppPalette.primaryColor : Color(0xffd8dadd)),
                     onPressed: () => changeScreen(1),
                   ),
                   SizedBox(width: 35),
                   IconButton(
                     icon: Icon(
                       Icons.bar_chart_outlined,
-                      color: index == 2 ? AppPalette.primaryColor : Colors.grey,
+                      color: index == 2 ? AppPalette.primaryColor : Color(0xffd8dadd),
                     ),
                     onPressed: () => changeScreen(2),
                   ),
                   IconButton(
-                    icon: Icon(Icons.person, color: index == 3 ? AppPalette.primaryColor : Colors.grey),
+                    icon: Icon(Icons.person, color: index == 3 ? AppPalette.primaryColor : Color(0xffd8dadd)),
                     onPressed: () => changeScreen(3),
                   ),
                 ],
@@ -152,7 +159,7 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
                 leading: const Icon(Icons.bookmark),
                 title: Text('Saved posts', style: context.textTheme.bodyLarge),
                 onTap: () {
-                  Navigator.pop(context);
+                  context.pop();
                 },
               ),
               ListTile(

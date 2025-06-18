@@ -7,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:save_heaven/core/hive/adapters/app_config_adapter/app_config_model.dart';
+import 'package:save_heaven/core/hive/adapters/secure_adapter/secure_hive.dart';
+import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
 import 'package:save_heaven/core/hive/adapters/user_settings_adapter/user_setting_hive.dart';
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/hive/hive_keys/hive_keys.dart';
@@ -15,11 +17,8 @@ import 'package:save_heaven/firebase_options.dart';
 import 'package:save_heaven/save_heaven.dart';
 import 'package:save_heaven/core/utils/app_bloc_observer.dart';
 
-const userToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODUxMDg4N2JiN2VhNGRkOWJmYmFkZWMiLCJpYXQiOjE3NTAxNDEyMjgsImV4cCI6MTc1NzkxNzIyOH0.sSYtalZfC1YDVxJmpHhL544yzXG334_MA00mfhqrO3c';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupDependency();
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -34,6 +33,7 @@ void main() async {
   await _initHive();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   _setupFirebaseMessaging();
+  setupDependency();
   runApp(const SaveHeaven());
 }
 
@@ -57,7 +57,14 @@ Future<void> _initHive() async {
   Hive.init(appDocumentDirectory.path);
   Hive.registerAdapter(AppConfigModelAdapter());
   Hive.registerAdapter(UserSettingHiveAdapter());
-  await Future.wait([Hive.openBox(HiveKeys.appConfig), Hive.openBox(HiveKeys.userSetting)]);
+  Hive.registerAdapter(UserHiveAdapter());
+  Hive.registerAdapter(SecureHiveAdapter());
+  await Future.wait([
+    Hive.openBox(HiveKeys.appConfig),
+    Hive.openBox(HiveKeys.userSetting),
+    Hive.openBox(HiveKeys.user),
+    Hive.openBox(HiveKeys.secure),
+  ]);
 
   Box appConfigBox = HiveBoxes.appConfigBox;
   if (appConfigBox.isEmpty) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:save_heaven/core/utils/extensions.dart';
 
 class FoodDonationScreen extends StatelessWidget {
   const FoodDonationScreen({super.key});
@@ -10,10 +11,7 @@ class FoodDonationScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Food Donation', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios, size: 26),
-        ),
+        leading: IconButton(onPressed: () => context.pop(), icon: Icon(Icons.arrow_back_ios, size: 26)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

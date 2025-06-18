@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'user_setting_hive.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 4)
 class UserSettingHive extends HiveObject {
   @HiveField(0)
   bool isNotificationEnabled;

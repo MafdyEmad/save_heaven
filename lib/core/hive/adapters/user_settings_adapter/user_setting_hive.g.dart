@@ -8,7 +8,7 @@ part of 'user_setting_hive.dart';
 
 class UserSettingHiveAdapter extends TypeAdapter<UserSettingHive> {
   @override
-  final int typeId = 1;
+  final int typeId = 4;
 
   @override
   UserSettingHive read(BinaryReader reader) {

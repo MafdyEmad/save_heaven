@@ -9,6 +9,7 @@ import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/show_dialog.dart';
+import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
 import 'package:save_heaven/core/widgets/custom_button.dart';
 import 'package:save_heaven/shared/features/home/presentation/cubit/home_cubit.dart';
 
@@ -234,15 +235,10 @@ class _MakePostScreenState extends State<MakePostScreen> {
                     ),
                     const Spacer(),
                     CustomButton(
-                      onpPressed: () {
+                      onPressed: () {
                         homeBloc.makePosts(content: contentController.text.trim(), images: imagesToPost);
                       },
-                      child: Text(
-                        'Post',
-                        style: context.textTheme.headlineLarge?.copyWith(
-                          color: AppPalette.secondaryTextColor,
-                        ),
-                      ),
+                      text: 'Post',
                     ),
                   ],
                 ),

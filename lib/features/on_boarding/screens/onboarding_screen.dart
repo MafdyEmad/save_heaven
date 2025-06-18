@@ -6,7 +6,7 @@ import 'package:save_heaven/core/hive/adapters/app_config_adapter/app_config_mod
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
-import 'package:save_heaven/shared/features/home/presentation/screens/home_screen.dart';
+import 'package:save_heaven/features/auth/presentation/views/start_journey_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -199,7 +199,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _navigateToNextScreen() {
-    context.pushReplacement(const HomeScreen());
+    context.pushReplacement(const StartJourneyView());
   }
 }
 

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class SchedulePickupScreen extends StatefulWidget {
@@ -24,10 +25,7 @@ class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Schedule PickUp ', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios, size: 26),
-        ),
+        leading: IconButton(onPressed: () => context.pop(), icon: Icon(Icons.arrow_back_ios, size: 26)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/main.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
@@ -14,7 +15,7 @@ class ApiService {
     return _instance;
   }
 
-  static Future<String> get _userToken async => await Future.value(userToken);
+  static String get _userToken => HiveBoxes.secureBox.getAt(0);
 
   ApiService._internal() : _dio = Dio() {
     _dio.options = BaseOptions(
@@ -52,7 +53,7 @@ class ApiService {
           headers: {
             ..._dio.options.headers,
             ...?headers,
-            if (hasToken) 'Authorization': 'Bearer ${await _userToken}',
+            if (hasToken) 'Authorization': 'Bearer $_userToken',
           },
         ),
       );
@@ -78,7 +79,7 @@ class ApiService {
           headers: {
             ..._dio.options.headers,
             ...?headers,
-            if (hasToken) 'Authorization': 'Bearer ${await _userToken}',
+            if (hasToken) 'Authorization': 'Bearer $_userToken',
           },
         ),
       );
@@ -117,10 +118,7 @@ class ApiService {
     final response = await dio.post(
       endpoint,
       options: Options(
-        headers: {
-          if (hasToken) 'Authorization': 'Bearer ${await _userToken}',
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: {if (hasToken) 'Authorization': 'Bearer $_userToken', 'Content-Type': 'multipart/form-data'},
       ),
       data: formData,
       onSendProgress: (sent, total) {
@@ -167,7 +165,7 @@ class ApiService {
           headers: {
             ..._dio.options.headers,
             ...?headers,
-            if (hasToken) 'Authorization': 'Bearer ${await _userToken}',
+            if (hasToken) 'Authorization': 'Bearer $_userToken',
           },
         ),
       );
@@ -190,7 +188,7 @@ class ApiService {
           headers: {
             ..._dio.options.headers,
             ...?headers,
-            if (hasToken) 'Authorization': 'Bearer ${await _userToken}',
+            if (hasToken) 'Authorization': 'Bearer $_userToken',
           },
         ),
       );
@@ -211,7 +209,7 @@ class ApiService {
           headers: {
             ..._dio.options.headers,
             ...?headers,
-            if (hasToken) 'Authorization': 'Bearer ${await _userToken}',
+            if (hasToken) 'Authorization': 'Bearer $_userToken',
           },
         ),
       );

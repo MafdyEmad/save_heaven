@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:save_heaven/core/caching/caching_manager.dart';
 import 'package:save_heaven/core/services/api_services.dart';
+import 'package:save_heaven/features/auth/data/data_scource/auth_remote_data_source.dart';
+import 'package:save_heaven/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:save_heaven/shared/features/home/data/data_source/home_remote_data_source.dart';
 import 'package:save_heaven/shared/features/home/presentation/cubit/home_cubit.dart';
 
@@ -10,6 +12,7 @@ void setupDependency() {
   getIt.registerLazySingleton<ApiService>(() => ApiService());
   getIt.registerLazySingleton<CacheManager>(() => CacheManager());
   _setUpHome();
+  _setAuth();
 }
 
 void _setUpHome() {
@@ -19,4 +22,11 @@ void _setUpHome() {
   getIt.registerLazySingleton<HomeCubit>(
     () => HomeCubit(homeRemoteDataSource: getIt<HomeRemoteDataSource>()),
   );
+}
+
+void _setAuth() {
+  getIt.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(apiService: getIt<ApiService>()),
+  );
+  getIt.registerLazySingleton<AuthCubit>(() => AuthCubit(getIt<AuthRemoteDataSource>()));
 }

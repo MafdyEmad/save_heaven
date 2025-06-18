@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:like_button/like_button.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
+import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
+import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
@@ -26,9 +29,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final HomeCubit homeCubit;
+  final String token = HiveBoxes.secureBox.getAt(0);
+  late final UserHive user;
   @override
   void initState() {
     homeCubit = getIt<HomeCubit>()..getPosts();
+    final userId = JwtDecoder.decode(token)['userId'];
+    user = HiveBoxes.userBox.get(userId);
     super.initState();
   }
 
@@ -95,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           return MakePostWidget(
                             image:
                                 'https://t4.ftcdn.net/jpg/01/95/94/75/240_F_195947506_f7Gt71TOQvwHbQq6gprW6QSJLlxY00oV.jpg',
-                            name: 'name',
+                            name: user.name,
                           );
                         }
                         final post = posts.posts[index - 1];
