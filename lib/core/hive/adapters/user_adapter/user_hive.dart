@@ -32,7 +32,7 @@ class UserHive extends HiveObject {
   @HiveField(12)
   final int v;
   @HiveField(13)
-  final dynamic orphanage;
+  final OrphanageHive? orphanage;
 
   UserHive({
     required this.id,
@@ -65,7 +65,92 @@ class UserHive extends HiveObject {
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
       v: model.v,
-      orphanage: model.orphanage,
+      orphanage: model.orphanage == null ? null : OrphanageHive.fromModel(model.orphanage!),
+    );
+  }
+}
+
+@HiveType(typeId: 5)
+class WorkScheduleHive {
+  @HiveField(0)
+  final List<String> workDays;
+
+  @HiveField(1)
+  final List<String> workHours;
+
+  WorkScheduleHive({required this.workDays, required this.workHours});
+  factory WorkScheduleHive.fromModel(WorkSchedule model) {
+    return WorkScheduleHive(workDays: model.workDays, workHours: model.workHours);
+  }
+}
+
+@HiveType(typeId: 6)
+class OrphanageHive extends HiveObject {
+  @HiveField(0)
+  final String name;
+
+  @HiveField(1)
+  final String adminName;
+
+  @HiveField(2)
+  final String? image;
+
+  @HiveField(3)
+  final String address;
+
+  @HiveField(4)
+  final int currentChildren;
+
+  @HiveField(5)
+  final int totalCapacity;
+
+  @HiveField(6)
+  final bool active;
+
+  @HiveField(7)
+  final int staffCount;
+
+  @HiveField(8)
+  final DateTime establishedDate;
+
+  @HiveField(9)
+  final String phone;
+
+  @HiveField(10)
+  final DateTime birthdate;
+
+  @HiveField(11)
+  final WorkScheduleHive workSchedule;
+
+  OrphanageHive({
+    required this.name,
+    required this.adminName,
+    required this.image,
+    required this.address,
+    required this.currentChildren,
+    required this.totalCapacity,
+    required this.active,
+    required this.staffCount,
+    required this.establishedDate,
+    required this.phone,
+    required this.birthdate,
+    required this.workSchedule,
+  });
+
+  factory OrphanageHive.fromModel(Orphanage model) {
+    return OrphanageHive(
+      name: model.name,
+      adminName: model.adminName,
+      image: model.image,
+      address: model.address,
+      currentChildren: model.currentChildren,
+      totalCapacity: model.totalCapacity,
+      active: model.active,
+      staffCount: model.staffCount,
+      establishedDate: model.establishedDate,
+      phone: model.phone,
+      birthdate: model.birthdate,
+      workSchedule: WorkScheduleHive.fromModel(model.workSchedule),
     );
   }
 }

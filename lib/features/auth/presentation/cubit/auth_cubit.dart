@@ -33,4 +33,13 @@ class AuthCubit extends Cubit<AuthState> {
       (user) => emit(DonorSignUpSuccess(user: user)),
     );
   }
+
+  void orphanageSignUp(OrphanageSignUpParams params) async {
+    emit(OrphanageSignUpLoading());
+    final result = await _authRemoteDataSource.signUpOrphanage(params: params);
+    result.fold(
+      (error) => emit(OrphanageSignUpFail(message: error.message)),
+      (user) => emit(OrphanageSignUpSuccess(user: user)),
+    );
+  }
 }

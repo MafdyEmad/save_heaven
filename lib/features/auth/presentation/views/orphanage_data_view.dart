@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:save_heaven/features/auth/data/data_scource/auth_remote_data_source.dart';
 import 'package:save_heaven/features/auth/presentation/manager/Orphanage%20Data%20cubit/orphanage_data_cubit.dart';
 import 'package:save_heaven/features/auth/presentation/manager/step%20indicator%20cubit/step_indicator_cubit.dart';
 import 'package:save_heaven/features/auth/presentation/widgets/orphanage_data_body.dart';
 
 class OrphanageDataView extends StatelessWidget {
-  const OrphanageDataView({super.key});
+  final OrphanageSignUpParams currentParams;
+
+  const OrphanageDataView({super.key, required this.currentParams});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class OrphanageDataView extends StatelessWidget {
         BlocProvider(create: (_) => OrphanageDataCubit()),
         BlocProvider(create: (_) => StepIndicatorCubit()),
       ],
-      child: const Scaffold(body: OrphanageDataBody()),
+      child: Scaffold(body: OrphanageDataBody(currentParams: currentParams)),
     );
   }
 }

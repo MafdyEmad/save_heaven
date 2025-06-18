@@ -5,12 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
+import 'package:save_heaven/core/utils/app_colors.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/show_dialog.dart';
-import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
-import 'package:save_heaven/core/widgets/custom_button.dart';
+import 'package:save_heaven/core/utils/show_loading.dart';
 import 'package:save_heaven/shared/features/home/presentation/cubit/home_cubit.dart';
 
 class MakePostScreen extends StatefulWidget {
@@ -70,17 +70,7 @@ class _MakePostScreenState extends State<MakePostScreen> {
               onCancel: () {},
             );
           } else if (state is HomeMakePostsLoading) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => PopScope(
-                canPop: false,
-                child: AlertDialog(
-                  backgroundColor: Colors.transparent,
-                  content: Center(child: CircularProgressIndicator(color: AppPalette.primaryColor)),
-                ),
-              ),
-            );
+            showLoading(context);
           }
         },
         child: Scaffold(
@@ -228,17 +218,24 @@ class _MakePostScreenState extends State<MakePostScreen> {
                   ),
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       'everyone can reply & repost',
                       style: context.textTheme.headlineSmall?.copyWith(color: AppPalette.hintColor),
                     ),
-                    const Spacer(),
-                    CustomButton(
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
+                      ),
                       onPressed: () {
                         homeBloc.makePosts(content: contentController.text.trim(), images: imagesToPost);
                       },
-                      text: 'Post',
+                      child: Text(
+                        'Post',
+                        style: context.textTheme.headlineMedium?.copyWith(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),

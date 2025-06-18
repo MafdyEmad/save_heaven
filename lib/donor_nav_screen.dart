@@ -6,18 +6,19 @@ import 'package:flutter_svg/svg.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/config/assets_manager.dart';
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
+import 'package:save_heaven/core/utils/assets_images.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/features/auth/presentation/views/login_view.dart';
 import 'package:save_heaven/shared/features/home/presentation/screens/home_screen.dart';
 
-class OrphanageNavScreen extends StatefulWidget {
-  const OrphanageNavScreen({super.key});
+class DonorNavScreen extends StatefulWidget {
+  const DonorNavScreen({super.key});
 
   @override
-  State<OrphanageNavScreen> createState() => _OrphanageNavScreenState();
+  State<DonorNavScreen> createState() => _DonorNavScreenState();
 }
 
-class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
+class _DonorNavScreenState extends State<DonorNavScreen> {
   final ValueNotifier screenIndex = ValueNotifier(0);
   final screens = List.unmodifiable([HomeScreen(), HomeScreen(), HomeScreen(), HomeScreen()]);
   late final ValueNotifier<bool> isNotificationEnabled;
@@ -34,7 +35,7 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
       appBar: AppBar(
         leading: Builder(
           builder: (context) =>
-              IconButton(icon: const Icon(Icons.menu), onPressed: () => Scaffold.of(context).openDrawer()),
+              IconButton(icon: Icon(Icons.menu), onPressed: () => Scaffold.of(context).openDrawer()),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -47,7 +48,8 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
           context.pushAndRemoveUntil(const LoginView());
         },
         shape: CircleBorder(),
-        child: Icon(Icons.add, color: Colors.white),
+        child: SvgPicture.asset(AssetsImages.donate, width: 25),
+        //  Icon(Icons.add, color: Colors.white),
       ),
       drawer: buildDrawer(),
       bottomNavigationBar: Stack(
@@ -72,23 +74,27 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
                   IconButton(
                     icon: Icon(
                       Icons.home,
-                      size: 25,
                       color: index == 0 ? AppPalette.primaryColor : Color(0xffd8dadd),
+                      size: 25,
                     ),
                     onPressed: () => changeScreen(0),
                   ),
                   IconButton(
-                    icon: Icon(
-                      Icons.chat,
-                      size: 25,
-                      color: index == 1 ? AppPalette.primaryColor : Color(0xffd8dadd),
+                    icon: SvgPicture.asset(
+                      AssetsImages.people,
+                      width: 25,
+                      colorFilter: ColorFilter.mode(
+                        index == 1 ? AppPalette.primaryColor : Color(0xffd8dadd),
+                        BlendMode.srcIn,
+                      ),
                     ),
+
                     onPressed: () => changeScreen(1),
                   ),
                   SizedBox(width: 35),
                   IconButton(
                     icon: Icon(
-                      Icons.bar_chart_outlined,
+                      Icons.chat,
                       size: 25,
                       color: index == 2 ? AppPalette.primaryColor : Color(0xffd8dadd),
                     ),

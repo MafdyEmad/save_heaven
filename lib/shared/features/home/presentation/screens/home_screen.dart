@@ -9,10 +9,12 @@ import 'package:like_button/like_button.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
-import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/core/utils/show_dialog.dart';
+import 'package:save_heaven/core/utils/show_loading.dart';
+import 'package:save_heaven/core/utils/snack_bar.dart';
 import 'package:save_heaven/core/widgets/custom_pop_menu.dart';
 import 'package:save_heaven/core/widgets/custom_refresh.dart';
 import 'package:save_heaven/core/widgets/make_post_widget.dart';
@@ -50,7 +52,18 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.symmetric(horizontal: AppDimensions.horizontalPagePadding),
           child: Builder(
             builder: (context) {
-              return BlocBuilder<HomeCubit, HomeState>(
+              return BlocConsumer<HomeCubit, HomeState>(
+                listener: (context, state) {
+                  if (state is HomeDeletePostsSuccess) {
+                    context.pop();
+                    homeCubit.getPosts(refresh: true);
+                  } else if (state is HomeDeletePostsFail) {
+                    context.pop();
+                    showSnackBar(context, 'Failed to delete your post');
+                  } else if (state is HomeDeletePostsLoading) {
+                    showLoading(context);
+                  }
+                },
                 buildWhen: (previous, current) => homeGetPostsStates.contains(current.runtimeType),
                 builder: (context, state) {
                   if (state is HomeGetPostsLoading) {
@@ -136,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           trailing: GestureDetector(
-            onTapDown: (details) => _showPostOptions(details.globalPosition),
+            onTapDown: (details) => _showPostOptions(details.globalPosition, post),
             child: const Icon(Icons.more_horiz, color: Colors.grey),
           ),
           title: Text(post.user.name, style: context.textTheme.headlineMedium),
@@ -229,26 +242,52 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showPostOptions(Offset position) {
+  void _showPostOptions(Offset position, Post post) {
     CustomPopupMenu.show(
       context: context,
       position: position,
       items: [
-        ListTile(
-          leading: const Icon(Icons.edit),
-          title: Text('Edit Post', style: context.textTheme.headlineSmall),
-          onTap: () => CustomPopupMenu.hide(),
-        ),
-        ListTile(
-          leading: const Icon(Icons.bookmark),
-          title: Text('Save Post', style: context.textTheme.headlineSmall),
-          onTap: () => CustomPopupMenu.hide(),
-        ),
-        ListTile(
-          leading: const Icon(Icons.report_gmailerrorred_outlined, color: Colors.red),
-          title: Text('Report Post', style: context.textTheme.headlineSmall?.copyWith(color: Colors.red)),
-          onTap: () => CustomPopupMenu.hide(),
-        ),
+        if (_isMyPost(post))
+          ListTile(
+            leading: const Icon(Icons.edit),
+            title: Text('Edit Post', style: context.textTheme.headlineSmall),
+            onTap: () => CustomPopupMenu.hide(),
+          ),
+        if (_isMyPost(post))
+          ListTile(
+            leading: const Icon(Icons.delete, color: Colors.red),
+            title: Text('Delete post', style: context.textTheme.headlineSmall?.copyWith(color: Colors.red)),
+            onTap: () {
+              showCustomDialog(
+                context,
+                title: 'Deleting post',
+                content: 'Your are sure to delete this post',
+                confirmText: 'Delete',
+                cancelText: 'cancel',
+                cancelTextColor: AppPalette.primaryColor,
+                onConfirm: () {
+                  context.pop();
+                  homeCubit.deletePosts(post.id);
+                },
+                onCancel: () {
+                  context.pop();
+                },
+              );
+              CustomPopupMenu.hide();
+            },
+          ),
+        if (!_isMyPost(post))
+          ListTile(
+            leading: const Icon(Icons.bookmark),
+            title: Text('Save Post', style: context.textTheme.headlineSmall),
+            onTap: () => CustomPopupMenu.hide(),
+          ),
+        if (!_isMyPost(post))
+          ListTile(
+            leading: const Icon(Icons.report_gmailerrorred_outlined, color: Colors.red),
+            title: Text('Report Post', style: context.textTheme.headlineSmall?.copyWith(color: Colors.red)),
+            onTap: () => CustomPopupMenu.hide(),
+          ),
       ],
     );
   }
@@ -261,4 +300,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return count.toString();
   }
+
+  bool _isMyPost(Post post) => user.id == post.user.id;
 }

@@ -9,6 +9,7 @@ sealed class AuthState extends Equatable {
 
 final class AuthInitial extends AuthState {}
 
+//? DONOR SIGNUP
 final class DonorSignUpLoading extends AuthState {}
 
 final class DonorSignUpFail extends AuthState {
@@ -21,4 +22,19 @@ final class DonorSignUpSuccess extends AuthState {
   final UserModel user;
 
   const DonorSignUpSuccess({required this.user});
+}
+
+//? ORPHANAGE SIGNUP
+final class OrphanageSignUpLoading extends AuthState {}
+
+final class OrphanageSignUpFail extends AuthState {
+  final String message;
+
+  const OrphanageSignUpFail({required this.message});
+}
+
+final class OrphanageSignUpSuccess extends AuthState {
+  final UserModel user;
+
+  const OrphanageSignUpSuccess({required this.user});
 }

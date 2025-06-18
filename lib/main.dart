@@ -59,6 +59,8 @@ Future<void> _initHive() async {
   Hive.registerAdapter(UserSettingHiveAdapter());
   Hive.registerAdapter(UserHiveAdapter());
   Hive.registerAdapter(SecureHiveAdapter());
+  Hive.registerAdapter(WorkScheduleHiveAdapter());
+  Hive.registerAdapter(OrphanageHiveAdapter());
   await Future.wait([
     Hive.openBox(HiveKeys.appConfig),
     Hive.openBox(HiveKeys.userSetting),

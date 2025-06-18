@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
-import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
 
 void showCustomDialog(
   context, {
@@ -11,6 +10,7 @@ void showCustomDialog(
   required String content,
   required String confirmText,
   required String cancelText,
+  Color cancelTextColor = Colors.red,
   required void Function()? onConfirm,
   required void Function()? onCancel,
 }) {
@@ -38,17 +38,16 @@ void showCustomDialog(
             onPressed: onCancel,
             child: Text(
               cancelText,
-              style: context.textTheme.headlineLarge?.copyWith(fontSize: 16, color: Colors.redAccent),
+              style: context.textTheme.headlineLarge?.copyWith(fontSize: 16, color: cancelTextColor),
             ),
           ),
-          CustomButton(text: confirmText, onPressed: onConfirm!),
-          // ElevatedButton(
-          //   onPressed: onConfirm,
-          //   child: Text(
-          //     confirmText,
-          //     style: context.textTheme.headlineLarge?.copyWith(color: AppPalette.secondaryTextColor),
-          //   ),
-          // ),
+          ElevatedButton(
+            onPressed: onConfirm,
+            child: Text(
+              confirmText,
+              style: context.textTheme.headlineLarge?.copyWith(color: AppPalette.secondaryTextColor),
+            ),
+          ),
         ],
       ),
     ),

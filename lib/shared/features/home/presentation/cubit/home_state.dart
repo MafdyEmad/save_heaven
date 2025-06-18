@@ -37,3 +37,15 @@ final class HomeMakePostsFail extends HomeState {
   @override
   List<Object> get props => [message];
 }
+
+//? DELETE POST
+final class HomeDeletePostsSuccess extends HomeState {}
+
+final class HomeDeletePostsLoading extends HomeState {}
+
+final class HomeDeletePostsFail extends HomeState {
+  final String message;
+  const HomeDeletePostsFail({required this.message});
+  @override
+  List<Object> get props => [message];
+}

@@ -1,4 +1,6 @@
 class AssetsImages {
+  static const String donate = 'assets/icons/donate.svg';
+  static const String people = 'assets/icons/people.svg';
   static const String child = 'assets/images/child.png';
   static const String hand = 'assets/images/hand.png';
   static const String girl = 'assets/images/girl.png';
@@ -43,10 +45,10 @@ class AssetsImages {
   static const String share = 'assets/images/share.png';
   static const String comment = 'assets/images/comment.png';
   static const String loogoo = 'assets/images/loogoo.png';
-   static const String bethany = 'assets/icons/bethany.png';
+  static const String bethany = 'assets/icons/bethany.png';
   static const String sos = 'assets/icons/sos.png';
   static const String orman = 'assets/icons/orman.png';
   static const String banner = 'assets/images/banner.png';
-   static const String visa = 'assets/icons/visa.png';
+  static const String visa = 'assets/icons/visa.png';
   static const String mastarCard = 'assets/icons/mastar card.png';
 }

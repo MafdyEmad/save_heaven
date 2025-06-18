@@ -32,4 +32,13 @@ class HomeCubit extends Cubit<HomeState> {
       (_) => emit(HomeMakePostsSuccess()),
     );
   }
+
+  void deletePosts(String postId) async {
+    emit(HomeDeletePostsLoading());
+    final result = await _homeRemoteDataSource.deletePost(postId);
+    result.fold(
+      (fail) => emit(HomeDeletePostsFail(message: fail.message)),
+      (_) => emit(HomeDeletePostsSuccess()),
+    );
+  }
 }
