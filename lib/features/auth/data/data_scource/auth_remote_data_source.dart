@@ -22,6 +22,7 @@ abstract interface class AuthRemoteDataSource {
     required String gender,
   });
   Future<Either<Failure, UserModel>> signUpOrphanage({required OrphanageSignUpParams params});
+  Future<Either<Failure, UserModel>> login({required String email, required String password});
 }
 
 class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
@@ -115,7 +116,42 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       }
       return Left(Failure(message: Constants.serverErrorMessage));
     } catch (e) {
-      print(e);
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserModel>> login({required String email, required String password}) async {
+    try {
+      final response = await apiService.post(
+        endpoint: ApiEndpoints.login,
+        hasToken: false,
+        data: {'email': email, 'password': password},
+      );
+      final jsonMap = response.data;
+      final userJson = jsonMap['data']['user'];
+      final orphanageJson = jsonMap['data']['orphanage'];
+
+      final user = UserModel.fromJson(userJson, orphanageJson);
+      final token = jsonMap['token'];
+
+      final userId = JwtDecoder.decode(token)['userId'];
+      await HiveBoxes.userBox.put(userId, UserHive.fromModel(user));
+      if (HiveBoxes.secureBox.isNotEmpty) {
+        await HiveBoxes.secureBox.putAt(0, token);
+      } else {
+        await HiveBoxes.secureBox.add(token);
+      }
+      return Right(user);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        final List<String> messages = (e.response?.data['errors'] as List)
+            .map((e) => e['msg'].toString())
+            .toList();
+        return Left(Failure(message: messages.join('.\n')));
+      }
+      return Left(Failure(message: Constants.serverErrorMessage));
+    } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
     }
   }

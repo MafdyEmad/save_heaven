@@ -38,3 +38,18 @@ final class OrphanageSignUpSuccess extends AuthState {
 
   const OrphanageSignUpSuccess({required this.user});
 }
+
+//? LOGIN
+final class LoginLoading extends AuthState {}
+
+final class LoginFail extends AuthState {
+  final String message;
+
+  const LoginFail({required this.message});
+}
+
+final class LoginSuccess extends AuthState {
+  final UserModel user;
+
+  const LoginSuccess({required this.user});
+}

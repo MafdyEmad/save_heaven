@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/screens/make_post_screen.dart';
+import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 
 class MakePostWidget extends StatelessWidget {
@@ -21,7 +22,7 @@ class MakePostWidget extends StatelessWidget {
               height: 50,
               child: ClipOval(
                 child: CachedNetworkImage(
-                  imageUrl: image,
+                  imageUrl: '${ApiEndpoints.imageProvider}$image',
                   fit: BoxFit.cover,
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),

@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
-import 'package:save_heaven/main.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
@@ -128,27 +127,6 @@ class ApiService {
     );
 
     return response;
-  }
-
-  Future<Response> asd({
-    required String endpoint,
-    required Map<String, dynamic> fields,
-    required List<File> files,
-    required String fileFieldName,
-    bool hasToken = true,
-  }) async {
-    final formData = FormData();
-
-    fields.forEach((key, value) {
-      formData.fields.add(MapEntry(key, value.toString()));
-    });
-
-    for (File file in files) {
-      final fileName = file.path.split('/').last;
-      formData.files.add(MapEntry('images', await MultipartFile.fromFile(file.path, filename: fileName)));
-    }
-
-    return await post(endpoint: endpoint, data: formData, hasToken: hasToken);
   }
 
   Future<Response> put({

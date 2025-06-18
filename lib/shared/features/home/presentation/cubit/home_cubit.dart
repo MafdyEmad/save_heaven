@@ -41,4 +41,13 @@ class HomeCubit extends Cubit<HomeState> {
       (_) => emit(HomeDeletePostsSuccess()),
     );
   }
+
+  void updatePosts(String postId) async {
+    emit(HomeUpdatePostsLoading());
+    final result = await _homeRemoteDataSource.updatePost(postId);
+    result.fold(
+      (fail) => emit(HomeUpdatePostsFail(message: fail.message)),
+      (_) => emit(HomeUpdatePostsSuccess()),
+    );
+  }
 }

@@ -42,4 +42,10 @@ class AuthCubit extends Cubit<AuthState> {
       (user) => emit(OrphanageSignUpSuccess(user: user)),
     );
   }
+
+  void login({required String email, required String password}) async {
+    emit(LoginLoading());
+    final result = await _authRemoteDataSource.login(email: email, password: password);
+    result.fold((error) => emit(LoginFail(message: error.message)), (user) => emit(LoginSuccess(user: user)));
+  }
 }

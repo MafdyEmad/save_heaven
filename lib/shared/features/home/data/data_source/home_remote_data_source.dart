@@ -15,6 +15,7 @@ abstract interface class HomeRemoteDataSource {
   Future<Either<Failure, PostsResponse>> getPosts({required bool refresh});
   Future<Either<Failure, void>> makePost({required List<File> images, required String content});
   Future<Either<Failure, void>> deletePost(String postId);
+  Future<Either<Failure, void>> updatePost(String postId);
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -52,7 +53,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   @override
   Future<Either<Failure, void>> makePost({required List<File> images, required String content}) async {
     try {
-      final response = await apiService.sendFormData(
+      await apiService.sendFormData(
         fileFieldName: 'images',
         fields: {'content': content},
         files: images,
@@ -60,14 +61,11 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         hasToken: true,
       );
 
-      if (response.statusCode == 201) {
-        return Right(null);
-      } else {
-        return Left(Failure(message: response.data?['message'] ?? Constants.serverErrorMessage));
-      }
+      return Right(null);
     } on TimeoutException {
       return Left(Failure(message: 'Time out, Try again'));
     } on DioException catch (e) {
+      print(e);
       return Left(Failure(message: e.response?.data?['message'] ?? Constants.serverErrorMessage));
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
@@ -78,6 +76,16 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   Future<Either<Failure, void>> deletePost(postId) async {
     try {
       await apiService.delete(endpoint: '${ApiEndpoints.posts}/$postId', hasToken: true);
+      return Right(null);
+    } catch (e) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updatePost(String postId) async {
+    try {
+      await apiService.put(endpoint: '${ApiEndpoints.posts}/$postId', hasToken: true);
       return Right(null);
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));

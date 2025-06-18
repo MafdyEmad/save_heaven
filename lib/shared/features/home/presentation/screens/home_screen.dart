@@ -9,6 +9,8 @@ import 'package:like_button/like_button.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
+import 'package:save_heaven/core/screens/update_post_screen.dart';
+import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
@@ -21,6 +23,7 @@ import 'package:save_heaven/core/widgets/make_post_widget.dart';
 import 'package:save_heaven/shared/features/home/data/models/post_response.dart';
 import 'package:save_heaven/shared/features/home/presentation/cubit/home_cubit.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -140,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
           contentPadding: EdgeInsets.zero,
           leading: ClipOval(
             child: CachedNetworkImage(
-              // imageUrl: post.user.imageUrl
+              // imageUrl:'${ApiEndpoints.base}${post.user.image}',
               imageUrl: '',
               width: 50.w,
               height: 50.w,
@@ -164,9 +167,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildPostContent(Post post) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.horizontalPagePadding, vertical: 10),
-      color: const Color(0xFFF6F7F8),
+      // margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      // color: const Color(0xFFF6F7F8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -180,7 +183,40 @@ class _HomeScreenState extends State<HomeScreen> {
             linkColor: AppPalette.primaryColor,
           ),
           if (post.images.isNotEmpty)
-            Padding(padding: const EdgeInsets.only(top: 10), child: _buildMediaGrid(post.images)),
+            if (post.images.length == 1)
+              Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black,
+                      builder: (_) {
+                        return Dialog(
+                          backgroundColor: Colors.black,
+                          insetPadding: EdgeInsets.zero,
+                          child: ImagePreviewDialog(images: [post.images[0]], initialIndex: 0),
+                        );
+                      },
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: CachedNetworkImage(
+                      imageUrl: '${ApiEndpoints.imageProvider}${post.images[0]}',
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter,
+                      height: 300,
+                      width: double.infinity,
+                      placeholder: (context, url) => Container(color: Colors.grey.shade200),
+                      errorWidget: (context, url, error) =>
+                          Container(color: Colors.grey.shade300, child: const Icon(Icons.broken_image)),
+                    ),
+                  ),
+                ),
+              )
+            else
+              Padding(padding: const EdgeInsets.only(top: 10), child: _buildMediaGrid(post.images)),
         ],
       ),
     );
@@ -193,26 +229,54 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisSpacing: 8,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: images.length,
+      itemCount: images.length > 4 ? 4 : images.length,
       itemBuilder: (context, index) {
         final imageUrl = images[index];
 
-        // Vary the height for visual variety
         final randomHeight = 100 + (index % 4) * 40;
-
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: CachedNetworkImage(
-            imageUrl: imageUrl,
-            fit: BoxFit.cover,
-            height: randomHeight.toDouble(),
-            width: double.infinity,
-            placeholder: (context, url) =>
-                Container(height: randomHeight.toDouble(), color: Colors.grey.shade200),
-            errorWidget: (context, url, error) => Container(
-              height: randomHeight.toDouble(),
-              color: Colors.grey.shade300,
-              child: const Icon(Icons.broken_image),
+        return GestureDetector(
+          onTap: () {
+            showDialog(
+              context: context,
+              barrierColor: Colors.black,
+              builder: (_) {
+                return Dialog(
+                  backgroundColor: Colors.black,
+                  insetPadding: EdgeInsets.zero,
+                  child: ImagePreviewDialog(images: images, initialIndex: index),
+                );
+              },
+            );
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Stack(
+              children: [
+                CachedNetworkImage(
+                  imageUrl: '${ApiEndpoints.imageProvider}$imageUrl',
+                  fit: BoxFit.cover,
+                  height: randomHeight.toDouble(),
+                  width: double.infinity,
+                  placeholder: (context, url) =>
+                      Container(height: randomHeight.toDouble(), color: Colors.grey.shade200),
+                  errorWidget: (context, url, error) => Container(
+                    height: randomHeight.toDouble(),
+                    color: Colors.grey.shade300,
+                    child: const Icon(Icons.broken_image),
+                  ),
+                ),
+                if (index == 3)
+                  Positioned.fill(
+                    child: Container(
+                      color: Colors.black.withAlpha(150),
+                      alignment: Alignment.center,
+                      child: Text(
+                        '+${images.length - 4}',
+                        style: context.textTheme.titleLarge?.copyWith(color: Colors.white),
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
         );
@@ -232,10 +296,11 @@ class _HomeScreenState extends State<HomeScreen> {
           countDecoration: (_, count) => Text(_formatCount(count ?? 0), style: context.textTheme.bodyLarge),
         ),
         const SizedBox(width: 8),
-        IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.repeat, size: 35.sp),
-        ),
+        if (!_isMyPost(post))
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.repeat, size: 35.sp),
+          ),
         // Text(_formatCount(post.shares), style: context.textTheme.bodyLarge),
         Text(_formatCount(5848), style: context.textTheme.bodyLarge),
       ],
@@ -251,7 +316,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ListTile(
             leading: const Icon(Icons.edit),
             title: Text('Edit Post', style: context.textTheme.headlineSmall),
-            onTap: () => CustomPopupMenu.hide(),
+            onTap: () {
+              CustomPopupMenu.hide();
+              context.push(UpdatePostScreen(images: post.images));
+            },
           ),
         if (_isMyPost(post))
           ListTile(
@@ -302,4 +370,72 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool _isMyPost(Post post) => user.id == post.user.id;
+}
+
+class ImagePreviewDialog extends StatefulWidget {
+  final List<String> images;
+  final int initialIndex;
+
+  const ImagePreviewDialog({super.key, required this.images, required this.initialIndex});
+
+  @override
+  State<ImagePreviewDialog> createState() => _ImagePreviewDialogState();
+}
+
+class _ImagePreviewDialogState extends State<ImagePreviewDialog> {
+  late PageController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PageController(initialPage: widget.initialIndex);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        PageView.builder(
+          controller: _controller,
+          itemCount: widget.images.length,
+          itemBuilder: (context, index) {
+            return InteractiveViewer(
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: '${ApiEndpoints.imageProvider}${widget.images[index]}',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            );
+          },
+        ),
+        Positioned(
+          top: 40,
+          right: 20,
+          child: IconButton(
+            icon: const Icon(Icons.close, color: Colors.white, size: 30),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: SmoothPageIndicator(
+            controller: _controller,
+            count: widget.images.length,
+            effect: ExpandingDotsEffect(
+              activeDotColor: AppPalette.primaryColor,
+              dotHeight: 8.w,
+              dotWidth: 8.w,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

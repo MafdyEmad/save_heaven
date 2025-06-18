@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
+import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_colors.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
@@ -88,7 +89,7 @@ class _MakePostScreenState extends State<MakePostScreen> {
                       height: 50,
                       child: ClipOval(
                         child: CachedNetworkImage(
-                          imageUrl: widget.image,
+                          imageUrl: '${ApiEndpoints.imageProvider}${widget.image}',
                           fit: BoxFit.cover,
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -118,73 +119,116 @@ class _MakePostScreenState extends State<MakePostScreen> {
                             hintStyle: context.textTheme.headlineSmall?.copyWith(color: AppPalette.hintColor),
                           ),
                         ),
-
-                        if (imagesToPost.isNotEmpty) ...[
-                          const SizedBox(height: 12),
-                          MasonryGridView.count(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: imagesToPost.length,
-                            itemBuilder: (context, index) {
-                              final image = imagesToPost[index];
-                              final randomHeight = 100 + (index % 4) * 40;
-
-                              return AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 300),
-                                transitionBuilder: (child, animation) {
-                                  return FadeTransition(opacity: animation, child: child);
-                                },
-                                child: Container(
-                                  key: ValueKey(image.path),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey.shade300),
+                        SizedBox(height: 20),
+                        if (imagesToPost.isNotEmpty)
+                          if (imagesToPost.length == 1)
+                            Container(
+                              key: ValueKey(imagesToPost.first.path),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Stack(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Image.file(
-                                          File(image.path),
-                                          fit: BoxFit.cover,
-                                          height: randomHeight.toDouble(),
-                                          width: double.infinity,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        top: 8,
-                                        right: 8,
-                                        child: Container(
-                                          width: 25,
-                                          height: 25,
-                                          decoration: BoxDecoration(
-                                            color: Colors.black.withAlpha(150),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                imagesToPost.removeAt(index);
-                                              });
-                                            },
-                                            icon: const Icon(Icons.close, color: Colors.white, size: 18),
-                                            padding: EdgeInsets.zero,
-                                            constraints: const BoxConstraints(),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                                    child: Image.file(
+                                      File(imagesToPost.first.path),
+                                      fit: BoxFit.contain,
 
-                          const SizedBox(height: 12),
-                        ],
+                                      width: double.infinity,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 8,
+                                    right: 8,
+                                    child: Container(
+                                      width: 25,
+                                      height: 25,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withAlpha(150),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            imagesToPost.removeAt(0);
+                                          });
+                                        },
+                                        icon: const Icon(Icons.close, color: Colors.white, size: 18),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          else ...[
+                            const SizedBox(height: 12),
+                            MasonryGridView.count(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 8,
+                              crossAxisSpacing: 8,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: imagesToPost.length,
+                              itemBuilder: (context, index) {
+                                final image = imagesToPost[index];
+                                final randomHeight = 100 + (index % 4) * 40;
+                                return AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 300),
+                                  transitionBuilder: (child, animation) {
+                                    return FadeTransition(opacity: animation, child: child);
+                                  },
+                                  child: Container(
+                                    key: ValueKey(image.path),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey.shade300),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(12),
+                                          child: Image.file(
+                                            File(image.path),
+                                            fit: BoxFit.contain,
+                                            height: randomHeight.toDouble(),
+                                            width: double.infinity,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 8,
+                                          right: 8,
+                                          child: Container(
+                                            width: 25,
+                                            height: 25,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black.withAlpha(150),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  imagesToPost.removeAt(index);
+                                                });
+                                              },
+                                              icon: const Icon(Icons.close, color: Colors.white, size: 18),
+                                              padding: EdgeInsets.zero,
+                                              constraints: const BoxConstraints(),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+
+                            const SizedBox(height: 12),
+                          ],
                         Row(
                           children: [
                             IconButton(
@@ -203,6 +247,7 @@ class _MakePostScreenState extends State<MakePostScreen> {
                                 final images = await picker.pickMultiImage();
                                 if (images.isNotEmpty) {
                                   for (final image in images) {
+                                    print(image.path);
                                     imagesToPost.add(File(image.path));
                                   }
                                   setState(() {});

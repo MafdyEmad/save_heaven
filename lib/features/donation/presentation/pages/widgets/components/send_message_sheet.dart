@@ -11,7 +11,12 @@ class SendMessageSheet extends StatelessWidget {
   const SendMessageSheet({super.key, required this.messageController, required this.orphanageName});
 
   Future<void> pickFile(BuildContext context) async {
-    final result = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final result = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 100,
+      maxWidth: null,
+      maxHeight: null,
+    );
     if (result != null) {
       context.read<SendMessageCubit>().pickFile(result.path);
     }

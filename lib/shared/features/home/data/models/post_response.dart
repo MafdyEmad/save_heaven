@@ -71,7 +71,7 @@ class Post {
       content: json['content'],
       user: User.fromJson(json['user']),
       images: List<String>.from(json['images']),
-      slug: json['slug'],
+      slug: json['slug'] ?? '',
       repostedFrom: json['repostedFrom'],
       repostCount: json['repostCount'],
       createdAt: DateTime.parse(json['createdAt']),
