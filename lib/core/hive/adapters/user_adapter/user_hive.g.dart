@@ -29,6 +29,7 @@ class UserHiveAdapter extends TypeAdapter<UserHive> {
       active: fields[9] as bool,
       createdAt: fields[10] as DateTime,
       updatedAt: fields[11] as DateTime,
+      image: fields[14] as String?,
       v: fields[12] as int,
       orphanage: fields[13] as OrphanageHive?,
     );
@@ -37,7 +38,7 @@ class UserHiveAdapter extends TypeAdapter<UserHive> {
   @override
   void write(BinaryWriter writer, UserHive obj) {
     writer
-      ..writeByte(14)
+      ..writeByte(15)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -65,7 +66,9 @@ class UserHiveAdapter extends TypeAdapter<UserHive> {
       ..writeByte(12)
       ..write(obj.v)
       ..writeByte(13)
-      ..write(obj.orphanage);
+      ..write(obj.orphanage)
+      ..writeByte(14)
+      ..write(obj.image);
   }
 
   @override

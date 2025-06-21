@@ -118,8 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         if (index == 0) {
                           return MakePostWidget(
-                            image:
-                                'https://t4.ftcdn.net/jpg/01/95/94/75/240_F_195947506_f7Gt71TOQvwHbQq6gprW6QSJLlxY00oV.jpg',
+                            image: ApiEndpoints.imageProvider + user.image!,
                             name: user.name,
                           );
                         }

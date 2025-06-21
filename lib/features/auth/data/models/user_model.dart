@@ -6,6 +6,7 @@ class UserModel {
   final String email;
   final DateTime birthdate;
   final String phone;
+  final String? image;
   final String password;
   final String role;
   final bool active;
@@ -18,6 +19,7 @@ class UserModel {
     required this.id,
     required this.name,
     required this.gender,
+    required this.image,
     required this.address,
     required this.email,
     required this.birthdate,
@@ -34,6 +36,7 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json, [dynamic orphanage]) {
     return UserModel(
       id: json['_id'] ?? 0,
+      image: json['image'] ?? '',
       name: json['name'] ?? '',
       gender: json['gender'] ?? '',
       address: json['address'] ?? '',
@@ -84,7 +87,7 @@ class Orphanage {
     return Orphanage(
       name: json['name'],
       adminName: json['adminName'],
-      image: json['image'],
+      image: json['image'] ?? '',
       address: json['address'],
       currentChildren: json['currentChildren'],
       totalCapacity: json['totalCapacity'],

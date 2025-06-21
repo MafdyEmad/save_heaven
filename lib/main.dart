@@ -54,7 +54,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> _initHive() async {
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
-  Hive.init(appDocumentDirectory.path);
+  Hive.init('${appDocumentDirectory.path}/1');
   Hive.registerAdapter(AppConfigModelAdapter());
   Hive.registerAdapter(UserSettingHiveAdapter());
   Hive.registerAdapter(UserHiveAdapter());

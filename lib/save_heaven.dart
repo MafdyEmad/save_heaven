@@ -11,7 +11,9 @@ class SaveHeaven extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(440, 956),
       minTextAdapt: true,
-      builder: (context, child) => MaterialApp(theme: AppTheme.light, home: const SplashScreen()),
+
+      builder: (context, child) =>
+          MaterialApp(theme: AppTheme.light, home: const SplashScreen(), debugShowCheckedModeBanner: false),
     );
   }
 }

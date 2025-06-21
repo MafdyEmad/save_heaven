@@ -68,7 +68,7 @@ class Post {
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       id: json['_id'],
-      content: json['content'],
+      content: json['content'] ?? '',
       user: User.fromJson(json['user']),
       images: List<String>.from(json['images']),
       slug: json['slug'] ?? '',

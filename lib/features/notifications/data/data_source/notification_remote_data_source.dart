@@ -1,0 +1,29 @@
+import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:save_heaven/core/error/failure.dart';
+import 'package:save_heaven/core/services/api_services.dart';
+import 'package:save_heaven/core/utils/api_endpoints.dart';
+import 'package:save_heaven/core/utils/constants.dart';
+import 'package:save_heaven/features/notifications/data/data_source/models/notification_model.dart';
+
+abstract interface class NotificationRemoteDataSource {
+  Future<Either<Failure, List<NotificationModel>>> getNotifications();
+}
+
+class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
+  final ApiService apiService;
+
+  NotificationRemoteDataSourceImpl({required this.apiService});
+  @override
+  Future<Either<Failure, List<NotificationModel>>> getNotifications() async {
+    try {
+      final response = await apiService.get(endpoint: ApiEndpoints.notifications, hasToken: true);
+      final json = response.data['data'] as List<dynamic>;
+      return Right(json.map((e) => NotificationModel.fromJson(e)).toList());
+    } on DioException catch (e) {
+      return Left(Failure(message: e.response?.data?['message'] ?? Constants.serverErrorMessage));
+    } catch (e) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+}

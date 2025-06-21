@@ -6,9 +6,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/config/assets_manager.dart';
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
+import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/assets_images.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/core/widgets/nav_screen_app_bar.dart';
 import 'package:save_heaven/features/auth/presentation/views/login_view.dart';
+import 'package:save_heaven/helpers/helpers.dart';
 import 'package:save_heaven/shared/features/home/presentation/screens/home_screen.dart';
 
 class DonorNavScreen extends StatefulWidget {
@@ -22,6 +25,7 @@ class _DonorNavScreenState extends State<DonorNavScreen> {
   final ValueNotifier screenIndex = ValueNotifier(0);
   final screens = List.unmodifiable([HomeScreen(), HomeScreen(), HomeScreen(), HomeScreen()]);
   late final ValueNotifier<bool> isNotificationEnabled;
+  final user = Helpers.user;
 
   @override
   void initState() {
@@ -32,12 +36,7 @@ class _DonorNavScreenState extends State<DonorNavScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Builder(
-          builder: (context) =>
-              IconButton(icon: Icon(Icons.menu), onPressed: () => Scaffold.of(context).openDrawer()),
-        ),
-      ),
+      appBar: navScreenAppBar(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppPalette.primaryColor,
@@ -142,8 +141,7 @@ class _DonorNavScreenState extends State<DonorNavScreen> {
                       child: ClipOval(
                         child: CachedNetworkImage(
                           errorWidget: (context, url, error) => const Icon(Icons.error),
-                          imageUrl:
-                              'https://t4.ftcdn.net/jpg/01/95/94/75/240_F_195947506_f7Gt71TOQvwHbQq6gprW6QSJLlxY00oV.jpg',
+                          imageUrl: ApiEndpoints.imageProvider + (user.image ?? ''),
                           fit: BoxFit.cover,
                         ),
                       ),

@@ -80,9 +80,9 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         final userId = JwtDecoder.decode(token)['userId'];
         final UserHive user = HiveBoxes.userBox.get(userId);
         if (user.role == 'Donor') {
-          context.pushReplacement(OrphanageNavScreen());
-        } else {
           context.pushReplacement(DonorNavScreen());
+        } else {
+          context.pushReplacement(OrphanageNavScreen());
         }
         return;
       }

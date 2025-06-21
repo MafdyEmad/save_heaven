@@ -33,6 +33,8 @@ class UserHive extends HiveObject {
   final int v;
   @HiveField(13)
   final OrphanageHive? orphanage;
+  @HiveField(14)
+  final String? image;
 
   UserHive({
     required this.id,
@@ -47,11 +49,13 @@ class UserHive extends HiveObject {
     required this.active,
     required this.createdAt,
     required this.updatedAt,
+    required this.image,
     required this.v,
     required this.orphanage,
   });
   factory UserHive.fromModel(UserModel model) {
     return UserHive(
+      image: model.image,
       id: model.id,
       name: model.name,
       gender: model.gender,

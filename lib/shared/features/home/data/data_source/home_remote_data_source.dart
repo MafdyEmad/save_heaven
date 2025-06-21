@@ -39,12 +39,10 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
 
       final response = await apiService.get(endpoint: ApiEndpoints.posts, hasToken: false);
 
-      if (response.statusCode == 200 && response.data != null) {
-        cacheManager.setData(cacheKey, response.data);
-        return Right(PostsResponse.fromJson(response.data));
-      } else {
-        return Left(Failure(message: response.data?['message'] ?? Constants.serverErrorMessage));
-      }
+      cacheManager.setData(cacheKey, response.data);
+      return Right(PostsResponse.fromJson(response.data));
+    } on DioException catch (e) {
+      return Left(Failure(message: e.response?.data?['message'] ?? Constants.serverErrorMessage));
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
     }
