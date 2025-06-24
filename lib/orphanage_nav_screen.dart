@@ -10,7 +10,7 @@ import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/widgets/nav_screen_app_bar.dart';
 import 'package:save_heaven/features/auth/presentation/views/login_view.dart';
-import 'package:save_heaven/features/orphanage_dontaion/presentation/screens/adoptions_requests_screen.dart';
+import 'package:save_heaven/features/orphanage_dontaion/presentation/screens/orphanage_requests_screen.dart';
 import 'package:save_heaven/helpers/helpers.dart';
 import 'package:save_heaven/shared/features/home/presentation/screens/home_screen.dart';
 
@@ -23,7 +23,7 @@ class OrphanageNavScreen extends StatefulWidget {
 
 class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
   final ValueNotifier screenIndex = ValueNotifier(0);
-  final screens = List.unmodifiable([HomeScreen(), HomeScreen(), AdoptionsRequestsScreen(), HomeScreen()]);
+  final screens = List.unmodifiable([HomeScreen(), HomeScreen(), OrphanageRequestsScreen(), HomeScreen()]);
   late final ValueNotifier<bool> isNotificationEnabled;
   final user = Helpers.user;
   @override

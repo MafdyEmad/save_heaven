@@ -119,7 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ListView.separated(
                       padding: EdgeInsets.only(bottom: 20.h),
                       itemCount: posts.posts.length + 1,
-                      separatorBuilder: (context, index) => index == 0 ? SizedBox.shrink() : Divider(),
+                      separatorBuilder: (context, index) =>
+                          index == 0 ? SizedBox.shrink() : Divider(height: 30),
                       itemBuilder: (context, index) {
                         if (index == 0) {
                           return MakePostWidget(
@@ -175,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildPostContent(Post post) {
+    final repostedFromImage = post.repostedFrom == null ? '' : post.repostedFrom!.user.image;
     return Container(
       decoration: !didRePost(post)
           ? null
@@ -182,6 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(12),
             ),
+      margin: EdgeInsets.only(bottom: 10),
       width: double.infinity,
       padding: didRePost(post) ? const EdgeInsets.all(10) : const EdgeInsets.symmetric(vertical: 10),
       // color: const Color(0xFFF6F7F8),
@@ -196,17 +199,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   contentPadding: EdgeInsets.zero,
                   leading: ClipOval(
                     child: CachedNetworkImage(
-                      imageUrl: ApiEndpoints.imageProvider + post.user.image,
+                      imageUrl: ApiEndpoints.imageProvider + repostedFromImage,
                       width: 50.w,
                       height: 50.w,
                       fit: BoxFit.cover,
                       errorWidget: (_, __, ___) => const Icon(Icons.person),
                     ),
                   ),
-                  trailing: GestureDetector(
-                    onTapDown: (details) => _showPostOptions(details.globalPosition, post),
-                    child: const Icon(Icons.more_horiz, color: Colors.grey),
-                  ),
+
                   title: Text(post.user.name, style: context.textTheme.headlineMedium),
                   subtitle: Text(
                     DateTime.now().difference(post.createdAt).inDays == 0
@@ -336,7 +336,6 @@ class _HomeScreenState extends State<HomeScreen> {
       post.reacts.any((element) => element.user.id == user.id),
     );
     ValueNotifier<int> reactsCount = ValueNotifier(post.reactsCount);
-    ValueNotifier<int> rePostCount = ValueNotifier(post.reactsCount);
     final react = post.reacts.where((element) => element.user.id == user.id);
 
     return Row(
@@ -372,22 +371,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(width: 8),
         if (!_isMyPost(post))
-          ValueListenableBuilder(
-            valueListenable: rePostCount,
-            builder: (BuildContext context, dynamic value, Widget? child) {
-              return Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      homeCubit.rePost(post.id);
-                    },
-                    icon: Icon(Icons.repeat, size: 35.sp),
-                  ),
-                  // Text(_formatCount(post.shares), style: context.textTheme.bodyLarge),
-                  Text(_formatCount(post.reactsCount), style: context.textTheme.bodyLarge),
-                ],
-              );
-            },
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  homeCubit.rePost(post.id);
+                },
+                icon: Icon(Icons.repeat, size: 35.sp),
+              ),
+              Text(_formatCount(post.reactsCount), style: context.textTheme.bodyLarge),
+            ],
           ),
       ],
     );

@@ -8,6 +8,7 @@ import 'package:save_heaven/features/orphanage_dontaion/data/models/adoption_req
 
 abstract interface class OrphanageDonationRemoteDataSource {
   Future<Either<Failure, List<AdoptionRequestsModel>>> getAdoptionRequests();
+  Future<Either<Failure, void>> respondToRequest(String requestId, String response);
 }
 
 class OrphanageDonationRemoteDataSourceImpl implements OrphanageDonationRemoteDataSource {
@@ -20,6 +21,22 @@ class OrphanageDonationRemoteDataSourceImpl implements OrphanageDonationRemoteDa
       final response = await apiService.get(endpoint: ApiEndpoints.adoptionRequests, hasToken: true);
       final json = response.data['data'] as List<dynamic>;
       return Right(json.map((e) => AdoptionRequestsModel.fromJson(e)).toList());
+    } on DioException catch (e) {
+      return Left(Failure(message: e.response?.data?['message'] ?? Constants.serverErrorMessage));
+    } catch (e) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> respondToRequest(String requestId, String response) async {
+    try {
+      await apiService.put(
+        endpoint: '${ApiEndpoints.adoptionRequests}/$requestId',
+        hasToken: true,
+        data: {'status': response},
+      );
+      return Right(null);
     } on DioException catch (e) {
       return Left(Failure(message: e.response?.data?['message'] ?? Constants.serverErrorMessage));
     } catch (e) {

@@ -1,28 +1,28 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/utils/assets_images.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/features/orphanage_dontaion/presentation/cubit/orphanage_donation_state_cubit.dart';
-import 'package:save_heaven/features/orphanage_dontaion/presentation/screens/request_details_screen.dart';
+import 'package:save_heaven/features/orphanage_dontaion/presentation/screens/receipt_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
-class AdoptionsRequestsScreen extends StatefulWidget {
-  const AdoptionsRequestsScreen({super.key});
+class DonationReceiptsScree extends StatefulWidget {
+  const DonationReceiptsScree({super.key});
 
   @override
-  State<AdoptionsRequestsScreen> createState() => _AdoptionsRequestsScreenState();
+  State<DonationReceiptsScree> createState() => _DonationReceiptsScreeState();
 }
 
-class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
+class _DonationReceiptsScreeState extends State<DonationReceiptsScree> {
   final requestsStates = List.unmodifiable([
-    GetDonationsRequestsLoading,
-    GetDonationsRequestsSuccess,
-    GetDonationsRequestsFail,
+    // GetDonationsRequestsLoading,
+    // GetDonationsRequestsSuccess,
+    // GetDonationsRequestsFail,
   ]);
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OrphanageDonationCubit, OrphanageDonationStateState>(
@@ -57,10 +57,10 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
               width: double.infinity,
               child: Column(
                 children: [
-                  Image.asset(AssetsImages.don, width: 50),
+                  Image.asset(AssetsImages.care, width: 50),
                   SizedBox(height: 8),
                   Text(
-                    'This Month\'s Summary Adopted Children: ${state.requests.length}',
+                    ' This Month\'s Summary Number of donors: 33',
                     textAlign: TextAlign.center,
                     style: context.textTheme.headlineMedium?.copyWith(color: Colors.white),
                   ),
@@ -74,16 +74,8 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                 itemCount: requests.length,
                 itemBuilder: (context, index) {
                   final imageUrl = 'asdasd';
-                  final requestId = '#1234';
                   final childName = 'Ali';
-                  final applicantName = 'Ahmed';
-                  final status = requests[index].status;
-                  final Color statusColor = switch (status) {
-                    'pending' => Colors.blue,
-                    'approved' => Colors.green,
-                    'rejected' => Colors.red,
-                    _ => Colors.blue,
-                  };
+
                   return Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
@@ -94,13 +86,6 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Align(
-                          alignment: AlignmentDirectional.topEnd,
-                          child: Text(
-                            status,
-                            style: context.textTheme.headlineMedium?.copyWith(color: statusColor),
-                          ),
-                        ),
                         Row(
                           children: [
                             SizedBox(
@@ -118,6 +103,7 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                             ),
                             SizedBox(width: 10),
                             Column(
+                              spacing: 6,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
@@ -127,38 +113,25 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                                     color: AppPalette.primaryColor,
                                   ),
                                 ),
-                                RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: 'Request ID: ',
-                                        style: context.textTheme.headlineLarge?.copyWith(
-                                          fontWeight: FontWeight.w900,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: requestId,
-                                        style: context.textTheme.headlineLarge?.copyWith(
-                                          fontWeight: FontWeight.w500,
-                                          color: AppPalette.primaryColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                Row(
+                                  spacing: 10,
+                                  children: [
+                                    Icon(FontAwesomeIcons.shirt, color: Colors.white),
+                                    Text('Clothes', style: context.textTheme.headlineLarge),
+                                  ],
                                 ),
                                 RichText(
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
-                                        text: 'Applicant Name: ',
+                                        text: 'ID: ',
                                         style: context.textTheme.headlineLarge?.copyWith(
                                           fontWeight: FontWeight.w900,
                                           color: Colors.grey,
                                         ),
                                       ),
                                       TextSpan(
-                                        text: applicantName,
+                                        text: '#c-1234',
                                         style: context.textTheme.headlineLarge?.copyWith(
                                           fontWeight: FontWeight.w500,
                                           color: AppPalette.primaryColor,
@@ -191,16 +164,14 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                context.push(
-                                  RequestDetailsScreen(id: state.requests[index].id, status: status),
-                                );
+                                context.push(ReceiptScreen(orphanageImage: '', orphanageName: 'Mafdy'));
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
                               ),
                               child: Text(
-                                'View details',
+                                'View receipts',
                                 style: context.textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.w500,
                                   color: Colors.black,

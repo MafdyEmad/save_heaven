@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 void showSnackBar(context, String message) => ScaffoldMessenger.of(context).showSnackBar(
   SnackBar(
+    backgroundColor: Colors.grey.shade300,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
     ),

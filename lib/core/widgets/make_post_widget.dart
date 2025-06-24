@@ -23,7 +23,7 @@ class MakePostWidget extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl: image,
                   fit: BoxFit.cover,
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  errorWidget: (context, url, error) => const Icon(Icons.person),
                 ),
               ),
             ),
