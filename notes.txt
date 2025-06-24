@@ -1,0 +1,4 @@
+Notifications:
+	-Get sender name.
+	-Get sender image.
+	-Get notification content.

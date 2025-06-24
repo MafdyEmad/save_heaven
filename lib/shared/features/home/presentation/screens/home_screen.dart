@@ -59,13 +59,18 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context) {
               return BlocConsumer<HomeCubit, HomeState>(
                 listener: (context, state) {
-                  if (state is HomeDeletePostsSuccess) {
+                  if (state is HomeDeletePostsSuccess || state is HomeRePostSuccess) {
                     context.pop();
                     homeCubit.getPosts(refresh: true);
-                  } else if (state is HomeDeletePostsFail) {
+                  } else if (state is HomeDeletePostsFail || state is HomeRePostFail) {
                     context.pop();
-                    showSnackBar(context, 'Failed to delete your post');
-                  } else if (state is HomeDeletePostsLoading) {
+                    if (state is HomeDeletePostsFail) {
+                      showSnackBar(context, 'Failed to delete your post');
+                    }
+                    if (state is HomeRePostFail) {
+                      showSnackBar(context, 'Failed to repost');
+                    }
+                  } else if (state is HomeDeletePostsLoading || state is HomeRePostLoading) {
                     showLoading(context);
                   }
                 },
@@ -171,21 +176,58 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildPostContent(Post post) {
     return Container(
+      decoration: !didRePost(post)
+          ? null
+          : BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(12),
+            ),
       width: double.infinity,
-      // margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: didRePost(post) ? const EdgeInsets.all(10) : const EdgeInsets.symmetric(vertical: 10),
       // color: const Color(0xFFF6F7F8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ExpandableText(
-            post.content,
-            expandText: 'Read More',
-            collapseText: 'Read Less',
-            animation: true,
-            maxLines: 8,
-            style: context.textTheme.headlineMedium,
-            linkColor: AppPalette.primaryColor,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (didRePost(post))
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: ApiEndpoints.imageProvider + post.user.image,
+                      width: 50.w,
+                      height: 50.w,
+                      fit: BoxFit.cover,
+                      errorWidget: (_, __, ___) => const Icon(Icons.person),
+                    ),
+                  ),
+                  trailing: GestureDetector(
+                    onTapDown: (details) => _showPostOptions(details.globalPosition, post),
+                    child: const Icon(Icons.more_horiz, color: Colors.grey),
+                  ),
+                  title: Text(post.user.name, style: context.textTheme.headlineMedium),
+                  subtitle: Text(
+                    DateTime.now().difference(post.createdAt).inDays == 0
+                        ? timeago.format(post.createdAt)
+                        : DateFormat('yyyy-MM-dd').format(post.createdAt),
+                    style: context.textTheme.headlineSmall,
+                  ),
+                ),
+              Padding(
+                padding: EdgeInsetsDirectional.only(start: (didRePost(post)) ? 10 : 0),
+                child: ExpandableText(
+                  post.content,
+                  expandText: 'Read More',
+                  collapseText: 'Read Less',
+                  animation: true,
+                  maxLines: 8,
+                  style: context.textTheme.headlineMedium,
+                  linkColor: AppPalette.primaryColor,
+                ),
+              ),
+            ],
           ),
           if (post.images.isNotEmpty)
             if (post.images.length == 1)
@@ -290,24 +332,63 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildPostActions(Post post) {
+    ValueNotifier<bool> isLikedNotifier = ValueNotifier(
+      post.reacts.any((element) => element.user.id == user.id),
+    );
+    ValueNotifier<int> reactsCount = ValueNotifier(post.reactsCount);
+    ValueNotifier<int> rePostCount = ValueNotifier(post.reactsCount);
+    final react = post.reacts.where((element) => element.user.id == user.id);
+
     return Row(
       children: [
-        LikeButton(
-          size: 35.sp,
-          // isLiked: post.isLiked,
-          // likeCount: post.likes,
-          isLiked: true,
-          likeCount: 585,
-          countDecoration: (_, count) => Text(_formatCount(count ?? 0), style: context.textTheme.bodyLarge),
+        ValueListenableBuilder(
+          valueListenable: reactsCount,
+          builder: (context, reactCount, child) {
+            return ValueListenableBuilder(
+              valueListenable: isLikedNotifier,
+              builder: (context, liked, child) {
+                return LikeButton(
+                  onTap: (isLiked) async {
+                    if (isLiked) {
+                      homeCubit.unReactPost(react.first.id);
+                      isLikedNotifier.value = !liked;
+                      reactsCount.value -= 1;
+                      return !liked;
+                    }
+                    isLikedNotifier.value = !liked;
+                    reactsCount.value += 1;
+                    homeCubit.reactPost(post.id);
+                    return !liked;
+                  },
+                  size: 35.sp,
+                  isLiked: liked,
+                  likeCount: reactCount,
+                  countDecoration: (_, count) =>
+                      Text(_formatCount(count ?? 0), style: context.textTheme.bodyLarge),
+                );
+              },
+            );
+          },
         ),
         const SizedBox(width: 8),
         if (!_isMyPost(post))
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.repeat, size: 35.sp),
+          ValueListenableBuilder(
+            valueListenable: rePostCount,
+            builder: (BuildContext context, dynamic value, Widget? child) {
+              return Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      homeCubit.rePost(post.id);
+                    },
+                    icon: Icon(Icons.repeat, size: 35.sp),
+                  ),
+                  // Text(_formatCount(post.shares), style: context.textTheme.bodyLarge),
+                  Text(_formatCount(post.reactsCount), style: context.textTheme.bodyLarge),
+                ],
+              );
+            },
           ),
-        // Text(_formatCount(post.shares), style: context.textTheme.bodyLarge),
-        Text(_formatCount(5848), style: context.textTheme.bodyLarge),
       ],
     );
   }
@@ -323,7 +404,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text('Edit Post', style: context.textTheme.headlineSmall),
             onTap: () {
               CustomPopupMenu.hide();
-              context.push(UpdatePostScreen(images: post.images));
+              context.push(UpdatePostScreen(images: post.images, postId: post.id));
             },
           ),
         if (_isMyPost(post))
@@ -442,5 +523,13 @@ class _ImagePreviewDialogState extends State<ImagePreviewDialog> {
         ),
       ],
     );
+  }
+}
+
+bool didRePost(Post post) {
+  if (post.repostedFrom == null) {
+    return false;
+  } else {
+    return true;
   }
 }

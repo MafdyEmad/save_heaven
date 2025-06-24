@@ -61,3 +61,10 @@ final class HomeUpdatePostsFail extends HomeState {
   @override
   List<Object> get props => [message];
 }
+
+//? UPDATE POST
+final class HomeRePostSuccess extends HomeState {}
+
+final class HomeRePostLoading extends HomeState {}
+
+final class HomeRePostFail extends HomeState {}

@@ -93,8 +93,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         ),
                       ),
                       title: Text("Mafdy", style: context.textTheme.headlineLarge),
-                      subtitle: Text("Liked your post", style: context.textTheme.bodyLarge),
-                      trailing: Text(timeago.format(DateTime.now())),
+                      subtitle: Text(notifications[index].type, style: context.textTheme.bodyLarge),
+                      trailing: Text(timeago.format(notifications[index].createdAt)),
                     ),
                     separatorBuilder: (context, index) => SizedBox(height: 10),
                   );

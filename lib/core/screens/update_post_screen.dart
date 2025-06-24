@@ -14,7 +14,8 @@ import 'package:save_heaven/shared/features/home/presentation/cubit/home_cubit.d
 
 class UpdatePostScreen extends StatefulWidget {
   final List<String> images;
-  const UpdatePostScreen({super.key, required this.images});
+  final String postId;
+  const UpdatePostScreen({super.key, required this.images, required this.postId});
 
   @override
   State<UpdatePostScreen> createState() => _UpdatePostScreenState();
@@ -67,7 +68,6 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
               onCancel: () {},
             );
           } else if (state is HomeUpdatePostsLoading) {
-            homeBloc.getPosts(refresh: true);
             showLoading(context);
           }
         },
@@ -79,7 +79,11 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
                 valueListenable: isButtonEnabled,
                 builder: (context, enable, child) {
                   return ElevatedButton(
-                    onPressed: !enable ? null : () {},
+                    onPressed: !enable
+                        ? null
+                        : () {
+                            homeBloc.updatePosts(widget.postId, contentController.text.trim());
+                          },
                     child: Text(
                       'save',
                       style: context.textTheme.headlineLarge?.copyWith(color: AppPalette.secondaryTextColor),

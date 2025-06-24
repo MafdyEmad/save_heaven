@@ -15,7 +15,10 @@ abstract interface class HomeRemoteDataSource {
   Future<Either<Failure, PostsResponse>> getPosts({required bool refresh});
   Future<Either<Failure, void>> makePost({required List<File> images, required String content});
   Future<Either<Failure, void>> deletePost(String postId);
-  Future<Either<Failure, void>> updatePost(String postId);
+  Future<Either<Failure, void>> updatePost(String postId, String content);
+  Future<Either<Failure, void>> reactPost(String postId);
+  Future<Either<Failure, void>> unReactPost(String postId);
+  Future<Either<Failure, void>> rePost(String postId);
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -81,9 +84,48 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, void>> updatePost(String postId) async {
+  Future<Either<Failure, void>> updatePost(String postId, String content) async {
     try {
-      await apiService.put(endpoint: '${ApiEndpoints.posts}/$postId', hasToken: true);
+      await apiService.put(
+        endpoint: '${ApiEndpoints.posts}/$postId',
+        hasToken: true,
+        data: {'content': content},
+      );
+      return Right(null);
+    } catch (e) {
+      print(e);
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> reactPost(String postId) async {
+    try {
+      await apiService.post(
+        endpoint: ApiEndpoints.reactPost,
+        hasToken: true,
+        data: {"type": "love", "post": postId},
+      );
+      return Right(null);
+    } catch (e) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> unReactPost(String postId) async {
+    try {
+      await apiService.delete(endpoint: "${ApiEndpoints.reactPost}/$postId", hasToken: true);
+      return Right(null);
+    } catch (e) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> rePost(String postId) async {
+    try {
+      await apiService.post(endpoint: ApiEndpoints.rePost(postId), hasToken: true);
       return Right(null);
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));

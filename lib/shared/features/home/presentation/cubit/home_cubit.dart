@@ -42,12 +42,26 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  void updatePosts(String postId) async {
+  void updatePosts(String postId, String content) async {
     emit(HomeUpdatePostsLoading());
-    final result = await _homeRemoteDataSource.updatePost(postId);
+    final result = await _homeRemoteDataSource.updatePost(postId, content);
     result.fold(
       (fail) => emit(HomeUpdatePostsFail(message: fail.message)),
       (_) => emit(HomeUpdatePostsSuccess()),
     );
+  }
+
+  void rePost(String postId) async {
+    emit(HomeRePostLoading());
+    final result = await _homeRemoteDataSource.rePost(postId);
+    result.fold((fail) => emit(HomeRePostFail()), (_) => emit(HomeRePostSuccess()));
+  }
+
+  void reactPost(String postId) async {
+    await _homeRemoteDataSource.reactPost(postId);
+  }
+
+  void unReactPost(String postId) async {
+    await _homeRemoteDataSource.unReactPost(postId);
   }
 }
