@@ -8,29 +8,44 @@ import 'package:save_heaven/features/orphanage_dontaion/data/models/adoption_req
 
 abstract interface class OrphanageDonationRemoteDataSource {
   Future<Either<Failure, List<AdoptionRequestsModel>>> getAdoptionRequests();
-  Future<Either<Failure, void>> respondToRequest(String requestId, String response);
+  Future<Either<Failure, void>> respondToRequest(
+    String requestId,
+    String response,
+  );
   Future<Either<Failure, void>> getDonations();
 }
 
-class OrphanageDonationRemoteDataSourceImpl implements OrphanageDonationRemoteDataSource {
+class OrphanageDonationRemoteDataSourceImpl
+    implements OrphanageDonationRemoteDataSource {
   final ApiService apiService;
 
   OrphanageDonationRemoteDataSourceImpl({required this.apiService});
   @override
-  Future<Either<Failure, List<AdoptionRequestsModel>>> getAdoptionRequests() async {
+  Future<Either<Failure, List<AdoptionRequestsModel>>>
+  getAdoptionRequests() async {
     try {
-      final response = await apiService.get(endpoint: ApiEndpoints.adoptionRequests, hasToken: true);
+      final response = await apiService.get(
+        endpoint: ApiEndpoints.adoptionRequests,
+        hasToken: true,
+      );
       final json = response.data['data'] as List<dynamic>;
       return Right(json.map((e) => AdoptionRequestsModel.fromJson(e)).toList());
     } on DioException catch (e) {
-      return Left(Failure(message: e.response?.data?['message'] ?? Constants.serverErrorMessage));
+      return Left(
+        Failure(
+          message: e.response?.data?['message'] ?? Constants.serverErrorMessage,
+        ),
+      );
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
     }
   }
 
   @override
-  Future<Either<Failure, void>> respondToRequest(String requestId, String response) async {
+  Future<Either<Failure, void>> respondToRequest(
+    String requestId,
+    String response,
+  ) async {
     try {
       await apiService.put(
         endpoint: '${ApiEndpoints.adoptionRequests}/$requestId',
@@ -39,7 +54,11 @@ class OrphanageDonationRemoteDataSourceImpl implements OrphanageDonationRemoteDa
       );
       return Right(null);
     } on DioException catch (e) {
-      return Left(Failure(message: e.response?.data?['message'] ?? Constants.serverErrorMessage));
+      return Left(
+        Failure(
+          message: e.response?.data?['message'] ?? Constants.serverErrorMessage,
+        ),
+      );
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
     }
@@ -54,7 +73,11 @@ class OrphanageDonationRemoteDataSourceImpl implements OrphanageDonationRemoteDa
       ]);
       return Right(null);
     } on DioException catch (e) {
-      return Left(Failure(message: e.response?.data?['message'] ?? Constants.serverErrorMessage));
+      return Left(
+        Failure(
+          message: e.response?.data?['message'] ?? Constants.serverErrorMessage,
+        ),
+      );
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
     }

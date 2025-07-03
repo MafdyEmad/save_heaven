@@ -8,15 +8,16 @@ import 'package:save_heaven/features/orphanage_dontaion/presentation/cubit/orpha
 import 'package:save_heaven/features/orphanage_dontaion/presentation/screens/adoptions_requests_screen.dart';
 import 'package:save_heaven/features/orphanage_dontaion/presentation/screens/donation_receipts_scree.dart';
 
-class OrphanageRequestsScreen extends StatefulWidget {
-  const OrphanageRequestsScreen({super.key});
+class OrphanageRequestsScreenAndDonationsState extends StatefulWidget {
+  const OrphanageRequestsScreenAndDonationsState({super.key});
 
   @override
-  State<OrphanageRequestsScreen> createState() =>
-      _OrphanageRequestsScreenState();
+  State<OrphanageRequestsScreenAndDonationsState> createState() =>
+      _OrphanageRequestsScreenAndDonationsState();
 }
 
-class _OrphanageRequestsScreenState extends State<OrphanageRequestsScreen> {
+class _OrphanageRequestsScreenAndDonationsState
+    extends State<OrphanageRequestsScreenAndDonationsState> {
   final List<Widget> screens = List.unmodifiable([
     AdoptionsRequestsScreen(),
     DonationReceiptsScree(),
@@ -24,7 +25,7 @@ class _OrphanageRequestsScreenState extends State<OrphanageRequestsScreen> {
   final bloc = getIt<OrphanageDonationCubit>();
   @override
   void initState() {
-    // bloc.getRequests();
+    bloc.getRequests();
     bloc.getDonationItems();
     super.initState();
   }

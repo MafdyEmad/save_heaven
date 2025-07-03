@@ -5,6 +5,7 @@ import 'package:save_heaven/core/utils/validators.dart';
 import 'package:save_heaven/features/auth/data/data_scource/auth_remote_data_source.dart';
 import 'package:save_heaven/features/auth/presentation/manager/step%20indicator%20cubit/step_indicator_cubit.dart';
 import 'package:save_heaven/features/auth/presentation/views/orphanage_data_view.dart';
+import 'package:save_heaven/features/auth/presentation/views/work_schedule_view.dart';
 
 import '../../../../core/utils/widgets reuseable/custom_text_field.dart';
 import '../../../../core/utils/widgets reuseable/circle_back_button.dart';
@@ -50,7 +51,10 @@ class _OrphanageAdminBodyState extends State<OrphanageAdminBody> {
               const CircleBackButton(),
               const SizedBox(height: 20),
               const StepIndicator(
-                titles: ['Orphanage Administrator.', 'Enter The Orphanage Data', 'Set Up Your Work Schedule'],
+                titles: [
+                  'Orphanage Administrator.',
+                  'Set Up Your Work Schedule',
+                ],
               ),
               const SizedBox(height: 20),
               CustomTextField(
@@ -76,7 +80,7 @@ class _OrphanageAdminBodyState extends State<OrphanageAdminBody> {
                   onTap: () {
                     if (formKey.currentState!.validate()) {
                       context.push(
-                        OrphanageDataView(
+                        WorkScheduleView(
                           currentParams: widget.currentParams.copyWith(
                             adminName: nameController.text.trim(),
                             phone: phoneController.text.trim(),

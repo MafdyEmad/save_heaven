@@ -51,3 +51,16 @@ final class UpdateUserFail extends ProfileState {
 
   const UpdateUserFail({required this.message});
 }
+//? GET OUR KIDS
+
+final class GetOurKidsLoading extends ProfileState {}
+
+final class GetOurKidsSuccess extends ProfileState {
+  const GetOurKidsSuccess();
+}
+
+final class GetOurKidsFail extends ProfileState {
+  final String message;
+
+  const GetOurKidsFail({required this.message});
+}

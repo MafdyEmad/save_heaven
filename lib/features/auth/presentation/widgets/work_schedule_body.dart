@@ -76,7 +76,7 @@ class _WorkScheduleBodyState extends State<WorkScheduleBody> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    context.read<StepIndicatorCubit>().goToStep(2);
+    context.read<StepIndicatorCubit>().goToStep(1);
 
     return BlocProvider.value(
       value: getIt<AuthCubit>(),
@@ -117,7 +117,6 @@ class _WorkScheduleBodyState extends State<WorkScheduleBody> {
                         const StepIndicator(
                           titles: [
                             'Orphanage Administrator.',
-                            'Enter The Orphanage Data',
                             'Set Up Your Work Schedule',
                           ],
                         ),

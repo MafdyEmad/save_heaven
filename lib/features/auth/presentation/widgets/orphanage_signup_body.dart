@@ -17,7 +17,9 @@ class OrphanageSignupBody extends StatefulWidget {
 
 class _OrphanageSignupBodyState extends State<OrphanageSignupBody> {
   final ValueNotifier<bool> passwordVisibilityNotifier = ValueNotifier(true);
-  final ValueNotifier<bool> confirmPasswordVisibilityNotifier = ValueNotifier(true);
+  final ValueNotifier<bool> confirmPasswordVisibilityNotifier = ValueNotifier(
+    true,
+  );
   final formKey = GlobalKey<FormState>();
   final establishDateController = TextEditingController();
   DateTime? selectedDate;
@@ -26,7 +28,6 @@ class _OrphanageSignupBodyState extends State<OrphanageSignupBody> {
   final locationController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  final contactController = TextEditingController();
   @override
   void dispose() {
     establishDateController.dispose();
@@ -34,7 +35,6 @@ class _OrphanageSignupBodyState extends State<OrphanageSignupBody> {
     locationController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
-    contactController.dispose();
     super.dispose();
   }
 
@@ -52,12 +52,20 @@ class _OrphanageSignupBodyState extends State<OrphanageSignupBody> {
               const SizedBox(height: 20),
               const CircleBackButton(),
               SizedBox(height: size.height * 0.02),
-              Center(child: Image.asset(AssetsImages.hand, height: size.height * 0.08)),
+              Center(
+                child: Image.asset(
+                  AssetsImages.hand,
+                  height: size.height * 0.08,
+                ),
+              ),
               const SizedBox(height: 12),
               Center(
                 child: Text(
                   "Welcome",
-                  style: TextStyle(fontSize: size.width * 0.06, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: size.width * 0.06,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
@@ -85,7 +93,8 @@ class _OrphanageSignupBodyState extends State<OrphanageSignupBody> {
                     controller: passwordController,
                     isPassword: true,
                     isVisible: isVisible,
-                    onToggleVisibility: () => passwordVisibilityNotifier.value = !isVisible,
+                    onToggleVisibility: () =>
+                        passwordVisibilityNotifier.value = !isVisible,
                     validator: Validators.password,
                   );
                 },
@@ -100,18 +109,22 @@ class _OrphanageSignupBodyState extends State<OrphanageSignupBody> {
                     controller: confirmPasswordController,
                     isPassword: true,
                     isVisible: isVisible,
-                    onToggleVisibility: () => confirmPasswordVisibilityNotifier.value = !isVisible,
-                    validator: (val) => Validators.confirmPassword(val, passwordController.text),
+                    onToggleVisibility: () =>
+                        confirmPasswordVisibilityNotifier.value = !isVisible,
+                    validator: (val) => Validators.confirmPassword(
+                      val,
+                      passwordController.text,
+                    ),
                   );
                 },
               ),
 
-              CustomTextField(
-                hint: 'Contact Number',
-                icon: Icons.phone,
-                controller: contactController,
-                validator: Validators.phone,
-              ),
+              // CustomTextField(
+              //   hint: 'Contact Number',
+              //   icon: Icons.phone,
+              //   controller: contactController,
+              //   validator: Validators.phone,
+              // ),
               GestureDetector(
                 onTap: () async {
                   final DateTime? picked = await showDatePicker(
@@ -136,7 +149,6 @@ class _OrphanageSignupBodyState extends State<OrphanageSignupBody> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 24),
               CustomButton(
                 text: "Next",
@@ -151,7 +163,6 @@ class _OrphanageSignupBodyState extends State<OrphanageSignupBody> {
                       address: locationController.text.trim(),
                       password: passwordController.text,
                       passwordConfirm: confirmPasswordController.text,
-                      phone: contactController.text.trim(),
                       establishedDate: dateOnly,
                     );
                     context.push(OrphanageAdminView(currentParams: params));

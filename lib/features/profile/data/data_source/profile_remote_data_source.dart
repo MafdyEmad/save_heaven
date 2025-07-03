@@ -16,6 +16,7 @@ abstract interface class ProfileRemoteDataSource {
     required ProfileUpdateparams params,
   });
   Future<Either<Failure, void>> addNewOrphan({required OrphanParams params});
+  Future<Either<Failure, void>> getOurKids(String id);
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -100,6 +101,27 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         ),
       );
     } catch (e) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> getOurKids(String id) async {
+    try {
+      final result = await apiService.get(
+        endpoint: ApiEndpoints.getChildren(id),
+
+        hasToken: true,
+      );
+      return Right(null);
+    } on DioException catch (e) {
+      return Left(
+        Failure(
+          message: e.response?.data?['message'] ?? Constants.serverErrorMessage,
+        ),
+      );
+    } catch (e) {
+      print(e);
       return Left(Failure(message: Constants.serverErrorMessage));
     }
   }

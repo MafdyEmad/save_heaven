@@ -27,6 +27,15 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
+  void getOurKids(String id) async {
+    emit(GetOurKidsLoading());
+    final result = await profileRemoteDataSource.getOurKids(id);
+    result.fold(
+      (error) => emit(GetOurKidsFail(message: error.message)),
+      (_) => emit(GetOurKidsSuccess()),
+    );
+  }
+
   void addNewOrphan(OrphanParams params) async {
     emit(AddNewOrphanLoading());
     final result = await profileRemoteDataSource.addNewOrphan(params: params);

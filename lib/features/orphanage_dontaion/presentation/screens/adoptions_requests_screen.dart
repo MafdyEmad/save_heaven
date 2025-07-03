@@ -14,27 +14,33 @@ class AdoptionsRequestsScreen extends StatefulWidget {
   const AdoptionsRequestsScreen({super.key});
 
   @override
-  State<AdoptionsRequestsScreen> createState() => _AdoptionsRequestsScreenState();
+  State<AdoptionsRequestsScreen> createState() =>
+      _AdoptionsRequestsScreenState();
 }
 
 class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
   final requestsStates = List.unmodifiable([
     GetDonationsRequestsLoading,
-    GetDonationsRequestsSuccess,
     GetDonationsRequestsFail,
+    GetDonationsRequestsSuccess,
   ]);
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OrphanageDonationCubit, OrphanageDonationStateState>(
-      buildWhen: (previous, current) => requestsStates.contains(current.runtimeType),
+      buildWhen: (previous, current) =>
+          requestsStates.contains(current.runtimeType),
       builder: (context, state) {
         if (state is GetDonationsRequestsLoading) {
           return ListView.separated(
             itemBuilder: (context, index) => Shimmer.fromColors(
               baseColor: Colors.grey.shade300,
               highlightColor: Colors.grey.shade100,
-              child: Container(width: double.infinity, height: 120, color: Colors.white),
+              child: Container(
+                width: double.infinity,
+                height: 120,
+                color: Colors.white,
+              ),
             ),
             separatorBuilder: (_, __) => SizedBox(height: 8),
             itemCount: 10,
@@ -42,12 +48,21 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
         }
 
         if (state is GetDonationsRequestsFail) {
-          return Center(child: Text(state.message, style: context.textTheme.headlineLarge));
+          return Center(
+            child: Text(state.message, style: context.textTheme.headlineLarge),
+          );
         }
 
         if (state is GetDonationsRequestsSuccess) {
           final requests = state.requests;
-
+          if (requests.isEmpty) {
+            return Center(
+              child: Text(
+                'No requests yet',
+                style: context.textTheme.headlineLarge,
+              ),
+            );
+          }
           return Column(
             children: [
               Container(
@@ -64,7 +79,9 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                     Text(
                       'This Month\'s Summary Adopted Children: ${requests.length}',
                       textAlign: TextAlign.center,
-                      style: context.textTheme.headlineMedium?.copyWith(color: Colors.white),
+                      style: context.textTheme.headlineMedium?.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
@@ -84,7 +101,10 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                     };
 
                     return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: Color(0xffe6ecfa),
                         borderRadius: BorderRadius.circular(12),
@@ -97,7 +117,9 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                             alignment: AlignmentDirectional.topEnd,
                             child: Text(
                               request.status,
-                              style: context.textTheme.headlineMedium?.copyWith(color: statusColor),
+                              style: context.textTheme.headlineMedium?.copyWith(
+                                color: statusColor,
+                              ),
                             ),
                           ),
                           Row(
@@ -108,7 +130,8 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                                 child: CircleAvatar(
                                   backgroundColor: Colors.grey.shade100,
                                   child: CachedNetworkImage(
-                                    imageUrl: '${ApiEndpoints.imageProvider}/${request.childId.image}',
+                                    imageUrl:
+                                        '${ApiEndpoints.imageProvider}/${request.childId.image}',
                                     errorWidget: (context, url, error) =>
                                         Icon(Icons.person, color: Colors.grey),
                                   ),
@@ -120,27 +143,30 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                                 children: [
                                   Text(
                                     request.childId.name,
-                                    style: context.textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.w900,
-                                      color: AppPalette.primaryColor,
-                                    ),
+                                    style: context.textTheme.titleLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w900,
+                                          color: AppPalette.primaryColor,
+                                        ),
                                   ),
                                   RichText(
                                     text: TextSpan(
                                       children: [
                                         TextSpan(
                                           text: 'Request ID: ',
-                                          style: context.textTheme.headlineLarge?.copyWith(
-                                            fontWeight: FontWeight.w900,
-                                            color: Colors.grey,
-                                          ),
+                                          style: context.textTheme.headlineLarge
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w900,
+                                                color: Colors.grey,
+                                              ),
                                         ),
                                         TextSpan(
                                           text: '',
-                                          style: context.textTheme.headlineLarge?.copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            color: AppPalette.primaryColor,
-                                          ),
+                                          style: context.textTheme.headlineLarge
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                color: AppPalette.primaryColor,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -150,17 +176,19 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                                       children: [
                                         TextSpan(
                                           text: 'Applicant Name: ',
-                                          style: context.textTheme.headlineLarge?.copyWith(
-                                            fontWeight: FontWeight.w900,
-                                            color: Colors.grey,
-                                          ),
+                                          style: context.textTheme.headlineLarge
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w900,
+                                                color: Colors.grey,
+                                              ),
                                         ),
                                         TextSpan(
                                           text: '', // Adjust if applicable
-                                          style: context.textTheme.headlineLarge?.copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            color: AppPalette.primaryColor,
-                                          ),
+                                          style: context.textTheme.headlineLarge
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                color: AppPalette.primaryColor,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -175,32 +203,44 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                             children: [
                               Text(
                                 'Date',
-                                style: context.textTheme.headlineLarge?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
-                                ),
+                                style: context.textTheme.headlineLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey,
+                                    ),
                               ),
                               Text(
-                                DateFormat('MMMM dd, yyyy').format(request.createdAt),
-                                style: context.textTheme.headlineLarge?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
+                                DateFormat(
+                                  'MMMM dd, yyyy',
+                                ).format(request.createdAt),
+                                style: context.textTheme.headlineLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
                               ),
                               ElevatedButton(
                                 onPressed: () {
-                                  context.push(RequestDetailsScreen(id: request.id, status: request.status));
+                                  context.push(
+                                    RequestDetailsScreen(
+                                      id: request.id,
+                                      status: request.status,
+                                    ),
+                                  );
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                  ),
                                 ),
                                 child: Text(
                                   'View details',
-                                  style: context.textTheme.headlineSmall?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
+                                  style: context.textTheme.headlineSmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
                                 ),
                               ),
                             ],

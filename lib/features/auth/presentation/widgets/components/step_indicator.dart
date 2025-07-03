@@ -7,7 +7,7 @@ class StepIndicator extends StatelessWidget {
   final List<String> titles;
   final int totalSteps;
 
-  const StepIndicator({super.key, required this.titles, this.totalSteps = 3});
+  const StepIndicator({super.key, required this.titles, this.totalSteps = 2});
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +41,13 @@ class StepIndicator extends StatelessWidget {
                 children: [
                   Text(
                     titles[state.currentStep],
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
-                  const SizedBox(height: 4),
-                  const Text("You Can Always Edit This Later.", style: TextStyle(fontSize: 12)),
+                  // const SizedBox(height: 4),
+                  // const Text("You Can Always Edit This Later.", style: TextStyle(fontSize: 12)),
                 ],
               ),
             ),

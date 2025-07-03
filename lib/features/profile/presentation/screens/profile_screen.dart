@@ -19,6 +19,7 @@ import 'package:save_heaven/core/widgets/custom_pop_menu.dart';
 import 'package:save_heaven/features/profile/data/models/porfile_model.dart';
 import 'package:save_heaven/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:save_heaven/features/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:save_heaven/features/profile/presentation/screens/our_kids_screen.dart';
 import 'package:save_heaven/shared/features/home/data/models/post_response.dart';
 import 'package:save_heaven/shared/features/home/presentation/cubit/home_cubit.dart';
 import 'package:save_heaven/shared/features/home/presentation/screens/home_screen.dart';
@@ -376,7 +377,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(11),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      context.push(OurKidsScreen(id: user.user.id));
+                    },
                     child: Text(
                       'Our Kids',
                       style: context.textTheme.headlineLarge?.copyWith(

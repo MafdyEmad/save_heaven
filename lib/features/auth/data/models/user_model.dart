@@ -59,10 +59,10 @@ class Orphanage {
   final String adminName;
   final String? image;
   final String address;
-  final int currentChildren;
-  final int totalCapacity;
+  // final int currentChildren;
+  // final int totalCapacity;
   final bool active;
-  final int staffCount;
+  // final int staffCount;
   final DateTime establishedDate;
   final String phone;
   final DateTime birthdate;
@@ -73,10 +73,10 @@ class Orphanage {
     required this.adminName,
     required this.image,
     required this.address,
-    required this.currentChildren,
-    required this.totalCapacity,
+    // required this.currentChildren,
+    // required this.totalCapacity,
     required this.active,
-    required this.staffCount,
+    // required this.staffCount,
     required this.establishedDate,
     required this.phone,
     required this.birthdate,
@@ -89,10 +89,10 @@ class Orphanage {
       adminName: json['adminName'],
       image: json['image'] ?? '',
       address: json['address'],
-      currentChildren: json['currentChildren'],
-      totalCapacity: json['totalCapacity'],
+      // currentChildren: json['currentChildren'],
+      // totalCapacity: json['totalCapacity'],
       active: json['active'],
-      staffCount: json['staffCount'],
+      // staffCount: json['staffCount'],
       establishedDate: DateTime.parse(json['establishedDate']),
       phone: json['phone'],
       birthdate: DateTime.parse(json['birthdate']),
@@ -106,10 +106,10 @@ class Orphanage {
       'adminName': adminName,
       'image': image,
       'address': address,
-      'currentChildren': currentChildren,
-      'totalCapacity': totalCapacity,
+      // 'currentChildren': currentChildren,
+      // 'totalCapacity': totalCapacity,
       'active': active,
-      'staffCount': staffCount,
+      // 'staffCount': staffCount,
       'establishedDate': establishedDate.toIso8601String(),
       'phone': phone,
       'birthdate': birthdate.toIso8601String(),

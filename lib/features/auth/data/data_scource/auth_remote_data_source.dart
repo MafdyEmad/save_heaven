@@ -85,6 +85,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       }
       return Left(Failure(message: Constants.serverErrorMessage));
     } catch (e) {
+      print(e);
       return Left(Failure(message: Constants.serverErrorMessage));
     }
   }

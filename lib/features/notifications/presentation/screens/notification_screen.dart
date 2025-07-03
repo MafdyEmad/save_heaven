@@ -81,70 +81,73 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ),
                     );
                   }
-                  final notifications =
-                      (state as GetNotificationsSuccess).notifications;
-                  if (notifications.isEmpty) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(width: double.infinity),
-                        Icon(
-                          Icons.notifications_active,
-                          color: AppPalette.primaryColor,
-                          size: context.width * .5,
-                        ),
-                        Text(
-                          'Nothing to display here!',
-                          style: context.textTheme.headlineLarge?.copyWith(
-                            color: AppPalette.primaryColor,
-                          ),
-                        ),
-                        Text(
-                          'Likes, comments and replies will appear here!',
-                          textAlign: TextAlign.center,
-                          style: context.textTheme.bodyLarge?.copyWith(
-                            color: AppPalette.primaryColor,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  return ListView.separated(
-                    itemCount: notifications.length,
-                    itemBuilder: (context, index) => ListTile(
-                      leading: Row(
-                        mainAxisSize: MainAxisSize.min,
+                  if (state is GetNotificationsSuccess) {
+                    final notifications = state.notifications;
+                    if (notifications.isEmpty) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          if (!notifications[index].isRead)
-                            Icon(Icons.circle, color: Colors.red, size: 10),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  '${ApiEndpoints.imageProvider}${notifications[index].image}',
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.person, size: 30),
+                          SizedBox(width: double.infinity),
+                          Icon(
+                            Icons.notifications_active,
+                            color: AppPalette.primaryColor,
+                            size: context.width * .5,
+                          ),
+                          Text(
+                            'Nothing to display here!',
+                            style: context.textTheme.headlineLarge?.copyWith(
+                              color: AppPalette.primaryColor,
+                            ),
+                          ),
+                          Text(
+                            'Likes, comments and replies will appear here!',
+                            textAlign: TextAlign.center,
+                            style: context.textTheme.bodyLarge?.copyWith(
+                              color: AppPalette.primaryColor,
                             ),
                           ),
                         ],
+                      );
+                    }
+                    return ListView.separated(
+                      itemCount: notifications.length,
+                      itemBuilder: (context, index) => ListTile(
+                        leading: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (!notifications[index].isRead)
+                              Icon(Icons.circle, color: Colors.red, size: 10),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    '${ApiEndpoints.imageProvider}${notifications[index].image}',
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.person, size: 30),
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: Text(
+                          notifications[index].name,
+                          style: context.textTheme.headlineLarge,
+                        ),
+                        subtitle: Text(
+                          notifications[index].message,
+                          style: context.textTheme.bodyLarge,
+                        ),
+                        trailing: Text(
+                          timeago.format(notifications[index].createdAt),
+                        ),
                       ),
-                      title: Text(
-                        notifications[index].name,
-                        style: context.textTheme.headlineLarge,
-                      ),
-                      subtitle: Text(
-                        notifications[index].message,
-                        style: context.textTheme.bodyLarge,
-                      ),
-                      trailing: Text(
-                        timeago.format(notifications[index].createdAt),
-                      ),
-                    ),
-                    separatorBuilder: (context, index) => SizedBox(height: 10),
-                  );
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 10),
+                    );
+                  }
+                  return SizedBox.shrink();
                 },
               ),
             ),

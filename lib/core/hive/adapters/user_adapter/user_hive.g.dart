@@ -134,21 +134,18 @@ class OrphanageHiveAdapter extends TypeAdapter<OrphanageHive> {
       adminName: fields[1] as String,
       image: fields[2] as String?,
       address: fields[3] as String,
-      currentChildren: fields[4] as int,
-      totalCapacity: fields[5] as int,
-      active: fields[6] as bool,
-      staffCount: fields[7] as int,
-      establishedDate: fields[8] as DateTime,
-      phone: fields[9] as String,
-      birthdate: fields[10] as DateTime,
-      workSchedule: fields[11] as WorkScheduleHive,
+      active: fields[4] as bool,
+      establishedDate: fields[5] as DateTime,
+      phone: fields[6] as String,
+      birthdate: fields[7] as DateTime,
+      workSchedule: fields[8] as WorkScheduleHive,
     );
   }
 
   @override
   void write(BinaryWriter writer, OrphanageHive obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -158,20 +155,14 @@ class OrphanageHiveAdapter extends TypeAdapter<OrphanageHive> {
       ..writeByte(3)
       ..write(obj.address)
       ..writeByte(4)
-      ..write(obj.currentChildren)
-      ..writeByte(5)
-      ..write(obj.totalCapacity)
-      ..writeByte(6)
       ..write(obj.active)
-      ..writeByte(7)
-      ..write(obj.staffCount)
-      ..writeByte(8)
+      ..writeByte(5)
       ..write(obj.establishedDate)
-      ..writeByte(9)
+      ..writeByte(6)
       ..write(obj.phone)
-      ..writeByte(10)
+      ..writeByte(7)
       ..write(obj.birthdate)
-      ..writeByte(11)
+      ..writeByte(8)
       ..write(obj.workSchedule);
   }
 

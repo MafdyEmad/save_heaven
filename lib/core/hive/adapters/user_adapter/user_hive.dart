@@ -69,7 +69,9 @@ class UserHive extends HiveObject {
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
       v: model.v,
-      orphanage: model.orphanage == null ? null : OrphanageHive.fromModel(model.orphanage!),
+      orphanage: model.orphanage == null
+          ? null
+          : OrphanageHive.fromModel(model.orphanage!),
     );
   }
 }
@@ -84,7 +86,10 @@ class WorkScheduleHive {
 
   WorkScheduleHive({required this.workDays, required this.workHours});
   factory WorkScheduleHive.fromModel(WorkSchedule model) {
-    return WorkScheduleHive(workDays: model.workDays, workHours: model.workHours);
+    return WorkScheduleHive(
+      workDays: model.workDays,
+      workHours: model.workHours,
+    );
   }
 }
 
@@ -103,27 +108,18 @@ class OrphanageHive extends HiveObject {
   final String address;
 
   @HiveField(4)
-  final int currentChildren;
-
-  @HiveField(5)
-  final int totalCapacity;
-
-  @HiveField(6)
   final bool active;
 
-  @HiveField(7)
-  final int staffCount;
-
-  @HiveField(8)
+  @HiveField(5)
   final DateTime establishedDate;
 
-  @HiveField(9)
+  @HiveField(6)
   final String phone;
 
-  @HiveField(10)
+  @HiveField(7)
   final DateTime birthdate;
 
-  @HiveField(11)
+  @HiveField(8)
   final WorkScheduleHive workSchedule;
 
   OrphanageHive({
@@ -131,10 +127,7 @@ class OrphanageHive extends HiveObject {
     required this.adminName,
     required this.image,
     required this.address,
-    required this.currentChildren,
-    required this.totalCapacity,
     required this.active,
-    required this.staffCount,
     required this.establishedDate,
     required this.phone,
     required this.birthdate,
@@ -147,10 +140,10 @@ class OrphanageHive extends HiveObject {
       adminName: model.adminName,
       image: model.image,
       address: model.address,
-      currentChildren: model.currentChildren,
-      totalCapacity: model.totalCapacity,
+      // currentChildren: model.currentChildren,
+      // totalCapacity: model.totalCapacity,
       active: model.active,
-      staffCount: model.staffCount,
+      // staffCount: model.staffCount,
       establishedDate: model.establishedDate,
       phone: model.phone,
       birthdate: model.birthdate,

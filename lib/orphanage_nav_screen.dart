@@ -13,7 +13,7 @@ import 'package:save_heaven/core/widgets/nav_screen_app_bar.dart';
 import 'package:save_heaven/features/auth/presentation/views/login_view.dart';
 import 'package:save_heaven/features/chat/presentation/screens/recent_chats_screen.dart';
 import 'package:save_heaven/features/notifications/presentation/cubit/notification_cubit.dart';
-import 'package:save_heaven/features/orphanage_dontaion/presentation/screens/orphanage_requests_screen.dart';
+import 'package:save_heaven/features/orphanage_dontaion/presentation/screens/orphanage_requests_and_dontations_screen.dart';
 import 'package:save_heaven/features/profile/presentation/screens/add_orphan_screen.dart';
 import 'package:save_heaven/features/profile/presentation/screens/profile_screen.dart';
 import 'package:save_heaven/helpers/helpers.dart';
@@ -31,7 +31,7 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
   final screens = List.unmodifiable([
     HomeScreen(),
     RecentChatsScreen(),
-    OrphanageRequestsScreen(),
+    OrphanageRequestsScreenAndDonationsState(),
     ProfileScreen(),
   ]);
   late final ValueNotifier<bool> isNotificationEnabled;
