@@ -202,7 +202,7 @@ class _DonorNavScreenState extends State<DonorNavScreen> {
                       ),
                     ),
                     title: Text(
-                      'Dar Al Orman',
+                      user.name,
                       style: context.textTheme.bodyLarge?.copyWith(
                         color: AppPalette.secondaryTextColor,
                         fontWeight: FontWeight.bold,

@@ -9,6 +9,7 @@ import 'package:save_heaven/features/notifications/data/data_source/models/notif
 abstract interface class NotificationRemoteDataSource {
   Future<Either<Failure, List<NotificationModel>>> getNotifications();
   Future<Either<Failure, int>> getUnreadNotificationsCount();
+  Future<Either<Failure, void>> makeNotationRead();
 }
 
 class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
@@ -40,11 +41,32 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   Future<Either<Failure, int>> getUnreadNotificationsCount() async {
     try {
       final response = await apiService.get(
-        endpoint: ApiEndpoints.notifications,
+        endpoint: ApiEndpoints.unReadNotificationsCount,
         hasToken: true,
       );
-      final json = response.data['data'] as dynamic;
-      return Right(json['unreadNotificationsCount']);
+      final count = response.data['count'] as dynamic;
+      return Right(count);
+    } on DioException catch (e) {
+      return Left(
+        Failure(
+          message: e.response?.data?['message'] ?? Constants.serverErrorMessage,
+        ),
+      );
+    } catch (e) {
+      print(e);
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> makeNotationRead() async {
+    try {
+      await apiService.patch(
+        endpoint: ApiEndpoints.readNotification,
+        hasToken: true,
+      );
+
+      return Right(null);
     } on DioException catch (e) {
       return Left(
         Failure(

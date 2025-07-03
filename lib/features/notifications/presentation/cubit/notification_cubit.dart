@@ -28,4 +28,8 @@ class NotificationCubit extends Cubit<NotificationState> {
       (count) => emit(GetUnReadNotificationsCountSuccess(count: count)),
     );
   }
+
+  void makeNotificationRead() async {
+    await _notificationRemoteDataSource.makeNotationRead();
+  }
 }

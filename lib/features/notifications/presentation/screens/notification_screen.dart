@@ -25,6 +25,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    bloc.makeNotificationRead();
+    bloc.getUnreadNotificationsCount();
+    super.dispose();
+  }
+
   final notificationStates = List.unmodifiable([
     GetNotificationsLoading,
     GetNotificationsFail,

@@ -194,7 +194,7 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
                       ),
                     ),
                     title: Text(
-                      'Dar Al Orman',
+                      user.name,
                       style: context.textTheme.bodyLarge?.copyWith(
                         color: AppPalette.secondaryTextColor,
                         fontWeight: FontWeight.bold,

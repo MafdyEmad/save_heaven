@@ -21,6 +21,7 @@ import 'package:save_heaven/core/utils/snack_bar.dart';
 import 'package:save_heaven/core/widgets/custom_pop_menu.dart';
 import 'package:save_heaven/core/widgets/custom_refresh.dart';
 import 'package:save_heaven/core/widgets/make_post_widget.dart';
+import 'package:save_heaven/features/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:save_heaven/shared/features/home/data/models/post_response.dart';
 import 'package:save_heaven/shared/features/home/presentation/cubit/home_cubit.dart';
 import 'package:shimmer/shimmer.dart';
@@ -38,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late final HomeCubit homeCubit;
   final String token = HiveBoxes.secureBox.getAt(0);
   late final UserHive user;
+  final notificationBloc = getIt<NotificationCubit>();
   @override
   void initState() {
     homeCubit = getIt<HomeCubit>()..getPosts();
@@ -123,6 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return CustomRefresh(
                     onRefresh: () async {
                       homeCubit.getPosts(refresh: true);
+                      notificationBloc.getUnreadNotificationsCount();
                     },
                     child: ListView.separated(
                       padding: EdgeInsets.only(bottom: 20.h),
