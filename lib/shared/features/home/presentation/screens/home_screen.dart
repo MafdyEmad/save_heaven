@@ -46,7 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  final homeGetPostsStates = List.unmodifiable([HomeGetPostsSuccess, HomeGetPostsLoading, HomeGetPostsFail]);
+  final homeGetPostsStates = List.unmodifiable([
+    HomeGetPostsSuccess,
+    HomeGetPostsLoading,
+    HomeGetPostsFail,
+  ]);
 
   @override
   Widget build(BuildContext context) {
@@ -54,36 +58,39 @@ class _HomeScreenState extends State<HomeScreen> {
       value: homeCubit,
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.horizontalPagePadding),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.horizontalPagePadding,
+          ),
           child: Builder(
             builder: (context) {
               return BlocConsumer<HomeCubit, HomeState>(
                 listener: (context, state) {
-                  if (state is HomeDeletePostsSuccess || state is HomeRePostSuccess) {
+                  if (state is HomeDeletePostsSuccess) {
                     context.pop();
                     homeCubit.getPosts(refresh: true);
-                  } else if (state is HomeDeletePostsFail || state is HomeRePostFail) {
+                  } else if (state is HomeDeletePostsFail) {
                     context.pop();
-                    if (state is HomeDeletePostsFail) {
-                      showSnackBar(context, 'Failed to delete your post');
-                    }
-                    if (state is HomeRePostFail) {
-                      showSnackBar(context, 'Failed to repost');
-                    }
-                  } else if (state is HomeDeletePostsLoading || state is HomeRePostLoading) {
+                    showSnackBar(context, 'Failed to delete your post');
+                  } else if (state is HomeDeletePostsLoading) {
                     showLoading(context);
                   }
                 },
-                buildWhen: (previous, current) => homeGetPostsStates.contains(current.runtimeType),
+                buildWhen: (previous, current) =>
+                    homeGetPostsStates.contains(current.runtimeType),
                 builder: (context, state) {
                   if (state is HomeGetPostsLoading) {
                     return ListView.separated(
                       itemBuilder: (context, index) => Shimmer.fromColors(
                         baseColor: Colors.grey.shade300,
                         highlightColor: Colors.grey.shade100,
-                        child: Container(width: double.infinity, height: 250, color: Colors.white),
+                        child: Container(
+                          width: double.infinity,
+                          height: 250,
+                          color: Colors.white,
+                        ),
                       ),
-                      separatorBuilder: (context, index) => SizedBox(height: 20),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 20),
                       itemCount: 10,
                     );
                   }
@@ -158,7 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           trailing: GestureDetector(
-            onTapDown: (details) => _showPostOptions(details.globalPosition, post),
+            onTapDown: (details) =>
+                _showPostOptions(details.globalPosition, post),
             child: const Icon(Icons.more_horiz, color: Colors.grey),
           ),
           title: Text(post.user.name, style: context.textTheme.headlineMedium),
@@ -169,6 +177,8 @@ class _HomeScreenState extends State<HomeScreen> {
             style: context.textTheme.headlineSmall,
           ),
         ),
+        if (didRePost(post))
+          Text(post.content, style: context.textTheme.headlineLarge),
         _buildPostContent(post),
         _buildPostActions(post),
       ],
@@ -176,7 +186,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildPostContent(Post post) {
-    final repostedFromImage = post.repostedFrom == null ? '' : post.repostedFrom!.user.image;
+    final repostedFromImage = post.repostedFrom == null
+        ? ''
+        : post.repostedFrom!.user.image;
     return Container(
       decoration: !didRePost(post)
           ? null
@@ -186,8 +198,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
       margin: EdgeInsets.only(bottom: 10),
       width: double.infinity,
-      padding: didRePost(post) ? const EdgeInsets.all(10) : const EdgeInsets.symmetric(vertical: 10),
-      // color: const Color(0xFFF6F7F8),
+      padding: didRePost(post)
+          ? const EdgeInsets.all(10)
+          : const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -206,8 +219,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       errorWidget: (_, __, ___) => const Icon(Icons.person),
                     ),
                   ),
-
-                  title: Text(post.user.name, style: context.textTheme.headlineMedium),
+                  title: Text(
+                    post.repostedFrom!.user.name,
+                    style: context.textTheme.headlineMedium,
+                  ),
                   subtitle: Text(
                     DateTime.now().difference(post.createdAt).inDays == 0
                         ? timeago.format(post.createdAt)
@@ -215,10 +230,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: context.textTheme.headlineSmall,
                   ),
                 ),
+
               Padding(
-                padding: EdgeInsetsDirectional.only(start: (didRePost(post)) ? 10 : 0),
+                padding: EdgeInsetsDirectional.only(
+                  start: (didRePost(post)) ? 10 : 0,
+                ),
                 child: ExpandableText(
-                  post.content,
+                  didRePost(post) ? post.repostedFrom!.content : post.content,
                   expandText: 'Read More',
                   collapseText: 'Read Less',
                   animation: true,
@@ -242,7 +260,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         return Dialog(
                           backgroundColor: Colors.black,
                           insetPadding: EdgeInsets.zero,
-                          child: ImagePreviewDialog(images: [post.images[0]], initialIndex: 0),
+                          child: ImagePreviewDialog(
+                            images: [post.images[0]],
+                            initialIndex: 0,
+                          ),
                         );
                       },
                     );
@@ -250,20 +271,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: CachedNetworkImage(
-                      imageUrl: '${ApiEndpoints.imageProvider}${post.images[0]}',
+                      imageUrl:
+                          '${ApiEndpoints.imageProvider}${post.images[0]}',
                       fit: BoxFit.cover,
                       alignment: Alignment.topCenter,
                       height: 300,
                       width: double.infinity,
-                      placeholder: (context, url) => Container(color: Colors.grey.shade200),
-                      errorWidget: (context, url, error) =>
-                          Container(color: Colors.grey.shade300, child: const Icon(Icons.broken_image)),
+                      placeholder: (context, url) =>
+                          Container(color: Colors.grey.shade200),
+                      errorWidget: (context, url, error) => Container(
+                        color: Colors.grey.shade300,
+                        child: const Icon(Icons.broken_image),
+                      ),
                     ),
                   ),
                 ),
               )
             else
-              Padding(padding: const EdgeInsets.only(top: 10), child: _buildMediaGrid(post.images)),
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: _buildMediaGrid(post.images),
+              ),
         ],
       ),
     );
@@ -290,7 +318,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Dialog(
                   backgroundColor: Colors.black,
                   insetPadding: EdgeInsets.zero,
-                  child: ImagePreviewDialog(images: images, initialIndex: index),
+                  child: ImagePreviewDialog(
+                    images: images,
+                    initialIndex: index,
+                  ),
                 );
               },
             );
@@ -304,8 +335,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   fit: BoxFit.cover,
                   height: randomHeight.toDouble(),
                   width: double.infinity,
-                  placeholder: (context, url) =>
-                      Container(height: randomHeight.toDouble(), color: Colors.grey.shade200),
+                  placeholder: (context, url) => Container(
+                    height: randomHeight.toDouble(),
+                    color: Colors.grey.shade200,
+                  ),
                   errorWidget: (context, url, error) => Container(
                     height: randomHeight.toDouble(),
                     color: Colors.grey.shade300,
@@ -319,7 +352,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       alignment: Alignment.center,
                       child: Text(
                         '+${images.length - 4}',
-                        style: context.textTheme.titleLarge?.copyWith(color: Colors.white),
+                        style: context.textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -362,8 +397,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   size: 35.sp,
                   isLiked: liked,
                   likeCount: reactCount,
-                  countDecoration: (_, count) =>
-                      Text(_formatCount(count ?? 0), style: context.textTheme.bodyLarge),
+                  countDecoration: (_, count) => Text(
+                    _formatCount(count ?? 0),
+                    style: context.textTheme.bodyLarge,
+                  ),
                 );
               },
             );
@@ -375,11 +412,20 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               IconButton(
                 onPressed: () {
-                  homeCubit.rePost(post.id);
+                  context.push(
+                    UpdatePostScreen(
+                      images: post.images,
+                      postId: post.id,
+                      isRePost: true,
+                    ),
+                  );
                 },
                 icon: Icon(Icons.repeat, size: 35.sp),
               ),
-              Text(_formatCount(post.reactsCount), style: context.textTheme.bodyLarge),
+              Text(
+                _formatCount(post.reactsCount),
+                style: context.textTheme.bodyLarge,
+              ),
             ],
           ),
       ],
@@ -397,13 +443,20 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text('Edit Post', style: context.textTheme.headlineSmall),
             onTap: () {
               CustomPopupMenu.hide();
-              context.push(UpdatePostScreen(images: post.images, postId: post.id));
+              context.push(
+                UpdatePostScreen(images: post.images, postId: post.id),
+              );
             },
           ),
         if (_isMyPost(post))
           ListTile(
             leading: const Icon(Icons.delete, color: Colors.red),
-            title: Text('Delete post', style: context.textTheme.headlineSmall?.copyWith(color: Colors.red)),
+            title: Text(
+              'Delete post',
+              style: context.textTheme.headlineSmall?.copyWith(
+                color: Colors.red,
+              ),
+            ),
             onTap: () {
               showCustomDialog(
                 context,
@@ -429,12 +482,12 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text('Save Post', style: context.textTheme.headlineSmall),
             onTap: () => CustomPopupMenu.hide(),
           ),
-        if (!_isMyPost(post))
-          ListTile(
-            leading: const Icon(Icons.report_gmailerrorred_outlined, color: Colors.red),
-            title: Text('Report Post', style: context.textTheme.headlineSmall?.copyWith(color: Colors.red)),
-            onTap: () => CustomPopupMenu.hide(),
-          ),
+        // if (!_isMyPost(post))
+        // ListTile(
+        //   leading: const Icon(Icons.report_gmailerrorred_outlined, color: Colors.red),
+        //   title: Text('Report Post', style: context.textTheme.headlineSmall?.copyWith(color: Colors.red)),
+        //   onTap: () => CustomPopupMenu.hide(),
+        // ),
       ],
     );
   }
@@ -455,7 +508,11 @@ class ImagePreviewDialog extends StatefulWidget {
   final List<String> images;
   final int initialIndex;
 
-  const ImagePreviewDialog({super.key, required this.images, required this.initialIndex});
+  const ImagePreviewDialog({
+    super.key,
+    required this.images,
+    required this.initialIndex,
+  });
 
   @override
   State<ImagePreviewDialog> createState() => _ImagePreviewDialogState();
@@ -487,7 +544,8 @@ class _ImagePreviewDialogState extends State<ImagePreviewDialog> {
             return InteractiveViewer(
               child: Center(
                 child: CachedNetworkImage(
-                  imageUrl: '${ApiEndpoints.imageProvider}${widget.images[index]}',
+                  imageUrl:
+                      '${ApiEndpoints.imageProvider}${widget.images[index]}',
                   fit: BoxFit.contain,
                 ),
               ),

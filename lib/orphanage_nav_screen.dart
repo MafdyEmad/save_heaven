@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/config/assets_manager.dart';
-import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/widgets/nav_screen_app_bar.dart';
 import 'package:save_heaven/features/auth/presentation/views/login_view.dart';
+import 'package:save_heaven/features/chat/presentation/screens/recent_chats_screen.dart';
 import 'package:save_heaven/features/orphanage_dontaion/presentation/screens/orphanage_requests_screen.dart';
+import 'package:save_heaven/features/profile/presentation/screens/add_orphan_screen.dart';
+import 'package:save_heaven/features/profile/presentation/screens/profile_screen.dart';
 import 'package:save_heaven/helpers/helpers.dart';
 import 'package:save_heaven/shared/features/home/presentation/screens/home_screen.dart';
 
@@ -23,27 +25,43 @@ class OrphanageNavScreen extends StatefulWidget {
 
 class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
   final ValueNotifier screenIndex = ValueNotifier(0);
-  final screens = List.unmodifiable([HomeScreen(), HomeScreen(), OrphanageRequestsScreen(), HomeScreen()]);
+  final screens = List.unmodifiable([
+    HomeScreen(),
+    RecentChatsScreen(),
+    OrphanageRequestsScreen(),
+    ProfileScreen(),
+  ]);
   late final ValueNotifier<bool> isNotificationEnabled;
   final user = Helpers.user;
   @override
   void initState() {
     super.initState();
-    isNotificationEnabled = ValueNotifier(FirebaseMessaging.instance.isAutoInitEnabled);
+    isNotificationEnabled = ValueNotifier(
+      FirebaseMessaging.instance.isAutoInitEnabled,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: navScreenAppBar(context),
+      appBar: navScreenAppBar(
+        context,
+        ValueListenableBuilder(
+          valueListenable: screenIndex,
+          builder: (context, index, child) => Text(switch (index) {
+            0 => 'Home',
+            1 => 'Chats',
+            2 => 'Adoption & Donation',
+            3 => 'Profile',
+            _ => '',
+          }, style: context.textTheme.titleLarge),
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppPalette.primaryColor,
         onPressed: () {
-          final token = HiveBoxes.secureBox.getAt(0);
-          HiveBoxes.secureBox.delete(token);
-          HiveBoxes.secureBox.clear();
-          context.pushAndRemoveUntil(const LoginView());
+          context.push(const AddOrphanScreen());
         },
         shape: CircleBorder(),
         child: Icon(Icons.add, color: Colors.white),
@@ -53,7 +71,11 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
         children: [
           Positioned.fill(
             child: CustomPaint(
-              painter: _BottomAppBarBorderPainter(color: Color(0xffd8dadd), strokeWidth: 1, notchMargin: 10),
+              painter: _BottomAppBarBorderPainter(
+                color: Color(0xffd8dadd),
+                strokeWidth: 1,
+                notchMargin: 10,
+              ),
             ),
           ),
           BottomAppBar(
@@ -72,7 +94,9 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
                     icon: Icon(
                       Icons.home,
                       size: 25,
-                      color: index == 0 ? AppPalette.primaryColor : Color(0xffd8dadd),
+                      color: index == 0
+                          ? AppPalette.primaryColor
+                          : Color(0xffd8dadd),
                     ),
                     onPressed: () => changeScreen(0),
                   ),
@@ -80,7 +104,9 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
                     icon: Icon(
                       Icons.chat,
                       size: 25,
-                      color: index == 1 ? AppPalette.primaryColor : Color(0xffd8dadd),
+                      color: index == 1
+                          ? AppPalette.primaryColor
+                          : Color(0xffd8dadd),
                     ),
                     onPressed: () => changeScreen(1),
                   ),
@@ -89,7 +115,9 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
                     icon: Icon(
                       Icons.bar_chart_outlined,
                       size: 25,
-                      color: index == 2 ? AppPalette.primaryColor : Color(0xffd8dadd),
+                      color: index == 2
+                          ? AppPalette.primaryColor
+                          : Color(0xffd8dadd),
                     ),
                     onPressed: () => changeScreen(2),
                   ),
@@ -97,7 +125,9 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
                     icon: Icon(
                       Icons.person,
                       size: 25,
-                      color: index == 3 ? AppPalette.primaryColor : Color(0xffd8dadd),
+                      color: index == 3
+                          ? AppPalette.primaryColor
+                          : Color(0xffd8dadd),
                     ),
                     onPressed: () => changeScreen(3),
                   ),
@@ -119,6 +149,7 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
   }
 
   Widget buildDrawer() => Drawer(
+    backgroundColor: Colors.white,
     child: Column(
       children: [
         SizedBox(
@@ -126,7 +157,12 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
           width: double.infinity,
           child: Stack(
             children: [
-              Positioned.fill(child: SvgPicture.asset(AssetsManager.drawer, fit: BoxFit.cover)),
+              Positioned.fill(
+                child: SvgPicture.asset(
+                  AssetsManager.drawer,
+                  fit: BoxFit.cover,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsetsDirectional.only(start: 30, top: 15),
                 child: SafeArea(
@@ -137,8 +173,10 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
                       height: 50,
                       child: ClipOval(
                         child: CachedNetworkImage(
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                          imageUrl: ApiEndpoints.imageProvider + (user.image ?? ''),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                          imageUrl:
+                              ApiEndpoints.imageProvider + (user.image ?? ''),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -154,7 +192,9 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
                     ),
                     subtitle: Text(
                       'orphanage',
-                      style: context.textTheme.bodyMedium?.copyWith(color: AppPalette.secondaryTextColor),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: AppPalette.secondaryTextColor,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -178,7 +218,10 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.notifications),
-                title: Text('Notifications', style: context.textTheme.bodyLarge),
+                title: Text(
+                  'Notifications',
+                  style: context.textTheme.bodyLarge,
+                ),
                 trailing: ValueListenableBuilder<bool>(
                   valueListenable: isNotificationEnabled,
                   builder: (context, enabled, _) => Switch(
@@ -193,6 +236,30 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
             ],
           ),
         ),
+        Divider(),
+        SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsetsDirectional.only(start: 20),
+          child: TextButton(
+            onPressed: () {
+              Helpers.logout();
+              context.pushAndRemoveUntil(const LoginView());
+            },
+            child: Row(
+              spacing: 10,
+              children: [
+                Icon(Icons.logout, color: AppPalette.primaryColor),
+                Text(
+                  'Logout',
+                  style: context.textTheme.headlineLarge?.copyWith(
+                    color: AppPalette.primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
       ],
     ),
   );
@@ -207,7 +274,11 @@ class _BottomAppBarBorderPainter extends CustomPainter {
   final double strokeWidth;
   final double notchMargin;
 
-  _BottomAppBarBorderPainter({required this.color, required this.strokeWidth, required this.notchMargin});
+  _BottomAppBarBorderPainter({
+    required this.color,
+    required this.strokeWidth,
+    required this.notchMargin,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -218,7 +289,12 @@ class _BottomAppBarBorderPainter extends CustomPainter {
 
     // Draw left rounded part
     final leftArcRadius = Radius.circular(28);
-    final leftArcRect = Rect.fromLTWH(0, 0, leftArcRadius.x * 2, leftArcRadius.y * 2);
+    final leftArcRect = Rect.fromLTWH(
+      0,
+      0,
+      leftArcRadius.x * 2,
+      leftArcRadius.y * 2,
+    );
     canvas.drawArc(leftArcRect, -pi, pi / 2, false, paint);
 
     // Draw right rounded part

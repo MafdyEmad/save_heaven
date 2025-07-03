@@ -12,6 +12,7 @@ import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
 import 'package:save_heaven/core/hive/adapters/user_settings_adapter/user_setting_hive.dart';
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/hive/hive_keys/hive_keys.dart';
+import 'package:save_heaven/core/services/web_socket.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/firebase_options.dart';
 import 'package:save_heaven/save_heaven.dart';
@@ -32,6 +33,7 @@ void main() async {
   await ScreenUtil.ensureScreenSize();
   await _initHive();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await WebSocketServices.connect();
   _setupFirebaseMessaging();
   setupDependency();
   runApp(const SaveHeaven());
@@ -40,7 +42,12 @@ void main() async {
 void _setupFirebaseMessaging() {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  FirebaseMessaging.instance.requestPermission(alert: true, badge: true, sound: true, provisional: true);
+  FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+    provisional: true,
+  );
 
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     debugPrint('📥 Foreground FCM: ${message.data}');

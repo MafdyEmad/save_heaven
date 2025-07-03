@@ -34,3 +34,14 @@ final class RespondToRequestFail extends OrphanageDonationStateState {
 
   const RespondToRequestFail({required this.message});
 }
+
+//? Get donations
+final class GetDonationsLoading extends OrphanageDonationStateState {}
+
+final class GetDonationsSuccess extends OrphanageDonationStateState {}
+
+final class GetDonationsFail extends OrphanageDonationStateState {
+  final String message;
+
+  const GetDonationsFail({required this.message});
+}

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/utils/app_colors.dart';
+import 'package:save_heaven/core/utils/extensions.dart';
 
 class CustomDropdownWidget extends StatelessWidget {
   final String hint;
@@ -27,23 +29,27 @@ class CustomDropdownWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: AppColors.babyBlue,
+        border: Border.all(),
+        // color: AppColors.babyBlue,
         borderRadius: BorderRadius.circular(30),
       ),
       alignment: Alignment.center,
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          isExpanded: true,
+          dropdownColor: AppPalette.backgroundColor,
+          isExpanded: false,
           value: selected,
-          hint: Text(hint),
+          hint: Text(hint, style: context.textTheme.headlineLarge),
           onChanged: (value) {
             if (value != null) onChanged(value);
           },
           items: options
-              .map((e) => DropdownMenuItem(
-                    value: e,
-                    child: Text(e),
-                  ))
+              .map(
+                (e) => DropdownMenuItem(
+                  value: e,
+                  child: Text(e, style: context.textTheme.headlineLarge),
+                ),
+              )
               .toList(),
         ),
       ),

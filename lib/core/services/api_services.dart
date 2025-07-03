@@ -129,6 +129,48 @@ class ApiService {
     return response;
   }
 
+  Future updateFormData({
+    required List<File> files,
+    required String endpoint,
+    required String fileFieldName,
+    required Map<String, dynamic> fields,
+    bool hasToken = true,
+  }) async {
+    final dio = Dio();
+    final formData = FormData();
+
+    for (var file in files) {
+      final fileName = file.path.split('/').last;
+      final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
+      final mediaType = MediaType.parse(mimeType);
+
+      formData.files.add(
+        MapEntry(
+          fileFieldName,
+          await MultipartFile.fromFile(file.path, filename: fileName, contentType: mediaType),
+        ),
+      );
+    }
+
+    fields.forEach((key, value) {
+      formData.fields.add(MapEntry(key, value.toString()));
+    });
+
+    final response = await dio.put(
+      endpoint,
+      options: Options(
+        headers: {if (hasToken) 'Authorization': 'Bearer $_userToken', 'Content-Type': 'multipart/form-data'},
+      ),
+      data: formData,
+      onSendProgress: (sent, total) {
+        final percent = (sent / total * 100).toStringAsFixed(2);
+        print('Upload progress: $percent%');
+      },
+    );
+
+    return response;
+  }
+
   Future<Response> put({
     bool hasToken = true,
     required String endpoint,

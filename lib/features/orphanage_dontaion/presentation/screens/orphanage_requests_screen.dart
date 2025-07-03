@@ -12,15 +12,20 @@ class OrphanageRequestsScreen extends StatefulWidget {
   const OrphanageRequestsScreen({super.key});
 
   @override
-  State<OrphanageRequestsScreen> createState() => _OrphanageRequestsScreenState();
+  State<OrphanageRequestsScreen> createState() =>
+      _OrphanageRequestsScreenState();
 }
 
 class _OrphanageRequestsScreenState extends State<OrphanageRequestsScreen> {
-  final List<Widget> screens = List.unmodifiable([AdoptionsRequestsScreen(), DonationReceiptsScree()]);
+  final List<Widget> screens = List.unmodifiable([
+    AdoptionsRequestsScreen(),
+    DonationReceiptsScree(),
+  ]);
   final bloc = getIt<OrphanageDonationCubit>();
   @override
   void initState() {
-    bloc.getRequests();
+    // bloc.getRequests();
+    bloc.getDonationItems();
     super.initState();
   }
 

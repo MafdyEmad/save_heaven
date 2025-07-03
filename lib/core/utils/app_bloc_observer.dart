@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppBlocObserver extends BlocObserver {
-  // @override
-  // void onEvent(Bloc bloc, Object? event) {
-  //   debugPrint('\x1B[33m[BLOC STATE CHANGED]\x1B[0m --> \x1B[33m${bloc.runtimeType}: $event\x1B[0m');
-  //   super.onEvent(bloc, event);
-  // }
-
   @override
   void onCreate(BlocBase bloc) {
     super.onCreate(bloc);

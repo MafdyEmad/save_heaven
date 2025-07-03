@@ -7,6 +7,7 @@ import 'package:save_heaven/core/config/assets_manager.dart';
 import 'package:save_heaven/core/hive/adapters/app_config_adapter/app_config_model.dart';
 import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
+import 'package:save_heaven/core/services/web_socket.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/donor_nav_screen.dart';
 import 'package:save_heaven/features/auth/presentation/views/start_journey_view.dart';
@@ -20,7 +21,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _fadeAnimation;
   late final Animation<Offset> _textSlideAnimation;
@@ -32,7 +34,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   void initState() {
     super.initState();
 
-    _controller = AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
 
     _fadeAnimation = Tween<double>(
       begin: 0,
@@ -78,6 +83,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       if (secureBox.isNotEmpty) {
         final String token = secureBox.getAt(0);
         final userId = JwtDecoder.decode(token)['userId'];
+        WebSocketServices.emitEvent('openApp', {'userId': userId});
         final UserHive user = HiveBoxes.userBox.get(userId);
         if (user.role == 'Donor') {
           context.pushReplacement(DonorNavScreen());
@@ -103,7 +109,11 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         children: [
           SlideTransition(
             position: _upperSlideAnimation,
-            child: SvgPicture.asset(AssetsManager.splashUpper, fit: BoxFit.fill, width: context.width),
+            child: SvgPicture.asset(
+              AssetsManager.splashUpper,
+              fit: BoxFit.fill,
+              width: context.width,
+            ),
           ),
           Expanded(
             child: FadeTransition(
@@ -113,7 +123,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ScaleTransition(scale: _logoScaleAnimation, child: Image.asset(AssetsManager.appIcon)),
+                    ScaleTransition(
+                      scale: _logoScaleAnimation,
+                      child: Image.asset(AssetsManager.appIcon),
+                    ),
                     SizedBox(
                       width: 150,
                       child: FittedBox(
@@ -146,7 +159,11 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
           ),
           SlideTransition(
             position: _lowerSlideAnimation,
-            child: SvgPicture.asset(AssetsManager.splashLower, fit: BoxFit.fill, width: context.width),
+            child: SvgPicture.asset(
+              AssetsManager.splashLower,
+              fit: BoxFit.fill,
+              width: context.width,
+            ),
           ),
         ],
       ),

@@ -13,9 +13,10 @@ import 'package:save_heaven/core/utils/show_loading.dart';
 import 'package:save_heaven/shared/features/home/presentation/cubit/home_cubit.dart';
 
 class UpdatePostScreen extends StatefulWidget {
+  final bool isRePost;
   final List<String> images;
   final String postId;
-  const UpdatePostScreen({super.key, required this.images, required this.postId});
+  const UpdatePostScreen({super.key, required this.images, required this.postId, this.isRePost = false});
 
   @override
   State<UpdatePostScreen> createState() => _UpdatePostScreenState();
@@ -48,7 +49,7 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
       value: homeBloc,
       child: BlocListener<HomeCubit, HomeState>(
         listener: (context, state) {
-          if (state is HomeUpdatePostsSuccess) {
+          if (state is HomeUpdatePostsSuccess || state is HomeRePostSuccess) {
             homeBloc.getPosts(refresh: true);
             context.pop();
             Future.delayed(Duration(milliseconds: 300)).then((_) {
@@ -67,7 +68,20 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
               },
               onCancel: () {},
             );
-          } else if (state is HomeUpdatePostsLoading) {
+          } else if (state is HomeRePostFail) {
+            context.pop();
+            showCustomDialog(
+              context,
+              title: 'Error while re-post post',
+              content: 'Failed to re-post',
+              confirmText: 'Try again',
+              cancelText: '',
+              onConfirm: () {
+                context.pop();
+              },
+              onCancel: () {},
+            );
+          } else if (state is HomeUpdatePostsLoading || state is HomeRePostLoading) {
             showLoading(context);
           }
         },
@@ -82,10 +96,14 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
                     onPressed: !enable
                         ? null
                         : () {
+                            if (widget.isRePost) {
+                              homeBloc.rePost(widget.postId, contentController.text.trim());
+                              return;
+                            }
                             homeBloc.updatePosts(widget.postId, contentController.text.trim());
                           },
                     child: Text(
-                      'save',
+                      widget.isRePost ? 'Re-post' : 'save',
                       style: context.textTheme.headlineLarge?.copyWith(color: AppPalette.secondaryTextColor),
                     ),
                   );
@@ -172,7 +190,6 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
                               );
                             },
                           ),
-
                           const SizedBox(height: 12),
                         ],
                       ],

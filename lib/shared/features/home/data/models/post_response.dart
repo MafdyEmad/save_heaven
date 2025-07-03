@@ -10,10 +10,6 @@ class PostsResponse {
       posts: List<Post>.from(json['data'].map((item) => Post.fromJson(item))),
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {'results': results, 'data': posts.map((e) => e.toJson()).toList()};
-  }
 }
 
 class Post {
@@ -143,10 +139,10 @@ class RePost {
 
   factory RePost.fromJson(Map<String, dynamic> json) {
     return RePost(
-      id: json['_id'] as String,
-      content: json['content'] as String,
+      id: json['_id'],
+      content: json['content'] ?? '',
       user: User.fromJson(json['user']),
-      repostCount: json['repostCount'] as int,
+      repostCount: json['repostCount'] ?? 0,
     );
   }
 }

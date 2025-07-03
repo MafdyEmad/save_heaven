@@ -9,4 +9,9 @@ class Helpers {
     final user = HiveBoxes.userBox.get(id);
     return user;
   }
+
+  static void logout() {
+    HiveBoxes.secureBox.clear();
+    HiveBoxes.userBox.clear();
+  }
 }

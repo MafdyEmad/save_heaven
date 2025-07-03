@@ -18,17 +18,14 @@ class DonationReceiptsScree extends StatefulWidget {
 }
 
 class _DonationReceiptsScreeState extends State<DonationReceiptsScree> {
-  final requestsStates = List.unmodifiable([
-    // GetDonationsRequestsLoading,
-    // GetDonationsRequestsSuccess,
-    // GetDonationsRequestsFail,
-  ]);
+  final requestsStates = List.unmodifiable([GetDonationsLoading, GetDonationsSuccess, GetDonationsFail]);
+  @override
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OrphanageDonationCubit, OrphanageDonationStateState>(
       buildWhen: (previous, current) => requestsStates.contains(current.runtimeType),
       builder: (context, state) {
-        if (state is GetDonationsRequestsLoading) {
+        if (state is GetDonationsLoading) {
           return ListView.separated(
             itemBuilder: (context, index) => Shimmer.fromColors(
               baseColor: Colors.grey.shade300,
@@ -40,11 +37,11 @@ class _DonationReceiptsScreeState extends State<DonationReceiptsScree> {
           );
         }
 
-        if (state is GetDonationsRequestsFail) {
+        if (state is GetDonationsFail) {
           return Center(child: Text(state.message, style: context.textTheme.headlineLarge));
         }
 
-        final requests = (state as GetDonationsRequestsSuccess).requests;
+        // final requests = (state as GetDonationsSuccess).requests;
 
         return Column(
           children: [
@@ -71,7 +68,8 @@ class _DonationReceiptsScreeState extends State<DonationReceiptsScree> {
             Expanded(
               child: ListView.separated(
                 separatorBuilder: (_, __) => SizedBox(height: 12),
-                itemCount: requests.length,
+                // itemCount: requests.length,
+                itemCount: 2,
                 itemBuilder: (context, index) {
                   final imageUrl = 'asdasd';
                   final childName = 'Ali';

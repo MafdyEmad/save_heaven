@@ -18,6 +18,15 @@ class OrphanageDonationCubit extends Cubit<OrphanageDonationStateState> {
     );
   }
 
+  void getDonationItems() async {
+    emit(GetDonationsLoading());
+    final result = await _orphanageDonationRemoteDataSource.getDonations();
+    result.fold(
+      (error) => emit(GetDonationsFail(message: error.message)),
+      (requests) => emit(GetDonationsSuccess()),
+    );
+  }
+
   void respondToRequest(String requestId, String response) async {
     emit(RespondToRequestLoading());
     final result = await _orphanageDonationRemoteDataSource.respondToRequest(requestId, response);

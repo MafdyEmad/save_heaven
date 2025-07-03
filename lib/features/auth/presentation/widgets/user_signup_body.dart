@@ -7,8 +7,8 @@ import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/show_dialog.dart';
 import 'package:save_heaven/core/utils/validators.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
+import 'package:save_heaven/donor_nav_screen.dart';
 import 'package:save_heaven/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:save_heaven/orphanage_nav_screen.dart';
 import '../../../../core/utils/widgets reuseable/custom_text_field.dart';
 import '../../../../core/utils/widgets reuseable/custom_dropdown.dart';
 import '../../../../core/utils/widgets reuseable/circle_back_button.dart';
@@ -45,19 +45,20 @@ class _UserSignupBodyState extends State<UserSignupBody> {
     super.dispose();
   }
 
+  final bloc = getIt<AuthCubit>();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     return BlocProvider.value(
-      value: getIt<AuthCubit>(),
+      value: bloc,
       child: Builder(
         builder: (blocContext) {
           return BlocConsumer<AuthCubit, AuthState>(
             buildWhen: (previous, current) => donorSignUpStates.contains(current.runtimeType),
             listener: (context, state) {
               if (state is DonorSignUpSuccess) {
-                context.pushAndRemoveUntil(const OrphanageNavScreen());
+                context.pushAndRemoveUntil(const DonorNavScreen());
               } else if (state is DonorSignUpFail) {
                 showCustomDialog(
                   context,
@@ -186,7 +187,7 @@ class _UserSignupBodyState extends State<UserSignupBody> {
                           Center(child: CircularProgressIndicator(color: AppPalette.primaryColor))
                         else
                           CustomButton(
-                            text: 'Next',
+                            text: 'Signup',
                             onPressed: () {
                               if (validateForm()) {
                                 final dateOnly =
@@ -194,7 +195,7 @@ class _UserSignupBodyState extends State<UserSignupBody> {
                                     "-${birthdate!.month.toString().padLeft(2, '0')}"
                                     "-${birthdate!.day.toString().padLeft(2, '0')}";
 
-                                blocContext.read()<AuthCubit>().donorSignUp(
+                                bloc.donorSignUp(
                                   name: fullNameController.text.trim(),
                                   address: addressController.text.trim(),
                                   email: emailController.text.trim(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:save_heaven/core/utils/extensions.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hint;
@@ -29,10 +30,14 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         validator: validator,
+
         obscureText: isPassword ? isVisible : false,
         onTap: onTap,
         readOnly: onTap != null,
         decoration: InputDecoration(
+          errorStyle: context.textTheme.headlineSmall?.copyWith(
+            color: Colors.red,
+          ),
           hintText: hint,
           prefixIcon: icon != null ? Icon(icon, size: 20) : null,
           suffixIcon: isPassword
@@ -53,10 +58,17 @@ class CustomTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: Colors.red),
           ),
-          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
+          ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         style: const TextStyle(fontSize: 14),
       ),

@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
+import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
@@ -31,6 +33,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
   ]);
   @override
   Widget build(BuildContext context) {
+    // print(HiveBoxes.secureBox.values.first);
+    // print(JwtDecoder.decode(HiveBoxes.secureBox.values.first));
+
     return BlocProvider.value(
       value: bloc,
       child: Builder(

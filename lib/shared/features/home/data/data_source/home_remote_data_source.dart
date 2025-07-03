@@ -13,21 +13,29 @@ import 'package:save_heaven/core/utils/constants.dart';
 
 abstract interface class HomeRemoteDataSource {
   Future<Either<Failure, PostsResponse>> getPosts({required bool refresh});
-  Future<Either<Failure, void>> makePost({required List<File> images, required String content});
+  Future<Either<Failure, void>> makePost({
+    required List<File> images,
+    required String content,
+  });
   Future<Either<Failure, void>> deletePost(String postId);
   Future<Either<Failure, void>> updatePost(String postId, String content);
   Future<Either<Failure, void>> reactPost(String postId);
   Future<Either<Failure, void>> unReactPost(String postId);
-  Future<Either<Failure, void>> rePost(String postId);
+  Future<Either<Failure, void>> rePost(String postId, String content);
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   final ApiService apiService;
   final CacheManager cacheManager;
 
-  HomeRemoteDataSourceImpl({required this.apiService, required this.cacheManager});
+  HomeRemoteDataSourceImpl({
+    required this.apiService,
+    required this.cacheManager,
+  });
   @override
-  Future<Either<Failure, PostsResponse>> getPosts({required bool refresh}) async {
+  Future<Either<Failure, PostsResponse>> getPosts({
+    required bool refresh,
+  }) async {
     const cacheKey = CachingKeys.posts;
 
     try {
@@ -40,19 +48,26 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         return Right(PostsResponse.fromJson(cachedData));
       }
 
-      final response = await apiService.get(endpoint: ApiEndpoints.posts, hasToken: false);
+      final response = await apiService.get(
+        endpoint: ApiEndpoints.posts,
+        hasToken: false,
+      );
 
       cacheManager.setData(cacheKey, response.data);
       return Right(PostsResponse.fromJson(response.data));
-    } on DioException catch (e) {
-      return Left(Failure(message: e.response?.data?['message'] ?? Constants.serverErrorMessage));
+    } on DioException catch (_) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+      // return Left(Failure(message: e.response?.data?['message'] ?? Constants.serverErrorMessage));
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
     }
   }
 
   @override
-  Future<Either<Failure, void>> makePost({required List<File> images, required String content}) async {
+  Future<Either<Failure, void>> makePost({
+    required List<File> images,
+    required String content,
+  }) async {
     try {
       await apiService.sendFormData(
         fileFieldName: 'images',
@@ -66,8 +81,11 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     } on TimeoutException {
       return Left(Failure(message: 'Time out, Try again'));
     } on DioException catch (e) {
-      print(e);
-      return Left(Failure(message: e.response?.data?['message'] ?? Constants.serverErrorMessage));
+      return Left(
+        Failure(
+          message: e.response?.data?['message'] ?? Constants.serverErrorMessage,
+        ),
+      );
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
     }
@@ -76,7 +94,10 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   @override
   Future<Either<Failure, void>> deletePost(postId) async {
     try {
-      await apiService.delete(endpoint: '${ApiEndpoints.posts}/$postId', hasToken: true);
+      await apiService.delete(
+        endpoint: '${ApiEndpoints.posts}/$postId',
+        hasToken: true,
+      );
       return Right(null);
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
@@ -84,7 +105,10 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, void>> updatePost(String postId, String content) async {
+  Future<Either<Failure, void>> updatePost(
+    String postId,
+    String content,
+  ) async {
     try {
       await apiService.put(
         endpoint: '${ApiEndpoints.posts}/$postId',
@@ -93,7 +117,6 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       );
       return Right(null);
     } catch (e) {
-      print(e);
       return Left(Failure(message: Constants.serverErrorMessage));
     }
   }
@@ -115,7 +138,10 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   @override
   Future<Either<Failure, void>> unReactPost(String postId) async {
     try {
-      await apiService.delete(endpoint: "${ApiEndpoints.reactPost}/$postId", hasToken: true);
+      await apiService.delete(
+        endpoint: "${ApiEndpoints.reactPost}/$postId",
+        hasToken: true,
+      );
       return Right(null);
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
@@ -123,9 +149,13 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, void>> rePost(String postId) async {
+  Future<Either<Failure, void>> rePost(String postId, String content) async {
     try {
-      await apiService.post(endpoint: ApiEndpoints.rePost(postId), hasToken: true);
+      await apiService.post(
+        endpoint: ApiEndpoints.rePost(postId),
+        hasToken: true,
+        data: {"content": content},
+      );
       return Right(null);
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));

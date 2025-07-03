@@ -83,7 +83,8 @@ class _WorkScheduleBodyState extends State<WorkScheduleBody> {
       child: Builder(
         builder: (context) {
           return BlocConsumer<AuthCubit, AuthState>(
-            buildWhen: (previous, current) => orphanageSignUpStates.contains(current.runtimeType),
+            buildWhen: (previous, current) =>
+                orphanageSignUpStates.contains(current.runtimeType),
             listener: (context, state) {
               if (state is OrphanageSignUpSuccess) {
                 context.pushAndRemoveUntil(const OrphanageNavScreen());
@@ -123,7 +124,10 @@ class _WorkScheduleBodyState extends State<WorkScheduleBody> {
                         const SizedBox(height: 30),
                         const Text(
                           "Select Work Days:",
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                         const SizedBox(height: 12),
                         Wrap(
@@ -132,7 +136,14 @@ class _WorkScheduleBodyState extends State<WorkScheduleBody> {
                           children: allDaysOfWeek.map((day) {
                             final selected = selectedDays.contains(day);
                             return ChoiceChip(
-                              label: Text(day),
+                              backgroundColor: AppPalette.primaryColor
+                                  .withAlpha(150),
+                              selectedColor: AppPalette.primaryColor,
+                              label: Text(
+                                day,
+                                style: context.textTheme.headlineMedium
+                                    ?.copyWith(color: Colors.white),
+                              ),
                               selected: selected,
                               onSelected: (_) => toggleDay(day),
                             );
@@ -141,7 +152,10 @@ class _WorkScheduleBodyState extends State<WorkScheduleBody> {
                         const SizedBox(height: 30),
                         const Text(
                           "Select Time From - To:",
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                         const SizedBox(height: 12),
                         Row(
@@ -157,9 +171,16 @@ class _WorkScheduleBodyState extends State<WorkScheduleBody> {
                                 if (picked != null) {
                                   if (toTime != null) {
                                     if (picked.hour > toTime!.hour ||
-                                        (picked.hour == toTime!.hour && picked.minute >= toTime!.minute)) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text("From time must be before To time")),
+                                        (picked.hour == toTime!.hour &&
+                                            picked.minute >= toTime!.minute)) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            "From time must be before To time",
+                                          ),
+                                        ),
                                       );
                                       return; // stop setting invalid time
                                     }
@@ -170,7 +191,9 @@ class _WorkScheduleBodyState extends State<WorkScheduleBody> {
                               },
                               child: Text(
                                 fromTime?.format(context) ?? "Select",
-                                style: const TextStyle(color: AppColors.primary),
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 30),
@@ -185,10 +208,15 @@ class _WorkScheduleBodyState extends State<WorkScheduleBody> {
                                 if (picked != null) {
                                   if (fromTime != null) {
                                     if (picked.hour < fromTime!.hour ||
-                                        (picked.hour == fromTime!.hour && picked.minute < fromTime!.minute)) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        (picked.hour == fromTime!.hour &&
+                                            picked.minute < fromTime!.minute)) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         const SnackBar(
-                                          content: Text("You can't choose To time before From time"),
+                                          content: Text(
+                                            "You can't choose To time before From time",
+                                          ),
                                         ),
                                       );
                                       return;
@@ -201,26 +229,41 @@ class _WorkScheduleBodyState extends State<WorkScheduleBody> {
                               },
                               child: Text(
                                 toTime?.format(context) ?? "Select",
-                                style: const TextStyle(color: AppColors.primary),
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                ),
                               ),
                             ),
                           ],
                         ),
                         const Spacer(),
                         state is OrphanageSignUpLoading
-                            ? Center(child: CircularProgressIndicator(color: AppPalette.primaryColor))
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: AppPalette.primaryColor,
+                                ),
+                              )
                             : CustomButton(
                                 text: 'Submit',
                                 onPressed: () {
-                                  if (selectedDays.isEmpty || fromTime == null || toTime == null) {
+                                  if (selectedDays.isEmpty ||
+                                      fromTime == null ||
+                                      toTime == null) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("Please complete all fields")),
+                                      const SnackBar(
+                                        content: Text(
+                                          "Please complete all fields",
+                                        ),
+                                      ),
                                     );
                                   } else {
                                     context.read<AuthCubit>().orphanageSignUp(
                                       widget.currentParams.copyWith(
                                         workDays: selectedDays,
-                                        workHours: [fromTime!.format(context), toTime!.format(context)],
+                                        workHours: [
+                                          fromTime!.format(context),
+                                          toTime!.format(context),
+                                        ],
                                       ),
                                     );
                                     // context.push(const OTPVerificationView());
