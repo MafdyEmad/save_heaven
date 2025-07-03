@@ -4,8 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
+import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_colors.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
@@ -50,8 +50,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   TimeOfDay _parseTimeOfDay(String timeString) {
-    final dateTime = DateFormat.jm().parse(timeString);
-    return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
+    // Split the string into time and period (AM/PM)
+    final parts = timeString.split(' ');
+    if (parts.length != 2) {
+      throw const FormatException('Invalid time format');
+    }
+
+    final timePart = parts[0];
+    final period = parts[1].toUpperCase();
+
+    final timeComponents = timePart.split(':');
+
+    int hour = int.parse(timeComponents[0]);
+    final int minute = int.parse(timeComponents[1]);
+
+    // Convert to 24-hour format
+    if (period == 'PM' && hour != 12) {
+      hour += 12;
+    } else if (period == 'AM' && hour == 12) {
+      hour = 0;
+    }
+
+    return TimeOfDay(hour: hour, minute: minute);
   }
 
   final bloc = getIt<ProfileCubit>();
@@ -159,14 +179,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   decoration: BoxDecoration(
                                     border: Border.all(),
                                     shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: image != null
+                                          ? FileImage(image!)
+                                          : CachedNetworkImageProvider(
+                                              '${ApiEndpoints.imageProvider}${widget.user.user.image}',
+                                            ),
+                                    ),
                                   ),
-                                  child: image != null
-                                      ? Image.file(image!, fit: BoxFit.cover)
-                                      : CachedNetworkImage(
-                                          imageUrl: '',
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.person, size: 50),
-                                        ),
                                 ),
                                 Positioned(
                                   right: 0,

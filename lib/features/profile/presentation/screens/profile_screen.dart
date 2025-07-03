@@ -299,11 +299,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundImage: CachedNetworkImageProvider(
                         '${ApiEndpoints.imageProvider}${user.user.image}',
                       ),
-                      child: const Icon(
-                        Icons.person,
-                        size: 60,
-                        color: Colors.grey,
-                      ),
+                      // child: const Icon(
+                      //   Icons.person,
+                      //   size: 60,
+                      //   color: Colors.grey,
+                      // ),
                     ),
                   ),
                 ),

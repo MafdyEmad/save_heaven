@@ -126,6 +126,14 @@ class _AddOrphanScreenState extends State<AddOrphanScreen> {
                                     decoration: BoxDecoration(
                                       border: Border.all(),
                                       shape: BoxShape.circle,
+                                      image: image == null
+                                          ? null
+                                          : DecorationImage(
+                                              image: FileImage(
+                                                File(image!.path),
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
                                     ),
                                     width: context.width * .4,
                                     height: context.width * .4,
@@ -143,10 +151,7 @@ class _AddOrphanScreenState extends State<AddOrphanScreen> {
                                               ),
                                             ],
                                           )
-                                        : Image.file(
-                                            File(image!.path),
-                                            fit: BoxFit.cover,
-                                          ),
+                                        : SizedBox.shrink(),
                                   ),
                                 ),
                                 if (field.hasError)

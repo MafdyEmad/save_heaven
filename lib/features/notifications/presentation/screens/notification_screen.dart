@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
-import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
+import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
@@ -46,24 +45,37 @@ class _NotificationScreenState extends State<NotificationScreen> {
               centerTitle: true,
             ),
             body: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppDimensions.horizontalPagePadding),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppDimensions.horizontalPagePadding,
+              ),
               child: BlocBuilder<NotificationCubit, NotificationState>(
                 builder: (context, state) {
-                  if (state is GetNotificationsLoading || state is NotificationInitial) {
+                  if (state is GetNotificationsLoading ||
+                      state is NotificationInitial) {
                     return ListView.separated(
                       itemBuilder: (context, index) => Shimmer.fromColors(
                         baseColor: Colors.grey.shade300,
                         highlightColor: Colors.grey.shade100,
-                        child: Container(width: double.infinity, height: 80, color: Colors.white),
+                        child: Container(
+                          width: double.infinity,
+                          height: 80,
+                          color: Colors.white,
+                        ),
                       ),
                       separatorBuilder: (context, index) => SizedBox(height: 8),
                       itemCount: 10,
                     );
                   }
                   if (state is GetNotificationsFail) {
-                    return Center(child: Text(state.message, style: context.textTheme.headlineLarge));
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: context.textTheme.headlineLarge,
+                      ),
+                    );
                   }
-                  final notifications = (state as GetNotificationsSuccess).notifications;
+                  final notifications =
+                      (state as GetNotificationsSuccess).notifications;
                   if (notifications.isEmpty) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -76,12 +88,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         ),
                         Text(
                           'Nothing to display here!',
-                          style: context.textTheme.headlineLarge?.copyWith(color: AppPalette.primaryColor),
+                          style: context.textTheme.headlineLarge?.copyWith(
+                            color: AppPalette.primaryColor,
+                          ),
                         ),
                         Text(
                           'Likes, comments and replies will appear here!',
                           textAlign: TextAlign.center,
-                          style: context.textTheme.bodyLarge?.copyWith(color: AppPalette.primaryColor),
+                          style: context.textTheme.bodyLarge?.copyWith(
+                            color: AppPalette.primaryColor,
+                          ),
                         ),
                       ],
                     );
@@ -89,17 +105,36 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   return ListView.separated(
                     itemCount: notifications.length,
                     itemBuilder: (context, index) => ListTile(
-                      leading: SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: CachedNetworkImage(
-                          imageUrl: '',
-                          errorWidget: (context, url, error) => Icon(Icons.error),
-                        ),
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (!notifications[index].isRead)
+                            Icon(Icons.circle, color: Colors.red, size: 10),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  '${ApiEndpoints.imageProvider}${notifications[index].image}',
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.person, size: 30),
+                            ),
+                          ),
+                        ],
                       ),
-                      title: Text("Mafdy", style: context.textTheme.headlineLarge),
-                      subtitle: Text(notifications[index].type, style: context.textTheme.bodyLarge),
-                      trailing: Text(timeago.format(notifications[index].createdAt)),
+                      title: Text(
+                        notifications[index].name,
+                        style: context.textTheme.headlineLarge,
+                      ),
+                      subtitle: Text(
+                        notifications[index].content,
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      trailing: Text(
+                        timeago.format(notifications[index].createdAt),
+                      ),
                     ),
                     separatorBuilder: (context, index) => SizedBox(height: 10),
                   );

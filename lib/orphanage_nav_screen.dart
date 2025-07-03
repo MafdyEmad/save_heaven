@@ -43,6 +43,7 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print((user.image));
     return Scaffold(
       appBar: navScreenAppBar(
         context,
@@ -174,7 +175,7 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
                       child: ClipOval(
                         child: CachedNetworkImage(
                           errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                              const Icon(Icons.person),
                           imageUrl:
                               ApiEndpoints.imageProvider + (user.image ?? ''),
                           fit: BoxFit.cover,

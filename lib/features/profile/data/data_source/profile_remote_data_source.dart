@@ -66,6 +66,9 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         result.data['data']['orphanage'],
       );
       HiveBoxes.userBox.putAt(0, UserHive.fromModel(user));
+      print('asdddddddddddddddddd');
+      print(UserHive.fromModel(user).image);
+      print('asdddddddddddddddddd');
       return Right(user);
     } on DioException catch (e) {
       return Left(

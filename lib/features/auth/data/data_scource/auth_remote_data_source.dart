@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:save_heaven/core/error/failure.dart';
 import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
@@ -21,8 +21,13 @@ abstract interface class AuthRemoteDataSource {
     required String birthdate,
     required String gender,
   });
-  Future<Either<Failure, UserModel>> signUpOrphanage({required OrphanageSignUpParams params});
-  Future<Either<Failure, UserModel>> login({required String email, required String password});
+  Future<Either<Failure, UserModel>> signUpOrphanage({
+    required OrphanageSignUpParams params,
+  });
+  Future<Either<Failure, UserModel>> login({
+    required String email,
+    required String password,
+  });
 }
 
 class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
@@ -53,6 +58,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
           'birthdate': birthdate,
           'gender': gender,
           'role': 'Donor',
+          'notificationToken': await FirebaseMessaging.instance.getToken(),
         }),
       );
       final jsonMap = response.data;
@@ -84,12 +90,17 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, UserModel>> signUpOrphanage({required OrphanageSignUpParams params}) async {
+  Future<Either<Failure, UserModel>> signUpOrphanage({
+    required OrphanageSignUpParams params,
+  }) async {
     try {
       final response = await apiService.post(
         endpoint: ApiEndpoints.signUp,
         hasToken: false,
-        data: params.toJson(),
+        data: {
+          ...params.toJson(),
+          'notificationToken': await FirebaseMessaging.instance.getToken(),
+        },
       );
       final jsonMap = response.data;
       final userJson = jsonMap['data']['user'];
@@ -120,7 +131,10 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, UserModel>> login({required String email, required String password}) async {
+  Future<Either<Failure, UserModel>> login({
+    required String email,
+    required String password,
+  }) async {
     try {
       final response = await apiService.post(
         endpoint: ApiEndpoints.login,
@@ -143,13 +157,8 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       }
       return Right(user);
     } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        final List<String> messages = (e.response?.data['errors'] as List)
-            .map((e) => e['msg'].toString())
-            .toList();
-        return Left(Failure(message: messages.join('.\n')));
-      }
-      return Left(Failure(message: Constants.serverErrorMessage));
+      return Left(Failure(message: e.response?.data['message']));
+      // return Left(Failure(message: Constants.serverErrorMessage));
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
     }

@@ -17,12 +17,20 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   @override
   Future<Either<Failure, List<NotificationModel>>> getNotifications() async {
     try {
-      final response = await apiService.get(endpoint: ApiEndpoints.notifications, hasToken: true);
+      final response = await apiService.get(
+        endpoint: ApiEndpoints.notifications,
+        hasToken: true,
+      );
       final json = response.data['data'] as List<dynamic>;
       return Right(json.map((e) => NotificationModel.fromJson(e)).toList());
     } on DioException catch (e) {
-      return Left(Failure(message: e.response?.data?['message'] ?? Constants.serverErrorMessage));
+      return Left(
+        Failure(
+          message: e.response?.data?['message'] ?? Constants.serverErrorMessage,
+        ),
+      );
     } catch (e) {
+      print(e);
       return Left(Failure(message: Constants.serverErrorMessage));
     }
   }
