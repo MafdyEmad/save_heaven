@@ -129,7 +129,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         style: context.textTheme.headlineLarge,
                       ),
                       subtitle: Text(
-                        notifications[index].content,
+                        notifications[index].message,
                         style: context.textTheme.bodyLarge,
                       ),
                       trailing: Text(

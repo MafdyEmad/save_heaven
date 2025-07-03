@@ -5,11 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/config/assets_manager.dart';
+import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
 import 'package:save_heaven/core/utils/api_endpoints.dart';
+import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/widgets/nav_screen_app_bar.dart';
 import 'package:save_heaven/features/auth/presentation/views/login_view.dart';
 import 'package:save_heaven/features/chat/presentation/screens/recent_chats_screen.dart';
+import 'package:save_heaven/features/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:save_heaven/features/orphanage_dontaion/presentation/screens/orphanage_requests_screen.dart';
 import 'package:save_heaven/features/profile/presentation/screens/add_orphan_screen.dart';
 import 'package:save_heaven/features/profile/presentation/screens/profile_screen.dart';
@@ -32,18 +35,21 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
     ProfileScreen(),
   ]);
   late final ValueNotifier<bool> isNotificationEnabled;
-  final user = Helpers.user;
+  UserHive user = Helpers.user;
   @override
   void initState() {
     super.initState();
+    notificationCubit = getIt<NotificationCubit>()
+      ..getUnreadNotificationsCount();
     isNotificationEnabled = ValueNotifier(
       FirebaseMessaging.instance.isAutoInitEnabled,
     );
   }
 
+  late final NotificationCubit notificationCubit;
+
   @override
   Widget build(BuildContext context) {
-    print((user.image));
     return Scaffold(
       appBar: navScreenAppBar(
         context,
@@ -57,6 +63,11 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
             _ => '',
           }, style: context.textTheme.titleLarge),
         ),
+        notificationCubit,
+        () {
+          user = Helpers.user;
+          setState(() {});
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
@@ -67,7 +78,7 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
         shape: CircleBorder(),
         child: Icon(Icons.add, color: Colors.white),
       ),
-      drawer: buildDrawer(),
+      drawer: buildDrawer(user),
       bottomNavigationBar: Stack(
         children: [
           Positioned.fill(
@@ -149,7 +160,7 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
     screenIndex.value = index;
   }
 
-  Widget buildDrawer() => Drawer(
+  Widget buildDrawer(UserHive user) => Drawer(
     backgroundColor: Colors.white,
     child: Column(
       children: [

@@ -8,7 +8,7 @@ class NotificationModel {
   final bool isRead;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String content;
+  final String message;
 
   NotificationModel({
     required this.id,
@@ -20,7 +20,7 @@ class NotificationModel {
     required this.isRead,
     required this.createdAt,
     required this.updatedAt,
-    required this.content,
+    required this.message,
   });
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
@@ -33,7 +33,7 @@ class NotificationModel {
       isRead: json['isRead'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      content: json['content'],
+      message: json['message'],
     );
   }
 }

@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/config/assets_manager.dart';
+import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/assets_images.dart';
+import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/widgets/nav_screen_app_bar.dart';
 import 'package:save_heaven/features/auth/presentation/views/login_view.dart';
 import 'package:save_heaven/features/kids/presentation/pages/kids_home_view.dart';
+import 'package:save_heaven/features/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:save_heaven/features/profile/presentation/screens/profile_screen.dart';
 import 'package:save_heaven/helpers/helpers.dart';
 import 'package:save_heaven/shared/features/home/presentation/screens/home_screen.dart';
@@ -32,16 +35,19 @@ class _DonorNavScreenState extends State<DonorNavScreen> {
     ProfileScreen(),
   ]);
   late final ValueNotifier<bool> isNotificationEnabled;
-  final user = Helpers.user;
+  UserHive user = Helpers.user;
 
   @override
   void initState() {
     super.initState();
+    notificationCubit = getIt<NotificationCubit>()
+      ..getUnreadNotificationsCount();
     isNotificationEnabled = ValueNotifier(
       FirebaseMessaging.instance.isAutoInitEnabled,
     );
   }
 
+  late final NotificationCubit notificationCubit;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +63,11 @@ class _DonorNavScreenState extends State<DonorNavScreen> {
             _ => '',
           }, style: context.textTheme.titleLarge),
         ),
+        notificationCubit,
+        () {
+          user = Helpers.user;
+          setState(() {});
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(

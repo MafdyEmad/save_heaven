@@ -7,13 +7,25 @@ part 'notification_state.dart';
 
 class NotificationCubit extends Cubit<NotificationState> {
   final NotificationRemoteDataSource _notificationRemoteDataSource;
-  NotificationCubit(this._notificationRemoteDataSource) : super(NotificationInitial());
+  NotificationCubit(this._notificationRemoteDataSource)
+    : super(NotificationInitial());
   void getNotifications() async {
     emit(GetNotificationsLoading());
     final result = await _notificationRemoteDataSource.getNotifications();
     result.fold(
       (error) => emit(GetNotificationsFail(message: error.message)),
-      (notifications) => emit(GetNotificationsSuccess(notifications: notifications)),
+      (notifications) =>
+          emit(GetNotificationsSuccess(notifications: notifications)),
+    );
+  }
+
+  void getUnreadNotificationsCount() async {
+    emit(GetUnReadNotificationsCountLoading());
+    final result = await _notificationRemoteDataSource
+        .getUnreadNotificationsCount();
+    result.fold(
+      (error) => emit(GetUnReadNotificationsCountFail(message: error.message)),
+      (count) => emit(GetUnReadNotificationsCountSuccess(count: count)),
     );
   }
 }

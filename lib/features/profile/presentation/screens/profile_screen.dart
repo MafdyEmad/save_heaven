@@ -109,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
                 final user = (state as GetProfileUserSuccess).user;
                 return DefaultTabController(
-                  length: 2,
+                  length: user.user.role != 'Donor' ? 2 : 1,
                   child: NestedScrollView(
                     headerSliverBuilder: (context, innerBoxIsScrolled) => [
                       SliverOverlapAbsorber(
@@ -129,9 +129,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ).textTheme.headlineMedium,
                             dividerColor: Colors.transparent,
                             indicatorColor: const Color(0xfffcd06b),
-                            tabs: const [
+                            tabs: [
                               Tab(text: 'Posts'),
-                              Tab(text: 'About us'),
+                              if (user.user.role != 'Donor')
+                                Tab(text: 'About us'),
                             ],
                           ),
                         ),
@@ -147,32 +148,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             user.posts,
                           ), // This ListView works alone
                         ),
-                        Builder(
-                          builder: (context) {
-                            return CustomScrollView(
-                              key: PageStorageKey('AboutUs'),
-                              slivers: [
-                                SliverOverlapInjector(
-                                  handle:
-                                      NestedScrollView.sliverOverlapAbsorberHandleFor(
-                                        context,
-                                      ),
-                                ),
-                                SliverPadding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal:
-                                        AppDimensions.horizontalPagePadding,
+                        if (user.user.role != 'Donor')
+                          Builder(
+                            builder: (context) {
+                              return CustomScrollView(
+                                key: PageStorageKey('AboutUs'),
+                                slivers: [
+                                  SliverOverlapInjector(
+                                    handle:
+                                        NestedScrollView.sliverOverlapAbsorberHandleFor(
+                                          context,
+                                        ),
                                   ),
-                                  sliver: SliverList(
-                                    delegate: SliverChildListDelegate([
-                                      _buildAbout(user.about),
-                                    ]),
+                                  SliverPadding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal:
+                                          AppDimensions.horizontalPagePadding,
+                                    ),
+                                    sliver: SliverList(
+                                      delegate: SliverChildListDelegate([
+                                        _buildAbout(user.about),
+                                      ]),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
+                                ],
+                              );
+                            },
+                          ),
                       ],
                     ),
                   ),

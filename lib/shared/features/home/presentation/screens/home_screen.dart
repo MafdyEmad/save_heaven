@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     homeCubit = getIt<HomeCubit>()..getPosts();
+
     final userId = JwtDecoder.decode(token)['userId'];
     user = HiveBoxes.userBox.get(userId);
     super.initState();

@@ -139,7 +139,11 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       final response = await apiService.post(
         endpoint: ApiEndpoints.login,
         hasToken: false,
-        data: {'email': email, 'password': password},
+        data: {
+          'email': email,
+          'password': password,
+          'notificationToken': await FirebaseMessaging.instance.getToken(),
+        },
       );
       final jsonMap = response.data;
       final userJson = jsonMap['data']['user'];

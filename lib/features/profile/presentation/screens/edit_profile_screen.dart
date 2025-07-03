@@ -255,179 +255,192 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           //   },
                           // ),
                           // SizedBox(height: 20),
-                          Text(
-                            'Location',
-                            style: context.textTheme.headlineLarge,
-                          ),
-                          SizedBox(height: 2),
-                          CustomTextField(
-                            hint: '',
-                            controller: location,
-                            validator: (p0) {
-                              if (p0!.isEmpty) {
-                                return 'Location is required';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 20),
-                          Text(
-                            'Select working days',
-                            style: context.textTheme.headlineLarge,
-                          ),
-                          SizedBox(height: 2),
-                          FormField(
-                            validator: (value) {
-                              if (selectedDays.isEmpty) {
-                                return 'Please select at least one day';
-                              }
-                              return null;
-                            },
-                            builder: (field) => Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Wrap(
-                                  spacing: 12,
-                                  runSpacing: 12,
-                                  children: allDaysOfWeek.map((day) {
-                                    final selected = selectedDays.contains(day);
-                                    return ChoiceChip(
-                                      backgroundColor: AppPalette.primaryColor
-                                          .withAlpha(150),
-                                      selectedColor: AppPalette.primaryColor,
-                                      label: Text(
+                          if (widget.user.user.role != 'Donor') ...[
+                            Text(
+                              'Location',
+                              style: context.textTheme.headlineLarge,
+                            ),
+                            SizedBox(height: 2),
+                            CustomTextField(
+                              hint: '',
+                              controller: location,
+                              validator: (p0) {
+                                if (p0!.isEmpty) {
+                                  return 'Location is required';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+
+                          if (widget.user.user.role != 'Donor') ...[
+                            SizedBox(height: 20),
+                            Text(
+                              'Select working days',
+                              style: context.textTheme.headlineLarge,
+                            ),
+                            SizedBox(height: 2),
+                            FormField(
+                              validator: (value) {
+                                if (selectedDays.isEmpty) {
+                                  return 'Please select at least one day';
+                                }
+                                return null;
+                              },
+                              builder: (field) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Wrap(
+                                    spacing: 12,
+                                    runSpacing: 12,
+                                    children: allDaysOfWeek.map((day) {
+                                      final selected = selectedDays.contains(
                                         day,
-                                        style: context.textTheme.headlineMedium
-                                            ?.copyWith(color: Colors.white),
-                                      ),
-                                      selected: selected,
-                                      onSelected: (_) => toggleDay(day),
-                                    );
-                                  }).toList(),
-                                ),
-                                if (field.hasError)
-                                  Text(
-                                    field.errorText!,
-                                    style: context.textTheme.headlineSmall
-                                        ?.copyWith(color: Colors.red),
+                                      );
+                                      return ChoiceChip(
+                                        backgroundColor: AppPalette.primaryColor
+                                            .withAlpha(150),
+                                        selectedColor: AppPalette.primaryColor,
+                                        label: Text(
+                                          day,
+                                          style: context
+                                              .textTheme
+                                              .headlineMedium
+                                              ?.copyWith(color: Colors.white),
+                                        ),
+                                        selected: selected,
+                                        onSelected: (_) => toggleDay(day),
+                                      );
+                                    }).toList(),
                                   ),
-                              ],
+                                  if (field.hasError)
+                                    Text(
+                                      field.errorText!,
+                                      style: context.textTheme.headlineSmall
+                                          ?.copyWith(color: Colors.red),
+                                    ),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 30),
-                          Text(
-                            "Select Time From - To:",
-                            style: context.textTheme.headlineLarge,
-                          ),
-                          const SizedBox(height: 12),
-                          FormField(
-                            validator: (value) {
-                              if (fromTime == null || toTime == null) {
-                                return 'From and To time are required';
-                              }
-                              return null;
-                            },
-                            builder: (field) => Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "From: ",
-                                      style: context.textTheme.headlineLarge,
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        final picked = await showTimePicker(
-                                          context: context,
-                                          initialTime: TimeOfDay.now(),
-                                        );
-
-                                        if (picked != null) {
-                                          if (toTime != null) {
-                                            if (picked.hour > toTime!.hour ||
-                                                (picked.hour == toTime!.hour &&
-                                                    picked.minute >=
-                                                        toTime!.minute)) {
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                    "From time must be before To time",
-                                                  ),
-                                                ),
-                                              );
-                                              return;
-                                            }
-                                          }
-                                          setFromTime(picked);
-                                        }
-                                      },
-                                      child: Text(
-                                        fromTime?.format(context) ?? "Select",
-                                        style: context.textTheme.headlineLarge
-                                            ?.copyWith(
-                                              color: AppColors.primary,
-                                            ),
+                          ],
+                          if (widget.user.user.role != 'Donor') ...[
+                            const SizedBox(height: 30),
+                            Text(
+                              "Select Time From - To:",
+                              style: context.textTheme.headlineLarge,
+                            ),
+                            const SizedBox(height: 12),
+                            FormField(
+                              validator: (value) {
+                                if (fromTime == null || toTime == null) {
+                                  return 'From and To time are required';
+                                }
+                                return null;
+                              },
+                              builder: (field) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "From: ",
+                                        style: context.textTheme.headlineLarge,
                                       ),
-                                    ),
-                                    const SizedBox(width: 30),
-                                    Text(
-                                      "To: ",
-                                      style: context.textTheme.headlineLarge,
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        final picked = await showTimePicker(
-                                          context: context,
-                                          initialTime: TimeOfDay.now(),
-                                        );
+                                      TextButton(
+                                        onPressed: () async {
+                                          final picked = await showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay.now(),
+                                          );
 
-                                        if (picked != null) {
-                                          if (fromTime != null) {
-                                            if (picked.hour < fromTime!.hour ||
-                                                (picked.hour ==
-                                                        fromTime!.hour &&
-                                                    picked.minute <
-                                                        fromTime!.minute)) {
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                    "You can't choose To time before From time",
+                                          if (picked != null) {
+                                            if (toTime != null) {
+                                              if (picked.hour > toTime!.hour ||
+                                                  (picked.hour ==
+                                                          toTime!.hour &&
+                                                      picked.minute >=
+                                                          toTime!.minute)) {
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                      "From time must be before To time",
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                              return;
+                                                );
+                                                return;
+                                              }
                                             }
+                                            setFromTime(picked);
                                           }
-
-                                          setToTime(picked);
-                                        }
-                                      },
-                                      child: Text(
-                                        toTime?.format(context) ?? "Select",
-                                        style: context.textTheme.headlineLarge
-                                            ?.copyWith(
-                                              color: AppColors.primary,
-                                            ),
+                                        },
+                                        child: Text(
+                                          fromTime?.format(context) ?? "Select",
+                                          style: context.textTheme.headlineLarge
+                                              ?.copyWith(
+                                                color: AppColors.primary,
+                                              ),
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                if (field.hasError)
-                                  Text(
-                                    field.errorText!,
-                                    style: context.textTheme.headlineSmall
-                                        ?.copyWith(color: Colors.red),
+                                      const SizedBox(width: 30),
+                                      Text(
+                                        "To: ",
+                                        style: context.textTheme.headlineLarge,
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          final picked = await showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay.now(),
+                                          );
+
+                                          if (picked != null) {
+                                            if (fromTime != null) {
+                                              if (picked.hour <
+                                                      fromTime!.hour ||
+                                                  (picked.hour ==
+                                                          fromTime!.hour &&
+                                                      picked.minute <
+                                                          fromTime!.minute)) {
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                      "You can't choose To time before From time",
+                                                    ),
+                                                  ),
+                                                );
+                                                return;
+                                              }
+                                            }
+
+                                            setToTime(picked);
+                                          }
+                                        },
+                                        child: Text(
+                                          toTime?.format(context) ?? "Select",
+                                          style: context.textTheme.headlineLarge
+                                              ?.copyWith(
+                                                color: AppColors.primary,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                              ],
+                                  if (field.hasError)
+                                    Text(
+                                      field.errorText!,
+                                      style: context.textTheme.headlineSmall
+                                          ?.copyWith(color: Colors.red),
+                                    ),
+                                ],
+                              ),
                             ),
-                          ),
+                            SizedBox(height: 20),
+                          ],
 
-                          SizedBox(height: 20),
                           Center(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -438,6 +451,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               onPressed: () {
                                 if (!formKey.currentState!.validate()) return;
+                                if (widget.user.user.role == 'Donor') {
+                                  bloc.updateUser(
+                                    ProfileUpdateparams(
+                                      image: image,
+                                      name: name.text.trim(),
+                                    ),
+                                  );
+                                  return;
+                                }
                                 bloc.updateUser(
                                   ProfileUpdateparams(
                                     image: image,

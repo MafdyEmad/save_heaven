@@ -23,3 +23,18 @@ final class GetNotificationsFail extends NotificationState {
 
   const GetNotificationsFail({required this.message});
 }
+
+//? GET UNREAD NOTIFICATIONS COUNT
+final class GetUnReadNotificationsCountLoading extends NotificationState {}
+
+final class GetUnReadNotificationsCountSuccess extends NotificationState {
+  final int count;
+
+  const GetUnReadNotificationsCountSuccess({required this.count});
+}
+
+final class GetUnReadNotificationsCountFail extends NotificationState {
+  final String message;
+
+  const GetUnReadNotificationsCountFail({required this.message});
+}

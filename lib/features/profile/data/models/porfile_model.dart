@@ -15,7 +15,14 @@ class UserDataResponse {
     return UserDataResponse(
       user: User.fromJson(json['user']),
       posts: List<Post>.from(json['posts'].map((x) => Post.fromJson(x))),
-      about: About.fromJson(json['about']),
+      about: json['about'] == null
+          ? About(
+              phone: 'phone',
+              workDays: [],
+              workHours: [],
+              establishedDate: DateTime.now(),
+            )
+          : About.fromJson(json['about']),
     );
   }
 

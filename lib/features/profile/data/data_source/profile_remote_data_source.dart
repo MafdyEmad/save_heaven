@@ -37,6 +37,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         ),
       );
     } catch (e) {
+      print(e);
       return Left(Failure(message: Constants.serverErrorMessage));
     }
   }
@@ -66,9 +67,6 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         result.data['data']['orphanage'],
       );
       HiveBoxes.userBox.putAt(0, UserHive.fromModel(user));
-      print('asdddddddddddddddddd');
-      print(UserHive.fromModel(user).image);
-      print('asdddddddddddddddddd');
       return Right(user);
     } on DioException catch (e) {
       return Left(
@@ -77,6 +75,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         ),
       );
     } catch (e) {
+      print(e);
       return Left(Failure(message: Constants.serverErrorMessage));
     }
   }
@@ -107,24 +106,24 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 }
 
 class ProfileUpdateparams {
-  final String name;
+  final String? name;
   final File? image;
-  final WorkSchedule workSchedule;
-  final String email;
-  final String address;
+  final WorkSchedule? workSchedule;
+  final String? email;
+  final String? address;
 
   ProfileUpdateparams({
-    required this.name,
+    this.name,
     this.image,
-    required this.workSchedule,
-    required this.email,
-    required this.address,
+    this.workSchedule,
+    this.email,
+    this.address,
   });
   Map<String, dynamic> toJson() => {
     'name': name,
-    'workSchedule': workSchedule.toJson(),
+    'workSchedule': workSchedule != null ? workSchedule?.toJson() : {},
     // 'email': email,
-    'address': address,
+    if (address != null) 'address': address,
   };
 }
 
