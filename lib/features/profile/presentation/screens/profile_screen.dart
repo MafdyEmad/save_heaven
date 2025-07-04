@@ -378,7 +378,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     onPressed: () {
-                      context.push(OurKidsScreen(id: user.user.id));
+                      context.push(OurKidsScreen(id: user.user.orphanage));
                     },
                     child: Text(
                       'Our Kids',

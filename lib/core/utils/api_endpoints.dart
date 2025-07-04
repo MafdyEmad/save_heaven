@@ -1,9 +1,10 @@
 class ApiEndpoints {
-  static const String _base = 'https://5357-197-53-84-46.ngrok-free.app/api/v1';
-  static const String socketUrl = 'ws://5357-197-53-84-46.ngrok-free.app';
+  static const String _base =
+      'https://f168-156-211-9-212.ngrok-free.app/api/v1';
+  static const String socketUrl = 'ws://f168-156-211-9-212.ngrok-free.app ';
 
   static const String imageProvider =
-      'https://5357-197-53-84-46.ngrok-free.app';
+      'https://f168-156-211-9-212.ngrok-free.app';
   static const String posts = '$_base/posts';
   static String getChildren(String id) => '$_base/users/$id/children';
   static const String getUser = '$_base/users/getMe';

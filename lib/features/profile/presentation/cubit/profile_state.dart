@@ -56,7 +56,8 @@ final class UpdateUserFail extends ProfileState {
 final class GetOurKidsLoading extends ProfileState {}
 
 final class GetOurKidsSuccess extends ProfileState {
-  const GetOurKidsSuccess();
+  final List<ChildModel> children;
+  const GetOurKidsSuccess(this.children);
 }
 
 final class GetOurKidsFail extends ProfileState {

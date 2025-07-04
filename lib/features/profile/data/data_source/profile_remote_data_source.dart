@@ -8,6 +8,8 @@ import 'package:save_heaven/core/services/api_services.dart';
 import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/constants.dart';
 import 'package:save_heaven/features/auth/data/models/user_model.dart';
+import 'package:save_heaven/features/orphanage_dontaion/data/models/adoption_requests.dart';
+import 'package:save_heaven/features/profile/data/models/child_model.dart';
 import 'package:save_heaven/features/profile/data/models/porfile_model.dart';
 
 abstract interface class ProfileRemoteDataSource {
@@ -16,7 +18,7 @@ abstract interface class ProfileRemoteDataSource {
     required ProfileUpdateparams params,
   });
   Future<Either<Failure, void>> addNewOrphan({required OrphanParams params});
-  Future<Either<Failure, void>> getOurKids(String id);
+  Future<Either<Failure, List<ChildModel>>> getOurKids(String id);
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -106,14 +108,15 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, void>> getOurKids(String id) async {
+  Future<Either<Failure, List<ChildModel>>> getOurKids(String id) async {
     try {
       final result = await apiService.get(
         endpoint: ApiEndpoints.getChildren(id),
-
         hasToken: true,
       );
-      return Right(null);
+      final json = result.data['data'] as List<dynamic>;
+
+      return Right(json.map((e) => ChildModel.fromJson(e)).toList());
     } on DioException catch (e) {
       return Left(
         Failure(
