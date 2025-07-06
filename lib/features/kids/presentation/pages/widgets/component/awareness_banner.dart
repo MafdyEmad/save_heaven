@@ -8,8 +8,9 @@ class AwarenessBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       height: 120,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.symmetric(vertical: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.yellow,
@@ -25,7 +26,11 @@ class AwarenessBanner extends StatelessWidget {
         children: const [
           Text(
             "Take Action Today:",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.white),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              color: AppColors.white,
+            ),
           ),
           SizedBox(height: 4),
           Text(

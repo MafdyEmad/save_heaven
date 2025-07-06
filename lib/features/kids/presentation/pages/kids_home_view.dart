@@ -10,10 +10,7 @@ class KidsHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => OrphanageNearCubit()..loadOrphanages()),
-        BlocProvider(create: (_) => NavigationCubit()..changeTab(1)),
-      ],
+      providers: [BlocProvider(create: (_) => NavigationCubit()..changeTab(1))],
       child: const KidsHomeBody(),
     );
   }

@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final VoidCallback? onTap;
+  final Function(String)? onChanged;
 
   const CustomTextField({
     super.key,
@@ -21,6 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.controller,
     this.validator,
     this.onTap,
+    this.onChanged,
   });
 
   @override
@@ -28,6 +30,7 @@ class CustomTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
+        onChanged: onChanged,
         controller: controller,
         validator: validator,
 

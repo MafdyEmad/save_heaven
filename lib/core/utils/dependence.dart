@@ -6,6 +6,8 @@ import 'package:save_heaven/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:save_heaven/features/auth/presentation/manager/Orphanage%20Data%20cubit/orphanage_data_cubit.dart';
 import 'package:save_heaven/features/chat/data/chat_remote_data_source.dart';
 import 'package:save_heaven/features/chat/presentation/cubit/chat_cubit.dart';
+import 'package:save_heaven/features/kids/presentation/cubit/orphanage%20cubit/orphanage_near_cubit.dart';
+import 'package:save_heaven/features/kids/presentation/data_source/remote_data_source.dart';
 import 'package:save_heaven/features/notifications/data/data_source/notification_remote_data_source.dart';
 import 'package:save_heaven/features/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:save_heaven/features/orphanage_dontaion/data/data_source/orphanage_donation_remote_data_source.dart';
@@ -26,6 +28,7 @@ void setupDependency() {
   _setUpOrphanageDonation();
   _setUpProfile();
   _setChat();
+  _setUpOrphanage();
 }
 
 void _setAuth() {
@@ -34,6 +37,15 @@ void _setAuth() {
   );
   getIt.registerLazySingleton<AuthCubit>(
     () => AuthCubit(getIt<AuthRemoteDataSource>()),
+  );
+}
+
+void _setUpOrphanage() {
+  getIt.registerLazySingleton<OrphanageRemoteDataSource>(
+    () => OrphanageRemoteDataSourceImpl(apiService: getIt<ApiService>()),
+  );
+  getIt.registerLazySingleton<OrphanageNearCubit>(
+    () => OrphanageNearCubit(getIt<OrphanageRemoteDataSource>()),
   );
 }
 

@@ -57,7 +57,7 @@ class _DonorNavScreenState extends State<DonorNavScreen> {
           valueListenable: screenIndex,
           builder: (context, index, child) => Text(switch (index) {
             0 => 'Home',
-            1 => 'Kids',
+            1 => 'orphanages',
             2 => 'Chats',
             3 => 'Profile',
             _ => '',
