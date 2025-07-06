@@ -15,7 +15,10 @@ class OrphanageCard extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: width * 0.035, horizontal: width * 0.03),
+      padding: EdgeInsets.symmetric(
+        vertical: width * 0.035,
+        horizontal: width * 0.03,
+      ),
       height: width * 0.6,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue.shade100),
@@ -29,7 +32,10 @@ class OrphanageCard extends StatelessWidget {
           Text(
             model.name,
             textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: width * 0.03),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: width * 0.03,
+            ),
           ),
           SizedBox(height: width * 0.015),
           Row(
@@ -41,11 +47,16 @@ class OrphanageCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: width * 0.02),
-          CustomButton(
-            text: "Donate♡",
+          ElevatedButton(
             onPressed: () {
               context.push(const DonationTypePage());
             },
+            child: Text(
+              'Donate♡',
+              style: context.textTheme.headlineLarge?.copyWith(
+                color: Colors.white,
+              ),
+            ),
           ),
 
           SizedBox(height: width * 0.02),

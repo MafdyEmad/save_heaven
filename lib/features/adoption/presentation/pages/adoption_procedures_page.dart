@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
-import 'package:save_heaven/core/widgets/custom_button.dart';
 import 'package:save_heaven/features/adoption/presentation/pages/adoption_request_form_page.dart';
 
 class AdoptionProceduresPage extends StatelessWidget {
@@ -33,7 +32,10 @@ class AdoptionProceduresPage extends StatelessWidget {
                   const Center(
                     child: Text(
                       "Adoption Procedures",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -42,27 +44,32 @@ class AdoptionProceduresPage extends StatelessWidget {
               _buildStepCard(
                 context,
                 title: "Step 1: Submit Application",
-                description: "Complete The Adoption Request Form With Your Details.",
+                description:
+                    "Complete The Adoption Request Form With Your Details.",
               ),
               _buildStepCard(
                 context,
                 title: "Step 2: Initial Screening",
-                description: "Our Team Will Review Your Application And We Will Contact You.",
+                description:
+                    "Our Team Will Review Your Application And We Will Contact You.",
               ),
               _buildStepCard(
                 context,
                 title: "Step 3: Home Visit",
-                description: "A Social Worker Will Visit Your Home To Assess The Environment.",
+                description:
+                    "A Social Worker Will Visit Your Home To Assess The Environment.",
               ),
               _buildStepCard(
                 context,
                 title: "Step 4: Approval & Matching",
-                description: "Once Approved, We Match You With A Child Based On Your Preferences.",
+                description:
+                    "Once Approved, We Match You With A Child Based On Your Preferences.",
               ),
               _buildStepCard(
                 context,
                 title: "Step 5: Legal Finalization",
-                description: "Complete Legal Procedures To Finalize The Adoption Process.",
+                description:
+                    "Complete Legal Procedures To Finalize The Adoption Process.",
               ),
               const SizedBox(height: 30),
               CustomButton(
@@ -79,7 +86,11 @@ class AdoptionProceduresPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStepCard(BuildContext context, {required String title, required String description}) {
+  Widget _buildStepCard(
+    BuildContext context, {
+    required String title,
+    required String description,
+  }) {
     final width = MediaQuery.of(context).size.width;
     return Container(
       margin: EdgeInsets.only(bottom: width * 0.04),
@@ -99,12 +110,18 @@ class AdoptionProceduresPage extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontSize: width * 0.04, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: width * 0.04,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: TextStyle(fontSize: width * 0.035, color: Colors.grey[600]),
+                  style: TextStyle(
+                    fontSize: width * 0.035,
+                    color: Colors.grey[600],
+                  ),
                 ),
               ],
             ),

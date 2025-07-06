@@ -83,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen>
       if (secureBox.isNotEmpty) {
         final String token = secureBox.getAt(0);
         final userId = JwtDecoder.decode(token)['userId'];
-        WebSocketServices.emitEvent('openApp', {'userId': userId});
+
         final UserHive user = HiveBoxes.userBox.get(userId);
         if (user.role == 'Donor') {
           context.pushReplacement(DonorNavScreen());

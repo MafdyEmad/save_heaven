@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
+import 'package:save_heaven/core/services/web_socket.dart';
+import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/features/chat/models/chat_model.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final Chat chat;
+  const ChatScreen({super.key, required this.chat});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -40,12 +44,15 @@ class _ChatScreenState extends State<ChatScreen> {
                   width: 65,
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(
-                      'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                      ApiEndpoints.imageProvider + widget.chat.user.image,
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
-                Text("Mafdy", style: context.textTheme.titleLarge),
+                Text(
+                  widget.chat.user.name,
+                  style: context.textTheme.titleLarge,
+                ),
               ],
             ),
             Expanded(
@@ -165,7 +172,15 @@ class _ChatScreenState extends State<ChatScreen> {
                           AppPalette.primaryColor,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        print('asd');
+                        WebSocketServices.emitEvent('SendMessage', {
+                          "senderId": "6866c767ab8a10d94f8cc53d",
+                          "receiverId": "6866f4235a704cb6e7a37655",
+                          "message": "hiii",
+                          "chatId": "6867e6ab0934f7dedb5de355",
+                        });
+                      },
                       icon: Icon(Icons.send_rounded, color: Colors.white),
                     ),
                   ],

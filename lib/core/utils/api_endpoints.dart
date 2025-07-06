@@ -1,10 +1,7 @@
 class ApiEndpoints {
-  static const String _base =
-      'https://f168-156-211-9-212.ngrok-free.app/api/v1';
-  static const String socketUrl = 'ws://f168-156-211-9-212.ngrok-free.app ';
-
-  static const String imageProvider =
-      'https://f168-156-211-9-212.ngrok-free.app';
+  static const String _base = 'http://192.168.1.121:8000/api/v1';
+  static const String socketUrl = 'ws://192.168.1.121:8000';
+  static const String imageProvider = 'http://192.168.1.121:8000';
   static const String posts = '$_base/posts';
   static String getChildren(String id) => '$_base/users/$id/children';
   static const String getUser = '$_base/users/getMe';

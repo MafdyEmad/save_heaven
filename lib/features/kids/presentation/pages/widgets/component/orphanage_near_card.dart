@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
 import 'package:save_heaven/features/kids/data/models/orphanage_near_card_model.dart';
+import 'package:save_heaven/features/kids/presentation/pages/display_all_kids_view.dart';
+import 'package:save_heaven/features/kids/presentation/pages/kids_home_view.dart';
 
 class OrphanageNearCard extends StatelessWidget {
   final OrphanageNearCardModel model;
@@ -28,7 +31,10 @@ class OrphanageNearCard extends StatelessWidget {
           Text(
             model.name,
             textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: width * 0.03),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: width * 0.03,
+            ),
           ),
           SizedBox(height: width * 0.01),
 
@@ -44,7 +50,9 @@ class OrphanageNearCard extends StatelessWidget {
 
           CustomButton(
             text: "Adopt",
-            onPressed: () {},
+            onPressed: () {
+              context.push(DisplayAllKidsView());
+            },
             width: width * 0.42,
             height: width * 0.08,
             fontSize: width * 0.03,

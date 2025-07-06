@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
-import 'package:save_heaven/core/widgets/custom_button.dart';
 import 'package:save_heaven/features/kids/presentation/pages/kids_home_view.dart';
 
 class AdoptionSuccessPage extends StatelessWidget {
@@ -55,7 +54,10 @@ class AdoptionSuccessPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Application Details", style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text(
+                    "Application Details",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 8),
                   Text("Request ID: $requestId"),
                   Text("Submission Date: $submissionDate"),

@@ -32,7 +32,10 @@ class FilterBody extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.black),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: AppColors.black,
+                    ),
                     onPressed: () => context.pop(),
                   ),
                   const SizedBox(width: 12),
@@ -47,22 +50,50 @@ class FilterBody extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              Container(height: 1, color: AppColors.yellow, width: double.infinity),
+              Container(
+                height: 1,
+                color: AppColors.yellow,
+                width: double.infinity,
+              ),
               const SizedBox(height: 24),
 
               buildTitle("Gender"),
               buildChipsRow([
-                FilterChipWidget(label: "Male", selected: state.gender, onTap: cubit.selectGender),
-                FilterChipWidget(label: "Female", selected: state.gender, onTap: cubit.selectGender),
+                FilterChipWidget(
+                  label: "Male",
+                  selected: state.gender,
+                  onTap: cubit.selectGender,
+                ),
+                FilterChipWidget(
+                  label: "Female",
+                  selected: state.gender,
+                  onTap: cubit.selectGender,
+                ),
               ]),
 
               const SizedBox(height: 16),
               buildTitle("Age"),
               buildChipsRow([
-                FilterChipWidget(label: "0-3", selected: state.ageGroup, onTap: cubit.selectAgeGroup),
-                FilterChipWidget(label: "4-6", selected: state.ageGroup, onTap: cubit.selectAgeGroup),
-                FilterChipWidget(label: "7-12", selected: state.ageGroup, onTap: cubit.selectAgeGroup),
-                FilterChipWidget(label: "+13", selected: state.ageGroup, onTap: cubit.selectAgeGroup),
+                FilterChipWidget(
+                  label: "0-3",
+                  selected: state.ageGroup,
+                  onTap: cubit.selectAgeGroup,
+                ),
+                FilterChipWidget(
+                  label: "4-6",
+                  selected: state.ageGroup,
+                  onTap: cubit.selectAgeGroup,
+                ),
+                FilterChipWidget(
+                  label: "7-12",
+                  selected: state.ageGroup,
+                  onTap: cubit.selectAgeGroup,
+                ),
+                FilterChipWidget(
+                  label: "+13",
+                  selected: state.ageGroup,
+                  onTap: cubit.selectAgeGroup,
+                ),
               ]),
 
               const SizedBox(height: 16),
@@ -84,8 +115,16 @@ class FilterBody extends StatelessWidget {
 
               buildTitle("Religion"),
               buildChipsRow([
-                FilterChipWidget(label: "Muslim", selected: state.religion, onTap: cubit.selectReligion),
-                FilterChipWidget(label: "Christian", selected: state.religion, onTap: cubit.selectReligion),
+                FilterChipWidget(
+                  label: "Muslim",
+                  selected: state.religion,
+                  onTap: cubit.selectReligion,
+                ),
+                FilterChipWidget(
+                  label: "Christian",
+                  selected: state.religion,
+                  onTap: cubit.selectReligion,
+                ),
               ]),
 
               const SizedBox(height: 16),
@@ -99,9 +138,21 @@ class FilterBody extends StatelessWidget {
 
               buildTitle("Hair Type"),
               buildChipsRow([
-                FilterChipWidget(label: "Curly", selected: state.hairType, onTap: cubit.selectHairType),
-                FilterChipWidget(label: "Wavy", selected: state.hairType, onTap: cubit.selectHairType),
-                FilterChipWidget(label: "Straight", selected: state.hairType, onTap: cubit.selectHairType),
+                FilterChipWidget(
+                  label: "Curly",
+                  selected: state.hairType,
+                  onTap: cubit.selectHairType,
+                ),
+                FilterChipWidget(
+                  label: "Wavy",
+                  selected: state.hairType,
+                  onTap: cubit.selectHairType,
+                ),
+                FilterChipWidget(
+                  label: "Straight",
+                  selected: state.hairType,
+                  onTap: cubit.selectHairType,
+                ),
               ]),
 
               const SizedBox(height: 24),
@@ -124,7 +175,9 @@ class FilterBody extends StatelessWidget {
                     child: CustomButton(
                       text: "Search",
                       onPressed: () {
-                        print("Filters: ${state.gender}, ${state.ageGroup}, ${state.level}");
+                        print(
+                          "Filters: ${state.gender}, ${state.ageGroup}, ${state.level}",
+                        );
                       },
                       borderRadius: 12,
                       height: itemHeight,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/curved_bottom_navBar.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_fab.dart';
 import 'package:save_heaven/features/donation/presentation/pages/widgets/donation_type_body.dart';
@@ -18,11 +19,12 @@ class DonationTypePage extends StatelessWidget {
           final height = MediaQuery.of(context).size.height;
 
           return Scaffold(
+            appBar: AppBar(
+              centerTitle: true,
+              title: Text('Donation', style: context.textTheme.titleLarge),
+            ),
             backgroundColor: Colors.white,
             body: DonationTypeBody(width: width, height: height),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-            floatingActionButton: const CustomFAB(),
-            bottomNavigationBar: CurvedBottomNavBar(),
           );
         },
       ),

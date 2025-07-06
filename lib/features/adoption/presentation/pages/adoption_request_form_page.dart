@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
-import 'package:save_heaven/core/widgets/custom_button.dart';
 import 'package:save_heaven/features/adoption/presentation/cubit/adoption_request_cubit.dart';
 import 'package:save_heaven/features/adoption/presentation/pages/adoption_success_page.dart';
 import 'package:save_heaven/features/adoption/presentation/pages/widgets/custom_request_field.dart';
@@ -25,7 +24,10 @@ class AdoptionRequestFormPage extends StatelessWidget {
           return Scaffold(
             backgroundColor: Colors.white,
             body: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.06, vertical: height * 0.02),
+              padding: EdgeInsets.symmetric(
+                horizontal: width * 0.06,
+                vertical: height * 0.02,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -42,7 +44,10 @@ class AdoptionRequestFormPage extends StatelessWidget {
                       ),
                       const Text(
                         "Adoption Request Form",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -62,39 +67,56 @@ class AdoptionRequestFormPage extends StatelessWidget {
                           hintText: "Enter your income",
                           controller: cubit.incomeController,
                           keyboardType: TextInputType.number,
-                          validator: (val) =>
-                              val == null || val.isEmpty ? "Monthly income is required" : null,
+                          validator: (val) => val == null || val.isEmpty
+                              ? "Monthly income is required"
+                              : null,
                         ),
                         CustomRequestField(
                           label: "Religion",
                           hintText: "Select religion",
-                          dropdownItems: const ["Islam", "Christianity", "Other"],
+                          dropdownItems: const [
+                            "Islam",
+                            "Christianity",
+                            "Other",
+                          ],
                           selectedValue: cubit.religion,
                           onChanged: (val) => cubit.religion = val,
-                          validator: (val) => val == null || val.isEmpty ? "Religion is required" : null,
+                          validator: (val) => val == null || val.isEmpty
+                              ? "Religion is required"
+                              : null,
                         ),
                         CustomRequestField(
                           label: "Location",
                           hintText: "Select location",
-                          dropdownItems: const ["Cairo", "Alexandria", "Giza", "Other"],
+                          dropdownItems: const [
+                            "Cairo",
+                            "Alexandria",
+                            "Giza",
+                            "Other",
+                          ],
                           selectedValue: cubit.location,
                           onChanged: (val) => cubit.location = val,
-                          validator: (val) => val == null || val.isEmpty ? "Location is required" : null,
+                          validator: (val) => val == null || val.isEmpty
+                              ? "Location is required"
+                              : null,
                         ),
                         CustomRequestField(
                           label: "Phone Number",
                           hintText: "Enter 11-digit number",
                           controller: cubit.phoneController,
                           keyboardType: TextInputType.phone,
-                          validator: (val) =>
-                              val == null || val.length != 11 ? "Phone number must be 11 digits" : null,
+                          validator: (val) => val == null || val.length != 11
+                              ? "Phone number must be 11 digits"
+                              : null,
                         ),
                         CustomRequestField(
                           label: "Why Do You Want To Adopt?",
                           hintText: "Write your motivation",
                           controller: cubit.reasonController,
                           maxLines: 4,
-                          validator: (val) => val == null || val.isEmpty ? "This field is required" : null,
+                          validator: (val) => val == null || val.isEmpty
+                              ? "This field is required"
+                              : null,
                         ),
                         const SizedBox(height: 20),
                         CustomButton(
