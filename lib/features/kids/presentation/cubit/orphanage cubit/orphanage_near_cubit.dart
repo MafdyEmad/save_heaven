@@ -16,4 +16,13 @@ class OrphanageNearCubit extends Cubit<OrphangesState> {
       (r) => emit(OrphangesLoaded(orphanagesResponse: r)),
     );
   }
+
+  void getAllKids(String id) async {
+    emit(GetAllKidsLoading());
+    var result = await orphanageRemoteDataSource.getAllKids(id);
+    result.fold(
+      (l) => emit(GetAllKidsError(message: l.message)),
+      (r) => emit(GetAllKidsLoaded(children: r)),
+    );
+  }
 }

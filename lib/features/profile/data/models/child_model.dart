@@ -33,20 +33,20 @@ class ChildModel {
 
   factory ChildModel.fromJson(Map<String, dynamic> json) {
     return ChildModel(
-      id: json['_id'] as String,
-      name: json['name'] as String,
-      gender: json['gender'] as String,
-      eyeColor: json['eyeColor'] as String,
-      skinTone: json['skinTone'] as String,
-      hairColor: json['hairColor'] as String,
-      hairStyle: json['hairStyle'] as String,
-      religion: json['religion'] as String,
-      birthdate: DateTime.parse(json['birthdate'] as String),
-      image: json['image'] as String,
-      orphanage: Orphanage.fromJson(json['orphanage'] as Map<String, dynamic>),
+      id: json['_id'] ?? '',
+      name: json['name'] ?? '',
+      gender: json['gender'] ?? '',
+      eyeColor: json['eyeColor'] ?? '',
+      skinTone: json['skinTone'] ?? '',
+      hairColor: json['hairColor'] ?? '',
+      hairStyle: json['hairStyle'] ?? '',
+      religion: json['religion'] ?? '',
+      birthdate: DateTime.parse(json['birthdate'] ?? ''),
+      image: json['image'] ?? '',
+      orphanage: Orphanage.fromJson(json['orphanage']),
       personality: json['personality'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['createdAt'] ?? ''),
+      updatedAt: DateTime.parse(json['updatedAt'] ?? ''),
     );
   }
 

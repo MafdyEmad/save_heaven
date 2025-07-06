@@ -53,7 +53,7 @@ class OrphanageNearCard extends StatelessWidget {
           CustomButton(
             text: "Adopt",
             onPressed: () {
-              context.push(DisplayAllKidsView());
+              context.push(DisplayAllKidsView(id: orphanage.id));
             },
             width: width * 0.42,
             height: width * 0.08,

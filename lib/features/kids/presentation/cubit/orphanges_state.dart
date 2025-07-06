@@ -21,3 +21,16 @@ final class OrphangesLoaded extends OrphangesState {
   final OrphanagesResponse orphanagesResponse;
   const OrphangesLoaded({required this.orphanagesResponse});
 }
+
+// ? GET ORPHANGES
+final class GetAllKidsLoading extends OrphangesState {}
+
+final class GetAllKidsError extends OrphangesState {
+  final String message;
+  const GetAllKidsError({required this.message});
+}
+
+final class GetAllKidsLoaded extends OrphangesState {
+  final List<ChildModel> children;
+  const GetAllKidsLoaded({required this.children});
+}
