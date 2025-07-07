@@ -11,6 +11,7 @@ class ApiEndpoints {
   static const String getOrphanages = '$_base/users/orphanages';
   static String getAllKids(String id) => '$_base/users/$id/children';
   static const String updateUser = '$_base/users/updateMe';
+  static const String adopt = '$_base/adoption-requests';
   static const String children = '$_base/children';
   static String rePost(postId) => '$_base/posts/$postId/repost';
   static const String reactPost = '$_base/reactions';

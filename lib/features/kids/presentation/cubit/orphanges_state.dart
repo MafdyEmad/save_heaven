@@ -34,3 +34,15 @@ final class GetAllKidsLoaded extends OrphangesState {
   final List<ChildModel> children;
   const GetAllKidsLoaded({required this.children});
 }
+
+// ? ADOPT
+final class AdoptLoading extends OrphangesState {}
+
+final class AdoptError extends OrphangesState {
+  final String message;
+  const AdoptError({required this.message});
+}
+
+final class AdoptLoaded extends OrphangesState {
+  const AdoptLoaded();
+}

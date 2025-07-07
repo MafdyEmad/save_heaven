@@ -6,6 +6,7 @@ class CustomTextField extends StatelessWidget {
   final IconData? icon;
   final bool isPassword;
   final bool isVisible;
+  final int? maxLines;
   final VoidCallback? onToggleVisibility;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -23,6 +24,7 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.onTap,
     this.onChanged,
+    this.maxLines,
   });
 
   @override
@@ -30,10 +32,10 @@ class CustomTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
+        maxLines: isPassword ? 1 : (maxLines ?? 1),
         onChanged: onChanged,
         controller: controller,
         validator: validator,
-
         obscureText: isPassword ? isVisible : false,
         onTap: onTap,
         readOnly: onTap != null,

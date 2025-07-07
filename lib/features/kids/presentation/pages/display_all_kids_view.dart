@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:save_heaven/core/utils/app_colors.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
-import 'package:save_heaven/core/utils/widgets%20reuseable/search_bar.dart';
+import 'package:save_heaven/core/utils/widgets%20reuseable/custom_text_field.dart';
 import 'package:save_heaven/features/kids/presentation/cubit/orphanage%20cubit/orphanage_near_cubit.dart';
 import 'package:save_heaven/features/kids/presentation/cubit/orphanges_cubit.dart';
 import 'package:save_heaven/features/kids/presentation/pages/widgets/component/kid_profile_card.dart';
@@ -19,12 +21,24 @@ class DisplayAllKidsView extends StatefulWidget {
 }
 
 class _DisplayAllKidsViewState extends State<DisplayAllKidsView> {
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    search.dispose();
+    super.dispose();
+  }
+
+  List filterData = [];
+  final search = TextEditingController();
   final bloc = getIt<OrphanageNearCubit>();
   final states = List.unmodifiable([
     GetAllKidsLoading,
     GetAllKidsError,
     GetAllKidsLoaded,
   ]);
+
   @override
   void initState() {
     bloc.getAllKids(widget.id);
@@ -81,7 +95,7 @@ class _DisplayAllKidsViewState extends State<DisplayAllKidsView> {
                           ),
                         ),
                         separatorBuilder: (context, index) =>
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                         itemCount: 10,
                       );
                     }
@@ -96,22 +110,52 @@ class _DisplayAllKidsViewState extends State<DisplayAllKidsView> {
                       }
                       return Column(
                         children: [
-                          const SearchBarWidget(),
-
+                          CustomTextField(
+                            hint: 'Search...',
+                            controller: search,
+                            onChanged: (p0) {
+                              _timer?.cancel();
+                              _timer = Timer(
+                                const Duration(milliseconds: 500),
+                                () {
+                                  setState(() {
+                                    filterData = state.children
+                                        .where(
+                                          (element) => element.name
+                                              .toLowerCase()
+                                              .contains(p0.toLowerCase()),
+                                        )
+                                        .toList();
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 10),
                           Expanded(
-                            child: ListView.builder(
-                              itemCount: state.children.length,
-                              itemBuilder: (context, index) {
-                                return KidProfileCard(
-                                  kid: state.children[index],
-                                );
-                              },
-                            ),
+                            child: search.text.isNotEmpty && filterData.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'No kids found',
+                                      style: context.textTheme.headlineLarge,
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    itemCount: search.text.isNotEmpty
+                                        ? filterData.length
+                                        : state.children.length,
+                                    itemBuilder: (context, index) {
+                                      final kid = search.text.isNotEmpty
+                                          ? filterData[index]
+                                          : state.children[index];
+                                      return KidProfileCard(kid: kid);
+                                    },
+                                  ),
                           ),
                         ],
                       );
                     }
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   },
                 ),
               ),

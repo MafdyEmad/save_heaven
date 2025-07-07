@@ -1,53 +1,65 @@
+import 'package:save_heaven/features/profile/data/models/child_model.dart';
+
 class AdoptionRequestsModel {
   final String id;
-  final String userId;
-  final Child childId;
+  final User user; // nested User object
+  final ChildModel child; // nested Child object with more fields
   final String status;
   final DateTime createdAt;
+  final String orphanage;
+  final String reason;
+  final String phone;
+  final String location;
+  final int monthlyIncome;
+  final String occupation;
+  final String religion;
+  final String maritalStatus;
+  final DateTime updatedAt;
 
   AdoptionRequestsModel({
     required this.id,
-    required this.userId,
-    required this.childId,
+    required this.user,
+    required this.child,
     required this.status,
     required this.createdAt,
+    required this.orphanage,
+    required this.reason,
+    required this.phone,
+    required this.location,
+    required this.monthlyIncome,
+    required this.occupation,
+    required this.religion,
+    required this.maritalStatus,
+    required this.updatedAt,
   });
+
   factory AdoptionRequestsModel.fromJson(Map<String, dynamic> json) {
     return AdoptionRequestsModel(
-      id: json['_id'],
-      userId: json['userId'] ?? '',
-      childId: Child.fromJson(json['childId']),
-      status: json['status'],
-      createdAt: DateTime.parse(json['createdAt']),
+      id: json['_id'] as String,
+      user: User.fromJson(json['userId'] as Map<String, dynamic>),
+      child: ChildModel.fromJson(json['childId'] as Map<String, dynamic>),
+      status: json['status'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      orphanage: json['orphanage'] as String,
+      reason: json['reason'] as String,
+      phone: json['phone'] as String,
+      location: json['location'] as String,
+      monthlyIncome: json['monthlyIncome'] as int,
+      occupation: json['occupation'] as String,
+      religion: json['religion'] as String,
+      maritalStatus: json['maritalStatus'] as String,
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
   }
 }
 
-class Child {
+class User {
   final String id;
   final String name;
-  final int age;
-  final String gender;
-  final String religion;
-  final String image;
 
-  Child({
-    required this.id,
-    required this.name,
-    required this.age,
-    required this.gender,
-    required this.religion,
-    required this.image,
-  });
+  User({required this.id, required this.name});
 
-  factory Child.fromJson(Map<String, dynamic> json) {
-    return Child(
-      id: json['_id'],
-      name: json['name'],
-      age: json['age'],
-      gender: json['gender'],
-      religion: json['religion'],
-      image: json['image'],
-    );
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(id: json['_id'] as String, name: json['name'] as String);
   }
 }

@@ -43,10 +43,16 @@ class ChildModel {
       religion: json['religion'] ?? '',
       birthdate: DateTime.parse(json['birthdate'] ?? ''),
       image: json['image'] ?? '',
-      orphanage: Orphanage.fromJson(json['orphanage']),
+      orphanage: json['orphanage'] == null
+          ? Orphanage(id: '', name: '')
+          : Orphanage.fromJson(json['orphanage']),
       personality: json['personality'] as String,
-      createdAt: DateTime.parse(json['createdAt'] ?? ''),
-      updatedAt: DateTime.parse(json['updatedAt'] ?? ''),
+      createdAt: json['createdAt'] == null
+          ? DateTime.now()
+          : DateTime.parse(json['createdAt']),
+      updatedAt: json['updatedAt'] == null
+          ? DateTime.now()
+          : DateTime.parse(json['updatedAt']),
     );
   }
 

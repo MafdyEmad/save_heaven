@@ -26,7 +26,7 @@ class _OrphanageRequestsScreenAndDonationsState
   @override
   void initState() {
     bloc.getRequests();
-    bloc.getDonationItems();
+    // bloc.getDonationItems();
     super.initState();
   }
 

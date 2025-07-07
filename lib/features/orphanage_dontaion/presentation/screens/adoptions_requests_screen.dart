@@ -6,6 +6,7 @@ import 'package:save_heaven/core/config/app_palette.dart';
 import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/assets_images.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/features/orphanage_dontaion/data/models/adoption_requests.dart';
 import 'package:save_heaven/features/orphanage_dontaion/presentation/cubit/orphanage_donation_state_cubit.dart';
 import 'package:save_heaven/features/orphanage_dontaion/presentation/screens/request_details_screen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -19,7 +20,7 @@ class AdoptionsRequestsScreen extends StatefulWidget {
 }
 
 class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
-  final requestsStates = List.unmodifiable([
+  final List<Type> requestsStates = List.unmodifiable([
     GetDonationsRequestsLoading,
     GetDonationsRequestsFail,
     GetDonationsRequestsSuccess,
@@ -42,7 +43,7 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                 color: Colors.white,
               ),
             ),
-            separatorBuilder: (_, __) => SizedBox(height: 8),
+            separatorBuilder: (_, __) => const SizedBox(height: 8),
             itemCount: 10,
           );
         }
@@ -66,7 +67,7 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
           return Column(
             children: [
               Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: AppPalette.primaryColor,
                   borderRadius: BorderRadius.circular(12),
@@ -75,7 +76,7 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                 child: Column(
                   children: [
                     Image.asset(AssetsImages.don, width: 50),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       'This Month\'s Summary Adopted Children: ${requests.length}',
                       textAlign: TextAlign.center,
@@ -86,13 +87,13 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                 child: ListView.separated(
-                  separatorBuilder: (_, __) => SizedBox(height: 12),
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemCount: requests.length,
                   itemBuilder: (context, index) {
-                    final request = requests[index];
+                    final AdoptionRequestsModel request = requests[index];
                     final Color statusColor = switch (request.status) {
                       'pending' => Colors.blue,
                       'approved' => Colors.green,
@@ -101,12 +102,12 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                     };
 
                     return Container(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: Color(0xffe6ecfa),
+                        color: const Color(0xffe6ecfa),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       width: double.infinity,
@@ -131,73 +132,93 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                                   backgroundColor: Colors.grey.shade100,
                                   child: CachedNetworkImage(
                                     imageUrl:
-                                        '${ApiEndpoints.imageProvider}/${request.childId.image}',
+                                        '${ApiEndpoints.imageProvider}/${request.child.image}',
                                     errorWidget: (context, url, error) =>
-                                        Icon(Icons.person, color: Colors.grey),
+                                        const Icon(
+                                          Icons.person,
+                                          color: Colors.grey,
+                                        ),
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    request.childId.name,
-                                    style: context.textTheme.titleLarge
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w900,
-                                          color: AppPalette.primaryColor,
-                                        ),
-                                  ),
-                                  RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: 'Request ID: ',
-                                          style: context.textTheme.headlineLarge
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.w900,
-                                                color: Colors.grey,
-                                              ),
-                                        ),
-                                        TextSpan(
-                                          text: '',
-                                          style: context.textTheme.headlineLarge
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.w500,
-                                                color: AppPalette.primaryColor,
-                                              ),
-                                        ),
-                                      ],
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      request.child.name,
+                                      style: context.textTheme.titleLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            color: AppPalette.primaryColor,
+                                          ),
                                     ),
-                                  ),
-                                  RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: 'Applicant Name: ',
-                                          style: context.textTheme.headlineLarge
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.w900,
-                                                color: Colors.grey,
-                                              ),
-                                        ),
-                                        TextSpan(
-                                          text: '', // Adjust if applicable
-                                          style: context.textTheme.headlineLarge
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.w500,
-                                                color: AppPalette.primaryColor,
-                                              ),
-                                        ),
-                                      ],
+                                    RichText(
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'Request ID: ',
+                                            style: context
+                                                .textTheme
+                                                .headlineLarge
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w900,
+                                                  color: Colors.grey,
+                                                ),
+                                          ),
+                                          TextSpan(
+                                            text: request.id,
+                                            style: context
+                                                .textTheme
+                                                .headlineLarge
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w500,
+                                                  color:
+                                                      AppPalette.primaryColor,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(height: 4),
+                                    RichText(
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'Applicant Name: ',
+                                            style: context
+                                                .textTheme
+                                                .headlineLarge
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w900,
+                                                  color: Colors.grey,
+                                                ),
+                                          ),
+                                          TextSpan(
+                                            text: request.user.name,
+                                            style: context
+                                                .textTheme
+                                                .headlineLarge
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w500,
+                                                  color:
+                                                      AppPalette.primaryColor,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                          Divider(),
+                          const Divider(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -219,13 +240,11 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                                       color: Colors.black,
                                     ),
                               ),
+
                               ElevatedButton(
                                 onPressed: () {
                                   context.push(
-                                    RequestDetailsScreen(
-                                      id: request.id,
-                                      status: request.status,
-                                    ),
+                                    RequestDetailsScreen(request: request),
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -255,7 +274,7 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
           );
         }
 
-        return const SizedBox.shrink(); // fallback for safety
+        return const SizedBox.shrink();
       },
     );
   }

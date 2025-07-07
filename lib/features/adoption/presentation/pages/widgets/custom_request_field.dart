@@ -39,21 +39,29 @@ class CustomRequestField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: width * 0.037,
-            )),
+        Text(
+          label,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: width * 0.037,
+          ),
+        ),
         const SizedBox(height: 6),
 
         dropdownItems != null
             ? DropdownButtonFormField<String>(
                 value: selectedValue,
                 items: dropdownItems!
-                    .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+                    .map(
+                      (item) =>
+                          DropdownMenuItem(value: item, child: Text(item)),
+                    )
                     .toList(),
                 onChanged: onChanged,
-                validator: validator ?? (val) => val == null || val.isEmpty ? 'Required field' : null,
+                validator:
+                    validator ??
+                    (val) =>
+                        val == null || val.isEmpty ? 'Required field' : null,
                 decoration: _buildDecoration(),
               )
             : TextFormField(
@@ -62,7 +70,10 @@ class CustomRequestField extends StatelessWidget {
                 maxLines: maxLines,
                 readOnly: onTap != null || readOnly,
                 onTap: onTap,
-                validator: validator ?? (val) => val == null || val.isEmpty ? 'Required field' : null,
+                validator:
+                    validator ??
+                    (val) =>
+                        val == null || val.isEmpty ? 'Required field' : null,
                 decoration: _buildDecoration(prefixIcon: icon, hint: hintText),
               ),
 
@@ -73,13 +84,13 @@ class CustomRequestField extends StatelessWidget {
 
   InputDecoration _buildDecoration({IconData? prefixIcon, String? hint}) {
     return InputDecoration(
-      hintText: hint, // ✅ استخدمنا الهينت هنا
+      hintText: hint,
       filled: true,
       fillColor: const Color(0xFFF5F5F5),
       prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(100),
         borderSide: BorderSide.none,
       ),
     );

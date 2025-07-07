@@ -6,7 +6,6 @@ import 'package:save_heaven/core/utils/app_colors.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
 import 'package:save_heaven/features/adoption/presentation/pages/adoption_procedures_page.dart';
-import 'package:save_heaven/features/kids/data/models/kid_model.dart';
 import 'package:save_heaven/features/profile/data/models/child_model.dart';
 
 class KidProfileCard extends StatelessWidget {
@@ -137,7 +136,7 @@ class KidProfileCard extends StatelessWidget {
                 height: 40,
                 text: "Adopt",
                 onPressed: () {
-                  context.push(AdoptionProceduresPage());
+                  context.push(AdoptionProceduresPage(child: kid));
                 },
                 backgroundColor: AppColors.primary,
                 // fontSize: screenWidth * 0.035,

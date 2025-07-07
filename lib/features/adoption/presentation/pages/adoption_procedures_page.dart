@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
 import 'package:save_heaven/features/adoption/presentation/pages/adoption_request_form_page.dart';
+import 'package:save_heaven/features/profile/data/models/child_model.dart';
 
 class AdoptionProceduresPage extends StatelessWidget {
-  const AdoptionProceduresPage({super.key});
+  final ChildModel child;
+  const AdoptionProceduresPage({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +77,7 @@ class AdoptionProceduresPage extends StatelessWidget {
               CustomButton(
                 text: 'Start Adoption',
                 onPressed: () {
-                  context.push(const AdoptionRequestFormPage());
+                  context.push(AdoptionRequestFormPage(child: child));
                 },
               ),
               const SizedBox(height: 30),

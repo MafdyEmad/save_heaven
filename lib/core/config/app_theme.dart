@@ -14,8 +14,12 @@ class AppTheme {
     ),
     datePickerTheme: DatePickerThemeData(
       backgroundColor: _backGroundColor,
-      confirmButtonStyle: ButtonStyle(textStyle: WidgetStatePropertyAll(TextStylesManager.bodyLargeLight)),
-      cancelButtonStyle: ButtonStyle(textStyle: WidgetStatePropertyAll(TextStylesManager.bodyLargeLight)),
+      confirmButtonStyle: ButtonStyle(
+        textStyle: WidgetStatePropertyAll(TextStylesManager.bodyLargeLight),
+      ),
+      cancelButtonStyle: ButtonStyle(
+        textStyle: WidgetStatePropertyAll(TextStylesManager.bodyLargeLight),
+      ),
     ),
     radioTheme: RadioThemeData(
       fillColor: WidgetStateProperty.resolveWith<Color>((states) {
@@ -28,7 +32,10 @@ class AppTheme {
       splashRadius: 24,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(backgroundColor: _primaryColor, shape: StadiumBorder()),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: _primaryColor,
+        shape: StadiumBorder(),
+      ),
     ),
     scaffoldBackgroundColor: _backGroundColor,
     appBarTheme: AppBarTheme(
@@ -46,8 +53,14 @@ class AppTheme {
       filled: true,
       hintStyle: TextStylesManager.bodyLargeLight,
       fillColor: Colors.white,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(50), borderSide: BorderSide.none),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(50), borderSide: BorderSide.none),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(50),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(50),
+        borderSide: BorderSide.none,
+      ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(50),
         borderSide: BorderSide(color: _primaryColor, width: 2),

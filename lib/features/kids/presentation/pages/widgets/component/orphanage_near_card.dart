@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
-import 'package:save_heaven/features/kids/data/models/orphanage_near_card_model.dart';
 import 'package:save_heaven/features/kids/data/models/orphanages_response.dart';
 import 'package:save_heaven/features/kids/presentation/pages/display_all_kids_view.dart';
-import 'package:save_heaven/features/kids/presentation/pages/kids_home_view.dart';
 
 class OrphanageNearCard extends StatelessWidget {
   final Orphanage orphanage;

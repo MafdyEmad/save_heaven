@@ -1,9 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:save_heaven/core/utils/app_colors.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
-import 'package:save_heaven/features/adoption/presentation/pages/adoption_procedures_page.dart';
 import 'package:save_heaven/features/donation/presentation/pages/widgets/components/donate_item_widget.dart';
 import 'package:save_heaven/features/donation/presentation/pages/widgets/components/send_message_sheet.dart';
 import 'package:save_heaven/features/payment/presentation/pages/payment_view.dart';
@@ -94,7 +92,7 @@ class DonationTypeBody extends StatelessWidget {
                 image: 'assets/images/clothes.png',
                 title: 'Clothes',
                 onTap: () {
-                  context.push(const AdoptionProceduresPage());
+                  // context.push( AdoptionProceduresPage(child:));
                 },
               ),
             ),
@@ -112,7 +110,7 @@ class DonationTypeBody extends StatelessWidget {
                 image: 'assets/images/food.png',
                 title: 'Food',
                 onTap: () {
-                  context.push(const AdoptionProceduresPage());
+                  // context.push(const AdoptionProceduresPage());
                 },
               ),
             ),

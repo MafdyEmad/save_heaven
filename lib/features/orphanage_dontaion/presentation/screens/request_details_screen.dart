@@ -8,12 +8,12 @@ import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/show_loading.dart';
 import 'package:save_heaven/core/utils/snack_bar.dart';
+import 'package:save_heaven/features/orphanage_dontaion/data/models/adoption_requests.dart';
 import 'package:save_heaven/features/orphanage_dontaion/presentation/cubit/orphanage_donation_state_cubit.dart';
 
 class RequestDetailsScreen extends StatefulWidget {
-  final String status;
-  final String id;
-  const RequestDetailsScreen({super.key, required this.id, required this.status});
+  final AdoptionRequestsModel request;
+  const RequestDetailsScreen({super.key, required this.request});
 
   @override
   State<RequestDetailsScreen> createState() => _RequestDetailsScreenState();
@@ -21,11 +21,15 @@ class RequestDetailsScreen extends StatefulWidget {
 
 class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
   final bloc = getIt<OrphanageDonationCubit>();
-  final states = List.unmodifiable([RespondToRequestLoading, RespondToRequestSuccess, RespondToRequestFail]);
+  final states = List.unmodifiable([
+    RespondToRequestLoading,
+    RespondToRequestSuccess,
+    RespondToRequestFail,
+  ]);
   late final Color statusColor;
   @override
   void initState() {
-    statusColor = switch (widget.status) {
+    statusColor = switch (widget.request.status) {
       'pending' => Colors.blue,
       'approved' => Colors.green,
       'rejected' => Colors.red,
@@ -58,7 +62,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
         child: Scaffold(
           appBar: AppBar(),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.horizontalPagePadding),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.horizontalPagePadding,
+            ),
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               child: Column(
@@ -68,17 +74,64 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                     height: context.width * .5,
                     child: CircleAvatar(
                       backgroundColor: Colors.grey.shade200,
-                      backgroundImage: imageUrl.isNotEmpty ? CachedNetworkImageProvider(imageUrl) : null,
-                      child: imageUrl.isEmpty ? Icon(Icons.person, size: 40, color: Colors.grey) : null,
+                      backgroundImage: imageUrl.isNotEmpty
+                          ? CachedNetworkImageProvider(imageUrl)
+                          : null,
+                      child: imageUrl.isEmpty
+                          ? Icon(Icons.person, size: 40, color: Colors.grey)
+                          : null,
                     ),
                   ),
                   SizedBox(height: 20),
-                  Text("Ali", style: context.textTheme.titleLarge?.copyWith(color: AppPalette.primaryColor)),
+                  Text(
+                    widget.request.child.name,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      color: AppPalette.primaryColor,
+                    ),
+                  ),
+                  Wrap(
+                    children: [
+                      Text(
+                        '${DateTime.now().year - widget.request.child.birthdate.year + 1}-year-old',
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        widget.request.child.gender,
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        '${widget.request.child.skinTone} skin tone',
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        '${widget.request.child.hairColor} hair color',
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        'with ${widget.request.child.hairStyle} hair style',
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        '${widget.request.child.eyeColor} eye color',
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        widget.request.child.personality,
+                        style: context.textTheme.bodyLarge,
+                      ),
+                      Text(
+                        widget.request.child.religion,
+                        style: context.textTheme.bodyLarge,
+                      ),
+                    ],
+                  ),
                   SizedBox(height: 8),
                   Text(
-                    "11-year-old ,male ,white stright-haired ,primary educated and muslim",
+                    widget.request.child.gender,
                     textAlign: TextAlign.center,
-                    style: context.textTheme.headlineSmall?.copyWith(color: AppPalette.primaryColor),
+                    style: context.textTheme.headlineSmall?.copyWith(
+                      color: AppPalette.primaryColor,
+                    ),
                   ),
                   Divider(height: 50),
                   Row(
@@ -92,7 +145,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                         ),
                       ),
                       Text(
-                        DateFormat('MMMM dd, yyyy').format(DateTime.now()),
+                        DateFormat(
+                          'MMMM dd, yyyy',
+                        ).format(widget.request.createdAt),
                         style: context.textTheme.headlineLarge?.copyWith(
                           fontWeight: FontWeight.w500,
                           color: Colors.black,
@@ -103,56 +158,77 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                   Divider(height: 50),
                   Text(
                     "application information",
-                    style: context.textTheme.titleLarge?.copyWith(color: AppPalette.primaryColor),
+                    style: context.textTheme.titleLarge?.copyWith(
+                      color: AppPalette.primaryColor,
+                    ),
                   ),
                   SizedBox(height: 20),
-                  _buildInformations('submitted name', ' zahraa saber'),
+                  _buildInformations(
+                    'submitted name',
+                    widget.request.user.name,
+                  ),
                   Divider(),
-                  _buildInformations('Birth date', DateFormat('dd/mm/yyyy').format(DateTime.now())),
+                  // _buildInformations(
+                  //   'Birth date',
+                  //   DateFormat('dd/mm/yyyy').format( widget.request.user.),
+                  // ),
+                  // Divider(),
+                  _buildInformations(
+                    'martial status',
+                    widget.request.maritalStatus,
+                  ),
                   Divider(),
-                  _buildInformations('martial status', 'married'),
+                  _buildInformations('occupation', widget.request.occupation),
                   Divider(),
-                  _buildInformations('occupation', 'Engineer'),
+                  _buildInformations(
+                    'monthly income',
+                    widget.request.monthlyIncome.toString(),
+                  ),
                   Divider(),
-                  _buildInformations('monthly income', '6000\$'),
+                  _buildInformations('location', widget.request.location),
                   Divider(),
-                  _buildInformations('location', 'Thrive Early Learning Centre -the5th'),
-                  Divider(),
-                  _buildInformations('phone number', '01207902447'),
+                  _buildInformations('phone number', widget.request.phone),
                   Divider(),
                   SizedBox(height: 20),
                   Text(
                     'why do you want to adopt?',
-                    style: context.textTheme.headlineLarge?.copyWith(color: Colors.black),
+                    style: context.textTheme.headlineLarge?.copyWith(
+                      color: Colors.black,
+                    ),
                   ),
                   SizedBox(height: 20),
                   Container(
+                    width: double.infinity,
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Colors.grey),
                     ),
                     child: Text(
-                      'I want to make a difference in a child’s life. Adoption is not just about giving them a home, but also hope and opportunities.',
+                      widget.request.reason,
                       style: context.textTheme.bodyLarge,
                     ),
                   ),
 
                   SizedBox(height: 20),
-                  if (widget.status == 'pending') ...[
+                  if (widget.request.status == 'pending') ...[
                     SizedBox(
                       width: context.width * .6,
                       height: 50,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(11),
+                          ),
                         ),
                         onPressed: () {
-                          bloc.respondToRequest(widget.id, 'approved');
+                          bloc.respondToRequest(widget.request.id, 'approved');
                         },
                         child: Text(
                           'Accept Request',
-                          style: context.textTheme.headlineLarge?.copyWith(color: Colors.white),
+                          style: context.textTheme.headlineLarge?.copyWith(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -162,17 +238,27 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                       height: 50,
                       child: OutlinedButton(
                         style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(11),
+                          ),
                         ),
                         onPressed: () {
-                          bloc.respondToRequest(widget.id, 'rejected');
+                          bloc.respondToRequest(widget.request.id, 'rejected');
                         },
-                        child: Text("Reject Request", style: context.textTheme.headlineLarge),
+                        child: Text(
+                          "Reject Request",
+                          style: context.textTheme.headlineLarge,
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),
                   ] else ...[
-                    Text(widget.status, style: context.textTheme.headlineLarge?.copyWith(color: statusColor)),
+                    Text(
+                      widget.request.status,
+                      style: context.textTheme.headlineLarge?.copyWith(
+                        color: statusColor,
+                      ),
+                    ),
                     SizedBox(height: 20),
                   ],
                 ],
@@ -189,7 +275,12 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: Text(infoHeader, style: context.textTheme.headlineLarge?.copyWith(color: Colors.grey)),
+          child: Text(
+            infoHeader,
+            style: context.textTheme.headlineLarge?.copyWith(
+              color: Colors.grey,
+            ),
+          ),
         ),
         Expanded(
           child: Align(
@@ -197,7 +288,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
             alignment: AlignmentDirectional.centerStart,
             child: Text(
               info,
-              style: context.textTheme.headlineLarge?.copyWith(color: AppPalette.primaryColor),
+              style: context.textTheme.headlineLarge?.copyWith(
+                color: AppPalette.primaryColor,
+              ),
             ),
           ),
         ),

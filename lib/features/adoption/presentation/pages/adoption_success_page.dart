@@ -3,19 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
-import 'package:save_heaven/features/kids/presentation/pages/kids_home_view.dart';
+import 'package:save_heaven/donor_nav_screen.dart';
 
 class AdoptionSuccessPage extends StatelessWidget {
-  final String requestId;
-  final String submissionDate;
-  final String applicantName;
-
-  const AdoptionSuccessPage({
-    super.key,
-    required this.requestId,
-    required this.submissionDate,
-    required this.applicantName,
-  });
+  const AdoptionSuccessPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,29 +34,6 @@ class AdoptionSuccessPage extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
-            // ✅ Application Details Card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue.shade100),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Application Details",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  Text("Request ID: $requestId"),
-                  Text("Submission Date: $submissionDate"),
-                  Text("Applicant Name: $applicantName"),
-                ],
-              ),
-            ),
-
             const SizedBox(height: 20),
             const Text(
               "You Can Done Your Request And Return To The Homepage.",
@@ -78,7 +46,7 @@ class AdoptionSuccessPage extends StatelessWidget {
             CustomButton(
               text: "Done",
               onPressed: () {
-                context.push(const KidsHomeView());
+                context.pushAndRemoveUntil(const DonorNavScreen());
               },
             ),
           ],
