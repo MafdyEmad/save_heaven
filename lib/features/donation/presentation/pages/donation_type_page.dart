@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
-import 'package:save_heaven/core/utils/widgets%20reuseable/curved_bottom_navBar.dart';
-import 'package:save_heaven/core/utils/widgets%20reuseable/custom_fab.dart';
 import 'package:save_heaven/features/donation/presentation/pages/widgets/donation_type_body.dart';
 import 'package:save_heaven/features/kids/presentation/cubit/navigation%20cubit/navigation_cubit.dart';
 
 class DonationTypePage extends StatelessWidget {
-  const DonationTypePage({super.key});
+  final String orphanageId;
+  const DonationTypePage({super.key, required this.orphanageId});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,11 @@ class DonationTypePage extends StatelessWidget {
               title: Text('Donation', style: context.textTheme.titleLarge),
             ),
             backgroundColor: Colors.white,
-            body: DonationTypeBody(width: width, height: height),
+            body: DonationTypeBody(
+              width: width,
+              height: height,
+              orphanageId: orphanageId,
+            ),
           );
         },
       ),

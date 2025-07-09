@@ -228,23 +228,23 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
                   context.pop();
                 },
               ),
-              ListTile(
-                leading: const Icon(Icons.notifications),
-                title: Text(
-                  'Notifications',
-                  style: context.textTheme.bodyLarge,
-                ),
-                trailing: ValueListenableBuilder<bool>(
-                  valueListenable: isNotificationEnabled,
-                  builder: (context, enabled, _) => Switch(
-                    activeTrackColor: AppPalette.primaryColor,
-                    value: enabled,
-                    onChanged: (value) {
-                      toggleNotification(value);
-                    },
-                  ),
-                ),
-              ),
+              // ListTile(
+              //   leading: const Icon(Icons.notifications),
+              //   title: Text(
+              //     'Notifications',
+              //     style: context.textTheme.bodyLarge,
+              //   ),
+              //   trailing: ValueListenableBuilder<bool>(
+              //     valueListenable: isNotificationEnabled,
+              //     builder: (context, enabled, _) => Switch(
+              //       activeTrackColor: AppPalette.primaryColor,
+              //       value: enabled,
+              //       onChanged: (value) {
+              //         toggleNotification(value);
+              //       },
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

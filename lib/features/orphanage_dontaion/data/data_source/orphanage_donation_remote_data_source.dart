@@ -70,7 +70,7 @@ class OrphanageDonationRemoteDataSourceImpl
     try {
       await Future.wait([
         apiService.get(endpoint: ApiEndpoints.donationItems, hasToken: true),
-        apiService.get(endpoint: ApiEndpoints.donations, hasToken: true),
+        apiService.get(endpoint: ApiEndpoints.donationsMony, hasToken: true),
       ]);
       return Right(null);
     } on DioException catch (e) {

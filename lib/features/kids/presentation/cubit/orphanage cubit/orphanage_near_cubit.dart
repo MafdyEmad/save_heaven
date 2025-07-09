@@ -9,7 +9,7 @@ class OrphanageNearCubit extends Cubit<OrphangesState> {
 
   void getOrphanages() async {
     emit(OrphangesLoading());
-    var result = await orphanageRemoteDataSource.getPosts();
+    var result = await orphanageRemoteDataSource.getorphanage();
     result.fold(
       (l) => emit(OrphangesError(message: l.message)),
       (r) => emit(OrphangesLoaded(orphanagesResponse: r)),

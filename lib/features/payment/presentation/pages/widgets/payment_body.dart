@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/features/donation/data/data_source/donation_remote_data_source.dart';
 import 'package:save_heaven/features/payment/presentation/manager/payment%20cubit/payment_cubit.dart';
 import 'components/payment_form.dart';
 
 class PaymentBody extends StatelessWidget {
-  const PaymentBody({super.key});
+  final bool isMony;
+  final String orphanageId;
+  const PaymentBody({
+    super.key,
+    required this.isMony,
+    required this.orphanageId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +35,20 @@ class PaymentBody extends StatelessWidget {
                     ),
                   ),
                   const Center(
-                    child: Text("Donation", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      "Donation",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              const Expanded(child: PaymentForm()),
+              Expanded(
+                child: PaymentForm(isMony: isMony, orphanageId: orphanageId),
+              ),
             ],
           ),
         ),

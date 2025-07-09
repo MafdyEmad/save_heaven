@@ -16,13 +16,21 @@ class PaymentFields extends StatelessWidget {
       children: [
         const FieldLabel("Donation Program"),
         DropdownButtonFormField<String>(
-          value: cubit.state.program.isNotEmpty ? cubit.state.program : 'Orphan Sponsorship',
+          value: cubit.state.program.isNotEmpty
+              ? cubit.state.program
+              : 'Orphan Sponsorship',
           decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
           items: const [
-            DropdownMenuItem(value: 'Orphan Sponsorship', child: Text('Orphan Sponsorship')),
-            DropdownMenuItem(value: 'Food Package', child: Text('Food Package')),
+            DropdownMenuItem(
+              value: 'Orphan Sponsorship',
+              child: Text('Orphan Sponsorship'),
+            ),
+            DropdownMenuItem(
+              value: 'Food Package',
+              child: Text('Food Package'),
+            ),
           ],
           onChanged: cubit.changeProgram,
           validator: (val) => val == null || val.isEmpty ? 'Required' : null,
@@ -38,6 +46,7 @@ class PaymentFields extends StatelessWidget {
 
         const FieldLabel("Card Number"),
         CustomTextField(
+          isNumbersOnly: true,
           hint: "Card Number",
           controller: cubit.cardNumber,
           validator: Validators.numberOnly,
@@ -48,6 +57,7 @@ class PaymentFields extends StatelessWidget {
           children: [
             Expanded(
               child: CustomTextField(
+                isNumbersOnly: true,
                 hint: "Donation Value",
                 controller: cubit.donationValue,
                 validator: Validators.positiveNumber,
@@ -56,6 +66,7 @@ class PaymentFields extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: CustomTextField(
+                isNumbersOnly: true,
                 hint: "CVC",
                 controller: cubit.cvc,
                 validator: Validators.numberOnly,

@@ -2,15 +2,18 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/features/donation/data/data_source/donation_remote_data_source.dart';
 import 'package:save_heaven/features/donation/presentation/pages/widgets/components/donate_item_widget.dart';
 import 'package:save_heaven/features/donation/presentation/pages/widgets/components/send_message_sheet.dart';
 import 'package:save_heaven/features/payment/presentation/pages/payment_view.dart';
 
 class DonationTypeBody extends StatelessWidget {
+  final String orphanageId;
   const DonationTypeBody({
     super.key,
     required this.width,
     required this.height,
+    required this.orphanageId,
   });
 
   final double width;
@@ -72,10 +75,12 @@ class DonationTypeBody extends StatelessWidget {
               ),
               padding: EdgeInsets.all(10),
               child: DonateItemWidget(
-                image: 'assets/images/money2.png',
+                image: 'assets/images/money.png',
                 title: 'Money',
                 onTap: () {
-                  context.push(const PaymentView());
+                  context.push(
+                    PaymentView(isMony: true, orphanageId: orphanageId),
+                  );
                 },
               ),
             ),

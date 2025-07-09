@@ -388,7 +388,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 return LikeButton(
                   onTap: (isLiked) async {
                     if (isLiked) {
-                      homeCubit.unReactPost(react.first.id);
+                      if (react.isNotEmpty) {
+                        homeCubit.unReactPost(react.first.id);
+                      }
+
                       isLikedNotifier.value = !liked;
                       reactsCount.value -= 1;
                       return !liked;

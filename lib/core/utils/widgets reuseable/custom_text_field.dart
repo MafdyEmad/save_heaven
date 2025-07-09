@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -13,6 +14,9 @@ class CustomTextField extends StatelessWidget {
   final VoidCallback? onTap;
   final Function(String)? onChanged;
 
+  /// ✅ New property to allow only positive numbers.
+  final bool isNumbersOnly;
+
   const CustomTextField({
     super.key,
     required this.hint,
@@ -25,6 +29,7 @@ class CustomTextField extends StatelessWidget {
     this.onTap,
     this.onChanged,
     this.maxLines,
+    this.isNumbersOnly = false, // default false
   });
 
   @override
@@ -39,6 +44,13 @@ class CustomTextField extends StatelessWidget {
         obscureText: isPassword ? isVisible : false,
         onTap: onTap,
         readOnly: onTap != null,
+
+        /// ✅ If numbers only, use number keyboard and input formatter
+        keyboardType: isNumbersOnly ? TextInputType.number : TextInputType.text,
+        inputFormatters: isNumbersOnly
+            ? [FilteringTextInputFormatter.digitsOnly]
+            : null,
+
         decoration: InputDecoration(
           errorStyle: context.textTheme.headlineSmall?.copyWith(
             color: Colors.red,

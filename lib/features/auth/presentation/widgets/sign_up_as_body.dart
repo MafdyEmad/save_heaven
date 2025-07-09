@@ -25,7 +25,9 @@ class SignUpAsBody extends StatelessWidget {
             SizedBox(height: height * 0.03),
             const CircleBackButton(),
             SizedBox(height: height * 0.02),
-            Center(child: Image.asset(AssetsImages.hand, height: height * 0.08)),
+            Center(
+              child: Image.asset(AssetsImages.hand, height: height * 0.08),
+            ),
             SizedBox(height: height * 0.025),
             Center(
               child: Text(
@@ -51,13 +53,13 @@ class SignUpAsBody extends StatelessWidget {
                 context.push(UserSignupView());
               },
             ),
-            SizedBox(height: height * 0.01),
-            CustomButton(
-              text: 'Guest',
-              onPressed: () {
-                context.push(UserSignupView());
-              },
-            ),
+            // SizedBox(height: height * 0.01),
+            // CustomButton(
+            //   text: 'Guest',
+            //   onPressed: () {
+            //     context.push(UserSignupView());
+            //   },
+            // ),
           ],
         ),
       ),

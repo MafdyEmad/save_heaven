@@ -52,14 +52,14 @@ class _DonationReceiptsScreeState extends State<DonationReceiptsScree> {
         }
 
         if (state is GetDonationsSuccess) {
-          if (true) {
-            return Center(
-              child: Text(
-                'No receipt yet',
-                style: context.textTheme.headlineLarge,
-              ),
-            );
-          }
+          // if (false) {
+          //   return Center(
+          //     child: Text(
+          //       'No receipt yet',
+          //       style: context.textTheme.headlineLarge,
+          //     ),
+          //   );
+          // }
           // final requests = state;
           return Column(
             children: [
@@ -75,7 +75,7 @@ class _DonationReceiptsScreeState extends State<DonationReceiptsScree> {
                     Image.asset(AssetsImages.care, width: 50),
                     SizedBox(height: 8),
                     Text(
-                      ' This Month\'s Summary Number of donors: 33',
+                      ' This Month\'s Summary Number of donors: 1',
                       textAlign: TextAlign.center,
                       style: context.textTheme.headlineMedium?.copyWith(
                         color: Colors.white,
@@ -89,9 +89,10 @@ class _DonationReceiptsScreeState extends State<DonationReceiptsScree> {
                 child: ListView.separated(
                   separatorBuilder: (_, __) => SizedBox(height: 12),
                   // itemCount: requests.length,
-                  itemCount: 2,
+                  itemCount: 1,
                   itemBuilder: (context, index) {
-                    final imageUrl = 'asdasd';
+                    final imageUrl =
+                        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
                     final childName = 'Ali';
 
                     return Container(
@@ -204,8 +205,8 @@ class _DonationReceiptsScreeState extends State<DonationReceiptsScree> {
                                 onPressed: () {
                                   context.push(
                                     ReceiptScreen(
-                                      orphanageImage: '',
-                                      orphanageName: 'Mafdy',
+                                      orphanageImage: imageUrl,
+                                      orphanageName: childName,
                                     ),
                                   );
                                 },

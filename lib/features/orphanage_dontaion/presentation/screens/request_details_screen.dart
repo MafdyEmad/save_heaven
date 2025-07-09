@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
+import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
@@ -40,7 +41,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = '';
+    final imageUrl = widget.request.child.image.isEmpty
+        ? ''
+        : ApiEndpoints.imageProvider + widget.request.child.image;
     return BlocProvider.value(
       value: bloc,
 
@@ -69,17 +72,16 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
               physics: AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
-                  SizedBox(
+                  Container(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    decoration: BoxDecoration(shape: BoxShape.circle),
                     width: double.infinity,
-                    height: context.width * .5,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.grey.shade200,
-                      backgroundImage: imageUrl.isNotEmpty
-                          ? CachedNetworkImageProvider(imageUrl)
-                          : null,
-                      child: imageUrl.isEmpty
-                          ? Icon(Icons.person, size: 40, color: Colors.grey)
-                          : null,
+                    height: context.width * .3,
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      fit: BoxFit.contain,
+                      errorWidget: (context, url, error) =>
+                          Icon(Icons.person, size: 40, color: Colors.grey),
                     ),
                   ),
                   SizedBox(height: 20),

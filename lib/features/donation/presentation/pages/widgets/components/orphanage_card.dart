@@ -1,12 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/assets_images.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
-import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
-import 'package:save_heaven/features/donation/data/models/orphanage_model.dart';
 import 'package:save_heaven/features/donation/presentation/pages/donation_type_page.dart';
+import 'package:save_heaven/features/kids/data/models/orphanages_response.dart';
 
 class OrphanageCard extends StatelessWidget {
-  final OrphanageModel model;
+  final Orphanage model;
 
   const OrphanageCard({super.key, required this.model});
 
@@ -27,7 +28,12 @@ class OrphanageCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset(model.logo, height: width * 0.1, fit: BoxFit.contain),
+          Expanded(
+            child: CachedNetworkImage(
+              imageUrl: ApiEndpoints.imageProvider + (model.image ?? ''),
+              errorWidget: (context, url, error) => const Icon(Icons.person),
+            ),
+          ),
           SizedBox(height: width * 0.01),
           Text(
             model.name,
@@ -49,7 +55,7 @@ class OrphanageCard extends StatelessWidget {
           SizedBox(height: width * 0.02),
           ElevatedButton(
             onPressed: () {
-              context.push(const DonationTypePage());
+              context.push(DonationTypePage(orphanageId: model.id));
             },
             child: Text(
               'Donate♡',
@@ -60,18 +66,18 @@ class OrphanageCard extends StatelessWidget {
           ),
 
           SizedBox(height: width * 0.02),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Text(
-                model.description,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: width * 0.03, color: Colors.black54),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
+          // Expanded(
+          //   child: Padding(
+          //     padding: const EdgeInsets.symmetric(horizontal: 6),
+          //     child: Text(
+          //       model.address,
+          //       textAlign: TextAlign.center,
+          //       style: TextStyle(fontSize: width * 0.03, color: Colors.black54),
+          //       maxLines: 3,
+          //       overflow: TextOverflow.ellipsis,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

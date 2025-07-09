@@ -25,8 +25,8 @@ class _OrphanageRequestsScreenAndDonationsState
   final bloc = getIt<OrphanageDonationCubit>();
   @override
   void initState() {
-    bloc.getRequests();
-    // bloc.getDonationItems();
+    // bloc.getRequests();
+    bloc.getDonationItems();
     super.initState();
   }
 

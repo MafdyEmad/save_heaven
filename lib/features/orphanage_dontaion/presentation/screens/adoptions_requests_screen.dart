@@ -125,20 +125,22 @@ class _AdoptionsRequestsScreenState extends State<AdoptionsRequestsScreen> {
                           ),
                           Row(
                             children: [
-                              SizedBox(
+                              Container(
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
                                 width: 85,
                                 height: 85,
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.grey.shade100,
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        '${ApiEndpoints.imageProvider}/${request.child.image}',
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(
-                                          Icons.person,
-                                          color: Colors.grey,
-                                        ),
-                                  ),
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      '${ApiEndpoints.imageProvider}${request.child.image}',
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(
+                                        Icons.person,
+                                        color: Colors.grey,
+                                      ),
                                 ),
                               ),
                               const SizedBox(width: 10),

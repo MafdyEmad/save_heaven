@@ -1,10 +1,7 @@
 class ApiEndpoints {
-  static const String _base =
-      'https://684d-156-211-91-71.ngrok-free.app/api/v1';
-  static const String socketUrl =
-      'ws://https://684d-156-211-91-71.ngrok-free.app';
-  static const String imageProvider =
-      'https://684d-156-211-91-71.ngrok-free.app';
+  static const String _base = 'https://13b00460fd2a.ngrok-free.app/api/v1';
+  static const String socketUrl = 'ws://https://13b00460fd2a.ngrok-free.app';
+  static const String imageProvider = 'https://13b00460fd2a.ngrok-free.app';
   static const String posts = '$_base/posts';
   static String getChildren(String id) => '$_base/users/$id/children';
   static const String getUser = '$_base/users/getMe';
@@ -21,7 +18,7 @@ class ApiEndpoints {
       '$_base/notifications/notifications-unread';
   static const String adoptionRequests = '$_base/adoption-requests';
   static const String donationItems = '$_base/donation-items';
-  static const String donations = '$_base/donations';
+  static const String donationsMony = '$_base/donations';
   static const String signUp = '$_base/auth/signup';
   static const String login = '$_base/auth/login';
 }

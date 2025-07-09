@@ -8,7 +8,7 @@ import 'package:save_heaven/features/kids/data/models/orphanages_response.dart';
 import 'package:save_heaven/features/profile/data/models/child_model.dart';
 
 abstract interface class OrphanageRemoteDataSource {
-  Future<Either<Failure, OrphanagesResponse>> getPosts();
+  Future<Either<Failure, OrphanagesResponse>> getorphanage();
   Future<Either<Failure, List<ChildModel>>> getAllKids(String id);
   Future<Either<Failure, void>> adopt(AdoptionRequest request);
 }
@@ -19,7 +19,7 @@ class OrphanageRemoteDataSourceImpl extends OrphanageRemoteDataSource {
   OrphanageRemoteDataSourceImpl({required this.apiService});
 
   @override
-  Future<Either<Failure, OrphanagesResponse>> getPosts() async {
+  Future<Either<Failure, OrphanagesResponse>> getorphanage() async {
     try {
       final result = await apiService.get(
         endpoint: ApiEndpoints.getOrphanages,
