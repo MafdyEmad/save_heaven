@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
-import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_colors.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
@@ -32,6 +31,7 @@ class _MakePostScreenState extends State<MakePostScreen> {
   void initState() {
     homeBloc = getIt<HomeCubit>();
     postFocusNode.requestFocus();
+    contentController.addListener(() => setState(() {}));
     super.initState();
   }
 
@@ -78,7 +78,9 @@ class _MakePostScreenState extends State<MakePostScreen> {
           resizeToAvoidBottomInset: true,
           appBar: AppBar(),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.horizontalPagePadding),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.horizontalPagePadding,
+            ),
             child: Column(
               children: [
                 Row(
@@ -89,9 +91,10 @@ class _MakePostScreenState extends State<MakePostScreen> {
                       height: 50,
                       child: ClipOval(
                         child: CachedNetworkImage(
-                          imageUrl: '${ApiEndpoints.imageProvider}${widget.image}',
+                          imageUrl: widget.image,
                           fit: BoxFit.cover,
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
                         ),
                       ),
                     ),
@@ -116,7 +119,8 @@ class _MakePostScreenState extends State<MakePostScreen> {
                             disabledBorder: InputBorder.none,
                             focusedBorder: UnderlineInputBorder(),
                             hintText: 'What\'s happening?',
-                            hintStyle: context.textTheme.headlineSmall?.copyWith(color: AppPalette.hintColor),
+                            hintStyle: context.textTheme.headlineSmall
+                                ?.copyWith(color: AppPalette.hintColor),
                           ),
                         ),
                         SizedBox(height: 20),
@@ -155,7 +159,11 @@ class _MakePostScreenState extends State<MakePostScreen> {
                                             imagesToPost.removeAt(0);
                                           });
                                         },
-                                        icon: const Icon(Icons.close, color: Colors.white, size: 18),
+                                        icon: const Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 18,
+                                        ),
                                         padding: EdgeInsets.zero,
                                         constraints: const BoxConstraints(),
                                       ),
@@ -179,18 +187,25 @@ class _MakePostScreenState extends State<MakePostScreen> {
                                 return AnimatedSwitcher(
                                   duration: const Duration(milliseconds: 300),
                                   transitionBuilder: (child, animation) {
-                                    return FadeTransition(opacity: animation, child: child);
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    );
                                   },
                                   child: Container(
                                     key: ValueKey(image.path),
                                     decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey.shade300),
+                                      border: Border.all(
+                                        color: Colors.grey.shade300,
+                                      ),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Stack(
                                       children: [
                                         ClipRRect(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                           child: Image.file(
                                             File(image.path),
                                             fit: BoxFit.contain,
@@ -205,7 +220,9 @@ class _MakePostScreenState extends State<MakePostScreen> {
                                             width: 25,
                                             height: 25,
                                             decoration: BoxDecoration(
-                                              color: Colors.black.withAlpha(150),
+                                              color: Colors.black.withAlpha(
+                                                150,
+                                              ),
                                               shape: BoxShape.circle,
                                             ),
                                             child: IconButton(
@@ -214,9 +231,14 @@ class _MakePostScreenState extends State<MakePostScreen> {
                                                   imagesToPost.removeAt(index);
                                                 });
                                               },
-                                              icon: const Icon(Icons.close, color: Colors.white, size: 18),
+                                              icon: const Icon(
+                                                Icons.close,
+                                                color: Colors.white,
+                                                size: 18,
+                                              ),
                                               padding: EdgeInsets.zero,
-                                              constraints: const BoxConstraints(),
+                                              constraints:
+                                                  const BoxConstraints(),
                                             ),
                                           ),
                                         ),
@@ -233,7 +255,9 @@ class _MakePostScreenState extends State<MakePostScreen> {
                           children: [
                             IconButton(
                               onPressed: () async {
-                                final image = await picker.pickImage(source: ImageSource.camera);
+                                final image = await picker.pickImage(
+                                  source: ImageSource.camera,
+                                );
                                 if (image != null) {
                                   setState(() {
                                     imagesToPost.add(File(image.path));
@@ -267,19 +291,32 @@ class _MakePostScreenState extends State<MakePostScreen> {
                   children: [
                     Text(
                       'everyone can reply & repost',
-                      style: context.textTheme.headlineSmall?.copyWith(color: AppPalette.hintColor),
+                      style: context.textTheme.headlineSmall?.copyWith(
+                        color: AppPalette.hintColor,
+                      ),
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(11),
+                        ),
                       ),
-                      onPressed: () {
-                        homeBloc.makePosts(content: contentController.text.trim(), images: imagesToPost);
-                      },
+                      onPressed:
+                          imagesToPost.isNotEmpty ||
+                              contentController.text.trim().isNotEmpty
+                          ? () {
+                              homeBloc.makePosts(
+                                content: contentController.text.trim(),
+                                images: imagesToPost,
+                              );
+                            }
+                          : null,
                       child: Text(
                         'Post',
-                        style: context.textTheme.headlineMedium?.copyWith(color: Colors.white),
+                        style: context.textTheme.headlineMedium?.copyWith(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],

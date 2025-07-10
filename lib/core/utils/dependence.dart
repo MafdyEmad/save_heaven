@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:save_heaven/core/caching/caching_manager.dart';
 import 'package:save_heaven/core/services/api_services.dart';
+import 'package:save_heaven/features/ai_search/data/data_source/ai_remote_data_source.dart';
+import 'package:save_heaven/features/ai_search/presentaion/cubit/ai_cubit.dart';
 import 'package:save_heaven/features/auth/data/data_scource/auth_remote_data_source.dart';
 import 'package:save_heaven/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:save_heaven/features/chat/data/chat_remote_data_source.dart';
@@ -31,6 +33,7 @@ void setupDependency() {
   _setChat();
   _setUpOrphanage();
   _setUpDonation();
+  _setupAi();
 }
 
 void _setAuth() {
@@ -109,5 +112,14 @@ void _setUpDonation() {
       getIt<DonationRemoteDataSource>(),
       getIt<OrphanageRemoteDataSource>(),
     ),
+  );
+}
+
+void _setupAi() {
+  getIt.registerLazySingleton<AiRemoteDataSource>(
+    () => AiRemoteDataSourceImpl(apiService: getIt<ApiService>()),
+  );
+  getIt.registerLazySingleton<AiCubit>(
+    () => AiCubit(getIt<AiRemoteDataSource>()),
   );
 }

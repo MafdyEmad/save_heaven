@@ -1,17 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/features/orphanage_dontaion/data/models/donation_model.dart';
 
 class ReceiptScreen extends StatefulWidget {
-  final String orphanageImage;
-  final String orphanageName;
-  const ReceiptScreen({
-    super.key,
-    required this.orphanageImage,
-    required this.orphanageName,
-  });
+  final DonationModel item;
+  const ReceiptScreen({super.key, required this.item});
 
   @override
   State<ReceiptScreen> createState() => _ReceiptScreenState();
@@ -30,12 +27,13 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
               width: 50,
               height: 50,
               child: CachedNetworkImage(
-                imageUrl: widget.orphanageImage,
+                imageUrl: ApiEndpoints.imageProvider + widget.item.donorImage,
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) => Icon(Icons.person),
               ),
             ),
-            Text(widget.orphanageName),
+            SizedBox(width: 10),
+            Text(widget.item.donorName),
           ],
         ),
       ),
@@ -45,6 +43,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
         ),
         child: Column(
           children: [
+            SizedBox(height: 20),
             Text('DONATION  RECEIPT', style: context.textTheme.titleLarge),
             SizedBox(height: 20),
             _buildInformations(

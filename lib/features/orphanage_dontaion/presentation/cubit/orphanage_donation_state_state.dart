@@ -38,7 +38,11 @@ final class RespondToRequestFail extends OrphanageDonationStateState {
 //? Get donations
 final class GetDonationsLoading extends OrphanageDonationStateState {}
 
-final class GetDonationsSuccess extends OrphanageDonationStateState {}
+final class GetDonationsSuccess extends OrphanageDonationStateState {
+  final List<DonationModel> items;
+
+  const GetDonationsSuccess({required this.items});
+}
 
 final class GetDonationsFail extends OrphanageDonationStateState {
   final String message;

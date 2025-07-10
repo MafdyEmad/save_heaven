@@ -6,7 +6,13 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 class WebSocketServices {
   static late IO.Socket socket;
 
-  static Future<void> connect() async {
+  /// ✅ Keep your user ID here for auto-joining the room
+  static String? _currentUserId;
+
+  /// ✅ Connect and join the user’s room
+  static Future<void> connect(String userId) async {
+    _currentUserId = userId;
+
     socket = IO.io(ApiEndpoints.socketUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
@@ -14,28 +20,56 @@ class WebSocketServices {
       'reconnectionAttempts': 5,
       'reconnectionDelay': 2000,
     });
+
     socket.connect();
-    debugPrint('connected');
+
+    socket.onConnect((_) {
+      debugPrint('✅ Socket connected');
+      if (_currentUserId != null) {
+        socket.emit('OpenApp', {'userId': _currentUserId});
+        debugPrint('✅ OpenApp sent with userId $_currentUserId');
+      }
+    });
+
+    socket.onDisconnect((_) {
+      debugPrint('⚡️ Socket disconnected');
+    });
+
+    socket.onConnectError((err) {
+      debugPrint('❌ Connect error: $err');
+    });
   }
 
   static bool get isConnected => socket.connected;
 
   static void disconnect() {
+    debugPrint('🧹 Disconnecting socket and clearing listeners');
     socket.disconnect();
     socket.clearListeners();
+    _currentUserId = null;
   }
 
-  static void emitEvent(String event, dynamic data) => socket.emit(event, data);
-  // ✅ listenEvent stays the same
+  /// ✅ General emit for any event
+  static void emitEvent(String event, dynamic data) {
+    debugPrint('📤 Emitting event $event with data: $data');
+    socket.emit(event, data);
+  }
+
+  /// ✅ General listen for any event
   static Stream<dynamic> listenEvent(String event) {
     final controller = StreamController<dynamic>();
 
+    if (!socket.connected) {
+      debugPrint('⚠️ Socket not connected. Connect first.');
+    }
+
     socket.on(event, (data) {
+      debugPrint('📥 Received event $event with data: $data');
       controller.add(data);
     });
 
-    // Also handle socket disconnect
     socket.onDisconnect((_) {
+      debugPrint('🧹 Closing stream controller for event $event');
       controller.close();
     });
 

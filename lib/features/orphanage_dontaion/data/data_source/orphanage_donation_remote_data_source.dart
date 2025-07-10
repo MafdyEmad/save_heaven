@@ -5,6 +5,7 @@ import 'package:save_heaven/core/services/api_services.dart';
 import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/constants.dart';
 import 'package:save_heaven/features/orphanage_dontaion/data/models/adoption_requests.dart';
+import 'package:save_heaven/features/orphanage_dontaion/data/models/donation_model.dart';
 
 abstract interface class OrphanageDonationRemoteDataSource {
   Future<Either<Failure, List<AdoptionRequestsModel>>> getAdoptionRequests();
@@ -12,7 +13,7 @@ abstract interface class OrphanageDonationRemoteDataSource {
     String requestId,
     String response,
   );
-  Future<Either<Failure, void>> getDonations();
+  Future<Either<Failure, List<DonationModel>>> getDonations();
 }
 
 class OrphanageDonationRemoteDataSourceImpl
@@ -66,13 +67,23 @@ class OrphanageDonationRemoteDataSourceImpl
   }
 
   @override
-  Future<Either<Failure, void>> getDonations() async {
+  Future<Either<Failure, List<DonationModel>>> getDonations() async {
     try {
-      await Future.wait([
+      final result = await Future.wait([
         apiService.get(endpoint: ApiEndpoints.donationItems, hasToken: true),
         apiService.get(endpoint: ApiEndpoints.donationsMony, hasToken: true),
       ]);
-      return Right(null);
+
+      final itemDonations = (result[0].data['data'] as List)
+          .map((e) => DonationModel.fromJson(e))
+          .toList();
+
+      final moneyDonations = (result[1].data['data'] as List)
+          .map((e) => DonationModel.fromJson(e))
+          .toList();
+
+      final allDonations = [...itemDonations, ...moneyDonations];
+      return Right(allDonations);
     } on DioException catch (e) {
       return Left(
         Failure(

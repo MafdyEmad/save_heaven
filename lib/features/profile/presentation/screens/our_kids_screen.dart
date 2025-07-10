@@ -8,6 +8,7 @@ import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:save_heaven/features/profile/presentation/screens/add_orphan_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 class OurKidsScreen extends StatefulWidget {
@@ -38,6 +39,13 @@ class _OurKidsScreenState extends State<OurKidsScreen> {
       child: Builder(
         builder: (context) {
           return Scaffold(
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: AppPalette.primaryColor,
+              child: const Icon(Icons.add, color: Colors.white),
+              onPressed: () {
+                context.push(const AddOrphanScreen());
+              },
+            ),
             appBar: AppBar(
               centerTitle: true,
               title: Text('Our Kids', style: context.textTheme.titleLarge),

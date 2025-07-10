@@ -19,8 +19,7 @@ class ApiService {
   ApiService._internal() : _dio = Dio() {
     _dio.options = BaseOptions(
       baseUrl: '',
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
+
       headers: {'Content-Type': 'application/json'},
     );
     if (kDebugMode) {
@@ -105,7 +104,11 @@ class ApiService {
       formData.files.add(
         MapEntry(
           fileFieldName,
-          await MultipartFile.fromFile(file.path, filename: fileName, contentType: mediaType),
+          await MultipartFile.fromFile(
+            file.path,
+            filename: fileName,
+            contentType: mediaType,
+          ),
         ),
       );
     }
@@ -117,7 +120,10 @@ class ApiService {
     final response = await dio.post(
       endpoint,
       options: Options(
-        headers: {if (hasToken) 'Authorization': 'Bearer $_userToken', 'Content-Type': 'multipart/form-data'},
+        headers: {
+          if (hasToken) 'Authorization': 'Bearer $_userToken',
+          'Content-Type': 'multipart/form-data',
+        },
       ),
       data: formData,
       onSendProgress: (sent, total) {
@@ -147,7 +153,11 @@ class ApiService {
       formData.files.add(
         MapEntry(
           fileFieldName,
-          await MultipartFile.fromFile(file.path, filename: fileName, contentType: mediaType),
+          await MultipartFile.fromFile(
+            file.path,
+            filename: fileName,
+            contentType: mediaType,
+          ),
         ),
       );
     }
@@ -159,7 +169,10 @@ class ApiService {
     final response = await dio.put(
       endpoint,
       options: Options(
-        headers: {if (hasToken) 'Authorization': 'Bearer $_userToken', 'Content-Type': 'multipart/form-data'},
+        headers: {
+          if (hasToken) 'Authorization': 'Bearer $_userToken',
+          'Content-Type': 'multipart/form-data',
+        },
       ),
       data: formData,
       onSendProgress: (sent, total) {

@@ -18,7 +18,6 @@ class ScheduledDoneScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(leading: Icon(Icons.arrow_back_ios)),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(

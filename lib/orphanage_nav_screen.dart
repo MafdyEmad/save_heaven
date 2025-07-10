@@ -68,6 +68,7 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
           user = Helpers.user;
           setState(() {});
         },
+        false,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(

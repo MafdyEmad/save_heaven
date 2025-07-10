@@ -19,9 +19,7 @@ class ChatCubit extends Cubit<ChatState> {
     _chatsSubscription = WebSocketServices.listenEvent('GetChats').listen(
       (response) {
         if (isClosed) return;
-
         debugPrint('Raw socket data: $response');
-
         try {
           if (response is List) {
             final chats = response.map((e) => Chat.fromJson(e)).toList();

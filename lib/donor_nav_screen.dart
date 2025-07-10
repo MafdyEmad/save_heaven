@@ -12,6 +12,7 @@ import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/widgets/nav_screen_app_bar.dart';
 import 'package:save_heaven/features/auth/presentation/views/login_view.dart';
+import 'package:save_heaven/features/chat/presentation/screens/recent_chats_screen.dart';
 import 'package:save_heaven/features/donation/presentation/pages/donation_home_page.dart';
 import 'package:save_heaven/features/kids/presentation/pages/kids_home_view.dart';
 import 'package:save_heaven/features/notifications/presentation/cubit/notification_cubit.dart';
@@ -31,7 +32,7 @@ class _DonorNavScreenState extends State<DonorNavScreen> {
   final screens = List.unmodifiable([
     HomeScreen(),
     KidsHomeView(),
-    HomeScreen(),
+    RecentChatsScreen(),
     ProfileScreen(),
   ]);
   late final ValueNotifier<bool> isNotificationEnabled;
@@ -53,6 +54,7 @@ class _DonorNavScreenState extends State<DonorNavScreen> {
     return Scaffold(
       appBar: navScreenAppBar(
         context,
+
         ValueListenableBuilder(
           valueListenable: screenIndex,
           builder: (context, index, child) => Text(switch (index) {
@@ -68,6 +70,7 @@ class _DonorNavScreenState extends State<DonorNavScreen> {
           user = Helpers.user;
           setState(() {});
         },
+        true,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(

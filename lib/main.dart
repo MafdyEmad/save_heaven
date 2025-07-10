@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -18,6 +21,9 @@ import 'package:save_heaven/firebase_options.dart';
 import 'package:save_heaven/save_heaven.dart';
 import 'package:save_heaven/core/utils/app_bloc_observer.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
@@ -28,12 +34,26 @@ void main() async {
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
 
+  const DarwinInitializationSettings initializationSettingsDarwin =
+      DarwinInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+      );
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: initializationSettingsDarwin,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   Bloc.observer = AppBlocObserver();
   await ScreenUtil.ensureScreenSize();
   await _initHive();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await WebSocketServices.connect();
   _setupFirebaseMessaging();
   setupDependency();
   runApp(const SaveHeaven());
@@ -51,6 +71,10 @@ void _setupFirebaseMessaging() {
 
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     debugPrint('📥 Foreground FCM: ${message.data}');
+  });
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    _showNotification(message);
   });
 }
 
@@ -85,5 +109,32 @@ Future<void> loadDefaultValues() async {
   Box appConfigBox = HiveBoxes.appConfigBox;
   if (appConfigBox.isEmpty) {
     await appConfigBox.add(AppConfigModel(isFirstTime: true));
+  }
+}
+
+void _showNotification(RemoteMessage message) async {
+  if (message.notification != null) {
+    flutterLocalNotificationsPlugin.show(
+      message.notification.hashCode,
+      message.notification?.title,
+      message.notification?.body,
+      NotificationDetails(
+        android: Platform.isAndroid
+            ? const AndroidNotificationDetails(
+                'high_importance_channel',
+                'channel_name',
+                channelDescription: 'channel_description',
+                importance: Importance.max,
+                priority: Priority.high,
+                icon: '@mipmap/ic_launcher',
+              )
+            : null,
+        iOS: const DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+    );
   }
 }

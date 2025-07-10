@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/features/ai_search/presentaion/screens/ai_search_screen.dart';
 import 'package:save_heaven/features/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:save_heaven/features/notifications/presentation/screens/notification_screen.dart';
 
@@ -9,6 +10,7 @@ PreferredSizeWidget navScreenAppBar(
   ValueListenableBuilder valueListenableBuilder,
   NotificationCubit notificationCubit,
   Function onDrawerOpen,
+  bool isDonor,
 ) {
   final states = List.unmodifiable([
     GetUnReadNotificationsCountLoading,
@@ -19,6 +21,13 @@ PreferredSizeWidget navScreenAppBar(
     title: valueListenableBuilder,
     centerTitle: true,
     actions: [
+      if (isDonor)
+        IconButton(
+          onPressed: () {
+            context.push(AiSearchScreen());
+          },
+          icon: Icon(Icons.search, size: 35),
+        ),
       IconButton(
         onPressed: () {
           context.push(const NotificationScreen());

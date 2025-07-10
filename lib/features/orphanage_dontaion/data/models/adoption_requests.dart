@@ -48,7 +48,7 @@ class AdoptionRequestsModel {
       occupation: json['occupation'] as String,
       religion: json['religion'] as String,
       maritalStatus: json['maritalStatus'] as String,
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      updatedAt: DateTime.now(),
     );
   }
 }
