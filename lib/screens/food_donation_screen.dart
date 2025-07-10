@@ -193,7 +193,7 @@ class _FoodDonationScreenState extends State<FoodDonationScreen> {
                 Row(
                   children: [
                     Radio(
-                      value: 'no',
+                      value: 'No',
                       groupValue: readyForCollection,
                       onChanged: (_) {
                         readyForCollection = 'No';

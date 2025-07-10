@@ -17,6 +17,7 @@ import 'package:save_heaven/core/hive/adapters/user_settings_adapter/user_settin
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/hive/hive_keys/hive_keys.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
+import 'package:save_heaven/features/kids/presentation/cubit/orphanage%20cubit/orphanage_near_cubit.dart';
 import 'package:save_heaven/firebase_options.dart';
 import 'package:save_heaven/save_heaven.dart';
 import 'package:save_heaven/core/utils/app_bloc_observer.dart';
@@ -56,7 +57,12 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   _setupFirebaseMessaging();
   setupDependency();
-  runApp(const SaveHeaven());
+  runApp(
+    BlocProvider.value(
+      value: getIt<OrphanageNearCubit>(),
+      child: const SaveHeaven(),
+    ),
+  );
 }
 
 void _setupFirebaseMessaging() {

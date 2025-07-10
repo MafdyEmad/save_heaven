@@ -281,6 +281,7 @@ class _PickupDetailsScreenState extends State<PickupDetailsScreen> {
                                 ),
                               ),
                               onPressed: () {
+                                print('asdasdasds');
                                 bloc.donate(
                                   isMony: false,
                                   itemModel: widget.donationItems,
