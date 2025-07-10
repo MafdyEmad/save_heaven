@@ -2,10 +2,22 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/donor_nav_screen.dart';
+import 'package:save_heaven/features/donation/data/data_source/donation_remote_data_source.dart';
+import 'package:save_heaven/screens/donate_location_screen.dart';
+import 'package:save_heaven/screens/pickup_details_screen.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:save_heaven/features/kids/data/models/orphanages_response.dart';
 
 class SchedulePickupScreen extends StatefulWidget {
-  const SchedulePickupScreen({super.key});
+  final DonationItems donationItems;
+  final Orphanage orphanage;
+
+  const SchedulePickupScreen({
+    super.key,
+    required this.donationItems,
+    required this.orphanage,
+  });
 
   @override
   State<SchedulePickupScreen> createState() => _SchedulePickupScreenState();
@@ -13,6 +25,7 @@ class SchedulePickupScreen extends StatefulWidget {
 
 class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
   final datePickerController = DateRangePickerController();
+  TimeOfDay? time;
   @override
   void dispose() {
     datePickerController.dispose();
@@ -24,8 +37,14 @@ class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Schedule PickUp ', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-        leading: IconButton(onPressed: () => context.pop(), icon: Icon(Icons.arrow_back_ios, size: 26)),
+        title: Text(
+          'Schedule PickUp ',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+        ),
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: Icon(Icons.arrow_back_ios, size: 26),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -41,7 +60,11 @@ class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
             Center(
               child: Text(
                 'Please complete these steps to complete your donation',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xff999999)),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xff999999),
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -49,7 +72,10 @@ class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
             Stack(
               children: [
                 CustomPaint(
-                  size: Size(double.infinity, MediaQuery.of(context).size.height * .4),
+                  size: Size(
+                    double.infinity,
+                    MediaQuery.of(context).size.height * .4,
+                  ),
                   painter: DomePainter(),
                 ),
 
@@ -68,7 +94,11 @@ class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
                       ),
                       Row(
                         children: [
-                          Icon(Icons.calendar_month_outlined, color: Color(0xff999999), size: 16),
+                          Icon(
+                            Icons.calendar_month_outlined,
+                            color: Color(0xff999999),
+                            size: 16,
+                          ),
                           SizedBox(width: 8),
                           Text(
                             'choose date',
@@ -115,22 +145,38 @@ class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
                           ),
                         ),
                         monthCellStyle: DateRangePickerMonthCellStyle(
-                          todayTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                          todayTextStyle: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                           blackoutDateTextStyle: TextStyle(color: Colors.black),
                         ),
                       ),
                       Row(
                         children: [
-                          Icon(Icons.access_time, color: Color(0xff999999), size: 16),
+                          Icon(
+                            Icons.access_time,
+                            color: Color(0xff999999),
+                            size: 16,
+                          ),
                           SizedBox(width: 8),
-                          Text(
-                            'choose time',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xff999999),
+                          GestureDetector(
+                            onTap: () async {
+                              time = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                              );
+                              setState(() {});
+                            },
+                            child: Text(
+                              'choose time',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xff999999),
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
@@ -140,53 +186,29 @@ class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
               ],
             ),
             Divider(color: Color(0xffFCD06B), height: 30),
-            Row(
-              children: List.generate(
-                3,
-                (index) => Expanded(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Color(0xffe6ecfa),
-                      borderRadius: BorderRadius.circular(21),
-                      border: Border.all(width: 1, color: Color(0xffdadada)),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        '10:00AM',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(0xff242760)),
-                      ),
+            if (time != null) ...[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Color(0xffe6ecfa),
+                  borderRadius: BorderRadius.circular(21),
+                  border: Border.all(width: 1, color: Color(0xffdadada)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(
+                    '10:00AM',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff242760),
                     ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            Row(
-              children: List.generate(
-                3,
-                (index) => Expanded(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Color(0xffe6ecfa),
-                      borderRadius: BorderRadius.circular(21),
-                      border: Border.all(width: 1, color: Color(0xffdadada)),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        '10:00AM',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(0xff242760)),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            ],
+
             Spacer(),
             SizedBox(
               height: 50,
@@ -197,12 +219,20 @@ class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xfff4f4f4),
-                        shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(11)),
+                        shape: ContinuousRectangleBorder(
+                          borderRadius: BorderRadius.circular(11),
+                        ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        context.pushAndRemoveUntil(DonorNavScreen());
+                      },
                       child: Text(
                         'Cancel',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -212,9 +242,27 @@ class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xff242760),
-                        shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(11)),
+                        shape: ContinuousRectangleBorder(
+                          borderRadius: BorderRadius.circular(11),
+                        ),
                       ),
-                      onPressed: () {},
+                      onPressed: !isEnabled()
+                          ? null
+                          : () {
+                              context.push(
+                                DonateLocationScreen(
+                                  orphanage: widget.orphanage,
+                                  donationItems: widget.donationItems.copyWith(
+                                    deliveryDate: datePickerController
+                                        .selectedDate
+                                        .toString(),
+                                    deliveryTime: time!
+                                        .format(context)
+                                        .toString(),
+                                  ),
+                                ),
+                              );
+                            },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -239,6 +287,10 @@ class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
         ),
       ),
     );
+  }
+
+  bool isEnabled() {
+    return datePickerController.selectedDate != null && time != null;
   }
 }
 

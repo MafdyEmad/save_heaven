@@ -2,16 +2,20 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
-import 'package:save_heaven/features/donation/data/data_source/donation_remote_data_source.dart';
+import 'package:save_heaven/features/adoption/presentation/pages/adoption_procedures_page.dart';
 import 'package:save_heaven/features/donation/presentation/pages/widgets/components/donate_item_widget.dart';
 import 'package:save_heaven/features/donation/presentation/pages/widgets/components/send_message_sheet.dart';
 import 'package:save_heaven/features/payment/presentation/pages/payment_view.dart';
+import 'package:save_heaven/screens/clothes_donation_screen.dart';
+import 'package:save_heaven/features/kids/data/models/orphanages_response.dart';
 
 class DonationTypeBody extends StatelessWidget {
   final String orphanageId;
+  final Orphanage orphanage;
   const DonationTypeBody({
     super.key,
     required this.width,
+    required this.orphanage,
     required this.height,
     required this.orphanageId,
   });
@@ -97,7 +101,12 @@ class DonationTypeBody extends StatelessWidget {
                 image: 'assets/images/clothes.png',
                 title: 'Clothes',
                 onTap: () {
-                  // context.push( AdoptionProceduresPage(child:));
+                  context.push(
+                    ClothesDonationScreen(
+                      orphanageId: orphanageId,
+                      orphanage: orphanage,
+                    ),
+                  );
                 },
               ),
             ),

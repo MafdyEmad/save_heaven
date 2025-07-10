@@ -1,17 +1,51 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:save_heaven/core/utils/extensions.dart';
 
-class ClothesDonationScreen extends StatelessWidget {
-  const ClothesDonationScreen({super.key});
+import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/core/utils/validators.dart';
+import 'package:save_heaven/core/utils/widgets%20reuseable/custom_text_field.dart';
+import 'package:save_heaven/features/donation/data/data_source/donation_remote_data_source.dart';
+import 'package:save_heaven/screens/schedule_pickup_screen.dart';
+import 'package:save_heaven/features/kids/data/models/orphanages_response.dart';
+
+class ClothesDonationScreen extends StatefulWidget {
+  final String orphanageId;
+  final Orphanage orphanage;
+  const ClothesDonationScreen({
+    super.key,
+    required this.orphanageId,
+    required this.orphanage,
+  });
+
+  @override
+  State<ClothesDonationScreen> createState() => _ClothesDonationScreenState();
+}
+
+class _ClothesDonationScreenState extends State<ClothesDonationScreen> {
+  String clothCondition = '';
+  String deliveryMethod = '';
+  final TextEditingController pieces = TextEditingController();
+  @override
+  void initState() {
+    pieces.addListener(() => setState(() {}));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Clothes Donation', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-        leading: IconButton(onPressed: () => context.pop(), icon: Icon(Icons.arrow_back_ios, size: 26)),
+        title: Text(
+          'Clothes Donation',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+        ),
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: Icon(Icons.arrow_back_ios, size: 26),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -24,17 +58,29 @@ class ClothesDonationScreen extends StatelessWidget {
             ),
             Text(
               'Please follow these steps to complete your donation .',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xff999999)),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Color(0xff999999),
+              ),
             ),
             SizedBox(height: 20),
             Text(
               'Clothes',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Color(0xff242760)),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                color: Color(0xff242760),
+              ),
             ),
             SizedBox(height: 6),
             Text(
               'Important Notes About Clothing Donations:',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xffFAB109)),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: Color(0xffFAB109),
+              ),
             ),
             SizedBox(height: 2),
             Row(
@@ -61,17 +107,29 @@ class ClothesDonationScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: 20),
-            Text('1. Clothing Condition', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+            Text(
+              '1. Clothing Condition',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+            ),
             Row(
               children: [
                 Expanded(
                   child: RadioListTile(
                     fillColor: WidgetStatePropertyAll(Color(0xff242760)),
                     contentPadding: EdgeInsets.zero,
-                    value: null,
-                    groupValue: 0,
-                    onChanged: (_) {},
-                    title: Text('New', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+                    value: 'New',
+                    groupValue: clothCondition,
+                    onChanged: (_) {
+                      clothCondition = 'New';
+                      setState(() {});
+                    },
+                    title: Text(
+                      'New',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -79,10 +137,19 @@ class ClothesDonationScreen extends StatelessWidget {
                   child: RadioListTile(
                     fillColor: WidgetStatePropertyAll(Color(0xff242760)),
                     contentPadding: EdgeInsets.zero,
-                    value: null,
-                    groupValue: 0,
-                    onChanged: (_) {},
-                    title: Text('Good', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+                    value: 'Good',
+                    groupValue: clothCondition,
+                    onChanged: (_) {
+                      clothCondition = 'Good';
+                      setState(() {});
+                    },
+                    title: Text(
+                      'Good',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -93,74 +160,108 @@ class ClothesDonationScreen extends StatelessWidget {
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
             ),
             SizedBox(height: 4),
-            TextFormField(
-              decoration: InputDecoration(
-                hint: Text(
-                  'eg. 3  Pieces',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xff2C2C2C)),
-                ),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Color(0xff242760)),
-                ),
-              ),
+            CustomTextField(
+              isNumbersOnly: true,
+              hint: 'eg. 3  Pieces',
+              controller: pieces,
+              validator: Validators.numberOnly,
             ),
-            SizedBox(height: 20),
-            Text('3. Select Delivery Method', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+
+            Text(
+              '3. Select Delivery Method',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+            ),
             SizedBox(height: 8),
             SizedBox(
               height: 150,
               child: Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xffe6ecfa),
-                        borderRadius: BorderRadius.circular(14.74),
-                        border: Border.all(width: 1, color: Color(0xffdadada)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              radius: 28,
-                              backgroundColor: Color(0xff242760),
-                              child: SvgPicture.asset('assets/icons/selfDelivery.svg', width: 28, height: 28),
-                            ),
-                            Spacer(),
-                            Text(
-                              'Self-delivery',
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                            ),
-                          ],
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          deliveryMethod = 'Self-delivery';
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xffe6ecfa),
+                          borderRadius: BorderRadius.circular(14.74),
+                          border: deliveryMethod == 'Self-delivery'
+                              ? Border.all(width: 3, color: Color(0xff242760))
+                              : Border.all(width: 1, color: Color(0xffdadada)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 20,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                radius: 28,
+                                backgroundColor: Color(0xff242760),
+                                child: SvgPicture.asset(
+                                  'assets/icons/selfDelivery.svg',
+                                  width: 28,
+                                  height: 28,
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                'Self-delivery',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                   SizedBox(width: 30),
                   Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xffe6ecfa),
-                        borderRadius: BorderRadius.circular(14.74),
-                        border: Border.all(width: 1, color: Color(0xffdadada)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              radius: 28,
-                              backgroundColor: Color(0xff242760),
-                              child: SvgPicture.asset('assets/icons/homePickup.svg', width: 28, height: 28),
-                            ),
-                            Spacer(),
-                            Text('Home Pickup', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                          ],
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          deliveryMethod = 'Home Pickup';
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xffe6ecfa),
+                          borderRadius: BorderRadius.circular(14.74),
+                          border: deliveryMethod == 'Home Pickup'
+                              ? Border.all(width: 3, color: Color(0xff242760))
+                              : Border.all(width: 1, color: Color(0xffdadada)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                radius: 28,
+                                backgroundColor: Color(0xff242760),
+                                child: SvgPicture.asset(
+                                  'assets/icons/homePickup.svg',
+                                  width: 28,
+                                  height: 28,
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                'Home Pickup',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -174,15 +275,36 @@ class ClothesDonationScreen extends StatelessWidget {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xff242760),
-                  shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(11)),
+                  shape: ContinuousRectangleBorder(
+                    borderRadius: BorderRadius.circular(11),
+                  ),
                 ),
-                onPressed: () {},
+                onPressed: !enable()
+                    ? null
+                    : () {
+                        context.push(
+                          SchedulePickupScreen(
+                            orphanage: widget.orphanage,
+                            donationItems: DonationItems(
+                              orphanageId: widget.orphanageId,
+                              clothingCondition: clothCondition,
+                              deliveryMethod: deliveryMethod,
+                              itemType: 'clothes',
+                              piecesCount: int.parse(pieces.text),
+                            ),
+                          ),
+                        );
+                      },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       'Next',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xffE6ECFA)),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xffE6ECFA),
+                      ),
                     ),
                     Icon(Icons.arrow_forward, color: Color(0xffE6ECFA)),
                   ],
@@ -194,5 +316,11 @@ class ClothesDonationScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  bool enable() {
+    return clothCondition.isNotEmpty &&
+        deliveryMethod.isNotEmpty &&
+        pieces.text.isNotEmpty;
   }
 }

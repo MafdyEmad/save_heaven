@@ -91,26 +91,26 @@ class DonateMony {
 }
 
 class DonationItems {
-  final String orphanageId;
-  final String itemType;
-  final String clothingCondition;
-  final int piecesCount;
-  final bool isReadyForPickup;
-  final String deliveryMethod;
-  final String deliveryDate; // You can use DateTime if you prefer
-  final String deliveryTime;
-  final String deliveryLocation;
+  final String? orphanageId;
+  final String? itemType;
+  final String? clothingCondition;
+  final int? piecesCount;
+  final bool? isReadyForPickup;
+  final String? deliveryMethod;
+  final String? deliveryDate; // You can change this to DateTime if needed
+  final String? deliveryTime;
+  final String? deliveryLocation;
 
   DonationItems({
-    required this.orphanageId,
-    required this.itemType,
-    required this.clothingCondition,
-    required this.piecesCount,
-    required this.isReadyForPickup,
-    required this.deliveryMethod,
-    required this.deliveryDate,
-    required this.deliveryTime,
-    required this.deliveryLocation,
+    this.orphanageId,
+    this.itemType,
+    this.clothingCondition,
+    this.piecesCount,
+    this.isReadyForPickup,
+    this.deliveryMethod,
+    this.deliveryDate,
+    this.deliveryTime,
+    this.deliveryLocation,
   });
 
   factory DonationItems.fromJson(Map<String, dynamic> json) {
@@ -139,5 +139,30 @@ class DonationItems {
       'deliveryTime': deliveryTime,
       'deliveryLocation': deliveryLocation,
     };
+  }
+
+  /// ✅ copyWith to create a new instance with some fields changed
+  DonationItems copyWith({
+    String? orphanageId,
+    String? itemType,
+    String? clothingCondition,
+    int? piecesCount,
+    bool? isReadyForPickup,
+    String? deliveryMethod,
+    String? deliveryDate,
+    String? deliveryTime,
+    String? deliveryLocation,
+  }) {
+    return DonationItems(
+      orphanageId: orphanageId ?? this.orphanageId,
+      itemType: itemType ?? this.itemType,
+      clothingCondition: clothingCondition ?? this.clothingCondition,
+      piecesCount: piecesCount ?? this.piecesCount,
+      isReadyForPickup: isReadyForPickup ?? this.isReadyForPickup,
+      deliveryMethod: deliveryMethod ?? this.deliveryMethod,
+      deliveryDate: deliveryDate ?? this.deliveryDate,
+      deliveryTime: deliveryTime ?? this.deliveryTime,
+      deliveryLocation: deliveryLocation ?? this.deliveryLocation,
+    );
   }
 }

@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/donor_nav_screen.dart';
+import 'package:save_heaven/features/kids/data/models/orphanages_response.dart';
+import 'package:save_heaven/features/donation/data/data_source/donation_remote_data_source.dart';
 
 class ScheduledDoneScreen extends StatelessWidget {
-  const ScheduledDoneScreen({super.key});
+  final Orphanage orphanage;
+  final DonationItems donationItems;
+  const ScheduledDoneScreen({
+    super.key,
+    required this.orphanage,
+    required this.donationItems,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +35,21 @@ class ScheduledDoneScreen extends StatelessWidget {
               alignment: AlignmentDirectional.centerStart,
               child: Text(
                 'We look forward to seeing you at your selected time.',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xff544C4C)),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xff544C4C),
+                ),
               ),
             ),
             SizedBox(height: 4),
             Text(
               'Please make sure to arrive on time and bring your donation items.',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xff544C4C)),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Color(0xff544C4C),
+              ),
             ),
             SizedBox(height: 10),
             SizedBox(
@@ -46,33 +65,39 @@ class ScheduledDoneScreen extends StatelessWidget {
                         color: Colors.white,
                         elevation: 10,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Dar Al Rahma Orphanage',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              '12 Al-Mahdy St., Nasr City, Cairo',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              'View on Google Maps',
+                              orphanage.name,
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.green,
                               ),
                             ),
                             SizedBox(height: 2),
+                            Text(
+                              orphanage.address,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height: 2),
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.calendar_month_outlined, color: Color(0xff999999), size: 16),
+                                Icon(
+                                  Icons.calendar_month_outlined,
+                                  color: Color(0xff999999),
+                                  size: 16,
+                                ),
                                 Text(
-                                  'Tuesday, April 23 - 2:00 PM',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                                  '${DateFormat('dd MMMM yyyy').format(DateTime.parse(donationItems.deliveryDate!))} at ${donationItems.deliveryTime.toString()}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ],
                             ),
@@ -83,7 +108,11 @@ class ScheduledDoneScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsetsDirectional.only(start: 10),
-                    child: SvgPicture.asset('assets/icons/location.svg', width: 40, height: 40),
+                    child: SvgPicture.asset(
+                      'assets/icons/location.svg',
+                      width: 40,
+                      height: 40,
+                    ),
                   ),
                 ],
               ),
@@ -95,43 +124,23 @@ class ScheduledDoneScreen extends StatelessWidget {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xff242760),
-                  shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(11)),
+                  shape: ContinuousRectangleBorder(
+                    borderRadius: BorderRadius.circular(11),
+                  ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  context.pushAndRemoveUntil(DonorNavScreen());
+                },
                 child: Text(
                   'Done',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xffE6ECFA)),
-                ),
-              ),
-            ),
-            SizedBox(height: 50),
-            Align(
-              alignment: AlignmentDirectional.bottomEnd,
-              child: SizedBox(
-                width: 172,
-                height: 38,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    side: BorderSide(color: Color(0xff242760)),
-
-                    shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(11)),
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Go home',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xff242760)),
-                      ),
-                      Icon(Icons.arrow_forward, color: Color(0xff242760)),
-                    ],
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xffE6ECFA),
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 50),
           ],
         ),
       ),

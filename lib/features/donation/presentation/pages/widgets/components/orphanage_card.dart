@@ -55,7 +55,9 @@ class OrphanageCard extends StatelessWidget {
           SizedBox(height: width * 0.02),
           ElevatedButton(
             onPressed: () {
-              context.push(DonationTypePage(orphanageId: model.id));
+              context.push(
+                DonationTypePage(orphanageId: model.id, orphanage: model),
+              );
             },
             child: Text(
               'Donate♡',
