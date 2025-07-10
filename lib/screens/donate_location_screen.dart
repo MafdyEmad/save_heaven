@@ -13,11 +13,12 @@ import 'package:save_heaven/features/kids/data/models/orphanages_response.dart';
 class DonateLocationScreen extends StatefulWidget {
   final DonationItems donationItems;
   final Orphanage orphanage;
-
+  final bool isCloth;
   const DonateLocationScreen({
     super.key,
     required this.donationItems,
     required this.orphanage,
+    required this.isCloth,
   });
 
   @override
@@ -106,7 +107,7 @@ class _DonateLocationScreenState extends State<DonateLocationScreen> {
         context.push(
           PickupDetailsScreen(
             orphanage: widget.orphanage,
-            isCloth: true,
+            isCloth: widget.isCloth,
             donationItems: widget.donationItems.copyWith(deliveryLocation: ''),
           ),
         );
@@ -128,7 +129,7 @@ class _DonateLocationScreenState extends State<DonateLocationScreen> {
       myAddress;
       context.push(
         PickupDetailsScreen(
-          isCloth: true,
+          isCloth: widget.isCloth,
           orphanage: widget.orphanage,
           donationItems: widget.donationItems.copyWith(
             deliveryLocation: myAddress,
@@ -139,7 +140,7 @@ class _DonateLocationScreenState extends State<DonateLocationScreen> {
       showSnackBar(context, 'No address found for this location.');
       context.push(
         PickupDetailsScreen(
-          isCloth: true,
+          isCloth: widget.isCloth,
           orphanage: widget.orphanage,
           donationItems: widget.donationItems.copyWith(deliveryLocation: ''),
         ),

@@ -53,13 +53,13 @@ class SignUpAsBody extends StatelessWidget {
                 context.push(UserSignupView());
               },
             ),
-            // SizedBox(height: height * 0.01),
-            // CustomButton(
-            //   text: 'Guest',
-            //   onPressed: () {
-            //     context.push(UserSignupView());
-            //   },
-            // ),
+            SizedBox(height: height * 0.01),
+            CustomButton(
+              text: 'Guest',
+              onPressed: () {
+                context.push(UserSignupView());
+              },
+            ),
           ],
         ),
       ),

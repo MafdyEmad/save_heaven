@@ -91,78 +91,122 @@ class DonateMony {
 }
 
 class DonationItems {
+  final String? userId;
   final String? orphanageId;
+
   final String? itemType;
+
+  // Clothes
   final String? clothingCondition;
   final int? piecesCount;
+
+  // Food
+  final String? foodType;
+  final String? foodQuantity;
+
   final bool? isReadyForPickup;
   final String? deliveryMethod;
-  final String? deliveryDate; // You can change this to DateTime if needed
+  final String? deliveryDate; // Or DateTime if you want
   final String? deliveryTime;
   final String? deliveryLocation;
 
+  final String? receiptNumber;
+  final String? status;
+  final DateTime? createdAt;
+
   DonationItems({
+    this.userId,
     this.orphanageId,
     this.itemType,
     this.clothingCondition,
     this.piecesCount,
+    this.foodType,
+    this.foodQuantity,
     this.isReadyForPickup,
     this.deliveryMethod,
     this.deliveryDate,
     this.deliveryTime,
     this.deliveryLocation,
+    this.receiptNumber,
+    this.status,
+    this.createdAt,
   });
 
   factory DonationItems.fromJson(Map<String, dynamic> json) {
     return DonationItems(
-      orphanageId: json['orphanageId'],
-      itemType: json['itemType'],
-      clothingCondition: json['clothingCondition'],
-      piecesCount: json['piecesCount'],
-      isReadyForPickup: json['isReadyForPickup'],
-      deliveryMethod: json['deliveryMethod'],
-      deliveryDate: json['deliveryDate'],
-      deliveryTime: json['deliveryTime'],
-      deliveryLocation: json['deliveryLocation'],
+      userId: json['userId'] as String?,
+      orphanageId: json['orphanageId'] as String?,
+      itemType: json['itemType'] as String?,
+      clothingCondition: json['clothingCondition'] as String?,
+      piecesCount: json['piecesCount'] as int?,
+      foodType: json['foodType'] as String?,
+      foodQuantity: json['foodQuantity'] as String?,
+      isReadyForPickup: json['isReadyForPickup'] as bool?,
+      deliveryMethod: json['deliveryMethod'] as String?,
+      deliveryDate: json['deliveryDate'] as String?,
+      deliveryTime: json['deliveryTime'] as String?,
+      deliveryLocation: json['deliveryLocation'] as String?,
+      receiptNumber: json['receiptNumber'] as String?,
+      status: json['status'] as String?,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'])
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'userId': userId,
       'orphanageId': orphanageId,
       'itemType': itemType,
       'clothingCondition': clothingCondition,
       'piecesCount': piecesCount,
+      'foodType': foodType,
+      'foodQuantity': foodQuantity,
       'isReadyForPickup': isReadyForPickup,
       'deliveryMethod': deliveryMethod,
       'deliveryDate': deliveryDate,
       'deliveryTime': deliveryTime,
       'deliveryLocation': deliveryLocation,
+      'receiptNumber': receiptNumber,
+      'status': status,
+      'createdAt': createdAt?.toIso8601String(),
     };
   }
 
-  /// ✅ copyWith to create a new instance with some fields changed
   DonationItems copyWith({
+    String? userId,
     String? orphanageId,
     String? itemType,
     String? clothingCondition,
     int? piecesCount,
+    String? foodType,
+    String? foodQuantity,
     bool? isReadyForPickup,
     String? deliveryMethod,
     String? deliveryDate,
     String? deliveryTime,
     String? deliveryLocation,
+    String? receiptNumber,
+    String? status,
+    DateTime? createdAt,
   }) {
     return DonationItems(
+      userId: userId ?? this.userId,
       orphanageId: orphanageId ?? this.orphanageId,
       itemType: itemType ?? this.itemType,
       clothingCondition: clothingCondition ?? this.clothingCondition,
       piecesCount: piecesCount ?? this.piecesCount,
+      foodType: foodType ?? this.foodType,
+      foodQuantity: foodQuantity ?? this.foodQuantity,
       isReadyForPickup: isReadyForPickup ?? this.isReadyForPickup,
       deliveryMethod: deliveryMethod ?? this.deliveryMethod,
       deliveryDate: deliveryDate ?? this.deliveryDate,
       deliveryTime: deliveryTime ?? this.deliveryTime,
       deliveryLocation: deliveryLocation ?? this.deliveryLocation,
+      receiptNumber: receiptNumber ?? this.receiptNumber,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

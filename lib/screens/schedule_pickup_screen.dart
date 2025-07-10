@@ -5,18 +5,19 @@ import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/donor_nav_screen.dart';
 import 'package:save_heaven/features/donation/data/data_source/donation_remote_data_source.dart';
 import 'package:save_heaven/screens/donate_location_screen.dart';
-import 'package:save_heaven/screens/pickup_details_screen.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:save_heaven/features/kids/data/models/orphanages_response.dart';
 
 class SchedulePickupScreen extends StatefulWidget {
   final DonationItems donationItems;
+  final bool isCloth;
   final Orphanage orphanage;
 
   const SchedulePickupScreen({
     super.key,
     required this.donationItems,
     required this.orphanage,
+    required this.isCloth,
   });
 
   @override
@@ -198,7 +199,7 @@ class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text(
-                    '10:00AM',
+                    time!.format(context),
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
@@ -251,6 +252,7 @@ class _SchedulePickupScreenState extends State<SchedulePickupScreen> {
                           : () {
                               context.push(
                                 DonateLocationScreen(
+                                  isCloth: widget.isCloth,
                                   orphanage: widget.orphanage,
                                   donationItems: widget.donationItems.copyWith(
                                     deliveryDate: datePickerController

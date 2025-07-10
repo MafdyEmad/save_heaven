@@ -33,6 +33,12 @@ class _ClothesDonationScreenState extends State<ClothesDonationScreen> {
   }
 
   @override
+  void dispose() {
+    pieces.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -284,6 +290,7 @@ class _ClothesDonationScreenState extends State<ClothesDonationScreen> {
                     : () {
                         context.push(
                           SchedulePickupScreen(
+                            isCloth: true,
                             orphanage: widget.orphanage,
                             donationItems: DonationItems(
                               orphanageId: widget.orphanageId,
