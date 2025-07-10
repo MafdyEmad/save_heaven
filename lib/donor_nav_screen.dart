@@ -18,6 +18,7 @@ import 'package:save_heaven/features/kids/presentation/pages/kids_home_view.dart
 import 'package:save_heaven/features/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:save_heaven/features/profile/presentation/screens/profile_screen.dart';
 import 'package:save_heaven/helpers/helpers.dart';
+import 'package:save_heaven/screens/saved_posts_screen.dart';
 import 'package:save_heaven/shared/features/home/presentation/screens/home_screen.dart';
 
 class DonorNavScreen extends StatefulWidget {
@@ -234,6 +235,7 @@ class _DonorNavScreenState extends State<DonorNavScreen> {
                 title: Text('Saved posts', style: context.textTheme.bodyLarge),
                 onTap: () {
                   context.pop();
+                  context.push(SavedPostsScreen());
                 },
               ),
               // ListTile(

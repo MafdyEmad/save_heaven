@@ -10,12 +10,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:save_heaven/core/hive/adapters/app_config_adapter/app_config_model.dart';
+import 'package:save_heaven/core/hive/adapters/post_adapter/post_hive.dart';
 import 'package:save_heaven/core/hive/adapters/secure_adapter/secure_hive.dart';
 import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
 import 'package:save_heaven/core/hive/adapters/user_settings_adapter/user_setting_hive.dart';
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
 import 'package:save_heaven/core/hive/hive_keys/hive_keys.dart';
-import 'package:save_heaven/core/services/web_socket.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/firebase_options.dart';
 import 'package:save_heaven/save_heaven.dart';
@@ -85,18 +85,20 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> _initHive() async {
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
-  Hive.init('${appDocumentDirectory.path}/1');
+  Hive.init(appDocumentDirectory.path);
   Hive.registerAdapter(AppConfigModelAdapter());
   Hive.registerAdapter(UserSettingHiveAdapter());
   Hive.registerAdapter(UserHiveAdapter());
   Hive.registerAdapter(SecureHiveAdapter());
   Hive.registerAdapter(WorkScheduleHiveAdapter());
   Hive.registerAdapter(OrphanageHiveAdapter());
+  Hive.registerAdapter(PostHiveAdapter());
   await Future.wait([
     Hive.openBox(HiveKeys.appConfig),
     Hive.openBox(HiveKeys.userSetting),
     Hive.openBox(HiveKeys.user),
     Hive.openBox(HiveKeys.secure),
+    Hive.openBox(HiveKeys.posts),
   ]);
 
   Box appConfigBox = HiveBoxes.appConfigBox;

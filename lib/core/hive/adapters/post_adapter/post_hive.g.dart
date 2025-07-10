@@ -17,7 +17,7 @@ class PostHiveAdapter extends TypeAdapter<PostHive> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PostHive(
-      isFirstTime: fields[0] as bool,
+      postIds: (fields[0] as List).cast<String>(),
     );
   }
 
@@ -26,7 +26,7 @@ class PostHiveAdapter extends TypeAdapter<PostHive> {
     writer
       ..writeByte(1)
       ..writeByte(0)
-      ..write(obj.isFirstTime);
+      ..write(obj.postIds);
   }
 
   @override

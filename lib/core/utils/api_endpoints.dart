@@ -12,6 +12,7 @@ class ApiEndpoints {
   static const String updateUser = '$_base/users/updateMe';
   static const String adopt = '$_base/adoption-requests';
   static const String children = '$_base/children';
+  static const String savePosts = '$_base/posts/saved-posts';
   static String rePost(postId) => '$_base/posts/$postId/repost';
   static const String reactPost = '$_base/reactions';
   static const String notifications = '$_base/notifications';

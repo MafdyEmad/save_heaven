@@ -26,7 +26,10 @@ class HomeCubit extends Cubit<HomeState> {
 
   void makePosts({required String content, required List<File> images}) async {
     emit(HomeMakePostsLoading());
-    final result = await _homeRemoteDataSource.makePost(images: images, content: content);
+    final result = await _homeRemoteDataSource.makePost(
+      images: images,
+      content: content,
+    );
     result.fold(
       (fail) => emit(HomeMakePostsFail(message: fail.message)),
       (_) => emit(HomeMakePostsSuccess()),
@@ -51,10 +54,22 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  void rePost(String postId, String content) async {
+  void rePost(String postId) async {
     emit(HomeRePostLoading());
-    final result = await _homeRemoteDataSource.rePost(postId, content);
-    result.fold((fail) => emit(HomeRePostFail()), (_) => emit(HomeRePostSuccess()));
+    final result = await _homeRemoteDataSource.rePost(postId);
+    result.fold(
+      (fail) => emit(HomeRePostFail()),
+      (_) => emit(HomeRePostSuccess()),
+    );
+  }
+
+  void getSavedPosts(List<String> ids) async {
+    emit(HomeGetSavedPostsLoading());
+    final result = await _homeRemoteDataSource.getSavedPosts(ids);
+    result.fold(
+      (fail) => emit(HomeGetSavedPostsFail(message: fail.message)),
+      (posts) => emit(HomeGetSavedPostsSuccess(posts: posts)),
+    );
   }
 
   void reactPost(String postId) async {

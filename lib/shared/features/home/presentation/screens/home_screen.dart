@@ -40,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final String token = HiveBoxes.secureBox.getAt(0);
   late final UserHive user;
   final notificationBloc = getIt<NotificationCubit>();
+  final postsBox = HiveBoxes.postsBox;
   @override
   void initState() {
     homeCubit = getIt<HomeCubit>()..getPosts();
@@ -68,6 +69,28 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context) {
               return BlocConsumer<HomeCubit, HomeState>(
                 listener: (context, state) {
+                  if (state is HomeRePostSuccess) {
+                    context.pop();
+                    homeCubit.getPosts();
+                  }
+                  if (state is HomeRePostFail) {
+                    context.pop();
+                    showCustomDialog(
+                      context,
+                      title: 'Error while re-post post',
+                      content: 'Failed to re-post',
+                      confirmText: 'Try again',
+                      cancelText: '',
+                      onConfirm: () {
+                        context.pop();
+                      },
+                      onCancel: () {},
+                    );
+                  }
+                  if (state is HomeRePostLoading) {
+                    showLoading(context);
+                  }
+
                   if (state is HomeDeletePostsSuccess) {
                     context.pop();
                     homeCubit.getPosts(refresh: true);
@@ -419,13 +442,14 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               IconButton(
                 onPressed: () {
-                  context.push(
-                    UpdatePostScreen(
-                      images: post.images,
-                      postId: post.id,
-                      isRePost: true,
-                    ),
-                  );
+                  homeCubit.rePost(post.id);
+                  // context.push(
+                  //   UpdatePostScreen(
+                  //     images: post.images,
+                  //     postId: post.id,
+                  //     isRePost: true,
+                  //   ),
+                  // );
                 },
                 icon: Icon(Icons.repeat, size: 35.sp),
               ),
@@ -484,10 +508,43 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         if (!_isMyPost(post))
-          ListTile(
-            leading: const Icon(Icons.bookmark),
-            title: Text('Save Post', style: context.textTheme.headlineSmall),
-            onTap: () => CustomPopupMenu.hide(),
+          Builder(
+            builder: (context) {
+              final savedPosts = (postsBox.get(user.id) as List<String>?) ?? [];
+              return ListTile(
+                leading: Icon(
+                  Icons.bookmark,
+                  color: savedPosts.contains(post.id)
+                      ? Colors.red
+                      : Colors.grey,
+                ),
+                title: Text(
+                  savedPosts.contains(post.id) ? 'Unsave post' : 'Save Post',
+                  style: context.textTheme.headlineSmall,
+                ),
+                onTap: () {
+                  final userId = user.id;
+                  final postId = post.id;
+
+                  // Get the user's saved posts, or empty list if none
+                  final savedPosts =
+                      (postsBox.get(userId) as List<String>?) ?? [];
+
+                  // Check if the post is saved
+                  final isSaved = savedPosts.contains(postId);
+
+                  if (!isSaved) {
+                    savedPosts.add(postId);
+                  } else {
+                    savedPosts.remove(postId);
+                  }
+
+                  // Save the updated list back under the user ID key
+                  postsBox.put(userId, savedPosts);
+                  CustomPopupMenu.hide();
+                },
+              );
+            },
           ),
         // if (!_isMyPost(post))
         // ListTile(

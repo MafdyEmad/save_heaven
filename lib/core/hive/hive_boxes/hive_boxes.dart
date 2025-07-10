@@ -6,4 +6,5 @@ class HiveBoxes {
   static final Box userSettingBox = Hive.box(HiveKeys.userSetting);
   static final Box userBox = Hive.box(HiveKeys.user);
   static final Box secureBox = Hive.box(HiveKeys.secure);
+  static final Box postsBox = Hive.box(HiveKeys.posts);
 }

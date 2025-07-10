@@ -16,7 +16,12 @@ class UpdatePostScreen extends StatefulWidget {
   final bool isRePost;
   final List<String> images;
   final String postId;
-  const UpdatePostScreen({super.key, required this.images, required this.postId, this.isRePost = false});
+  const UpdatePostScreen({
+    super.key,
+    required this.images,
+    required this.postId,
+    this.isRePost = false,
+  });
 
   @override
   State<UpdatePostScreen> createState() => _UpdatePostScreenState();
@@ -81,7 +86,8 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
               },
               onCancel: () {},
             );
-          } else if (state is HomeUpdatePostsLoading || state is HomeRePostLoading) {
+          } else if (state is HomeUpdatePostsLoading ||
+              state is HomeRePostLoading) {
             showLoading(context);
           }
         },
@@ -97,14 +103,19 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
                         ? null
                         : () {
                             if (widget.isRePost) {
-                              homeBloc.rePost(widget.postId, contentController.text.trim());
+                              homeBloc.rePost(widget.postId);
                               return;
                             }
-                            homeBloc.updatePosts(widget.postId, contentController.text.trim());
+                            homeBloc.updatePosts(
+                              widget.postId,
+                              contentController.text.trim(),
+                            );
                           },
                     child: Text(
                       widget.isRePost ? 'Re-post' : 'save',
-                      style: context.textTheme.headlineLarge?.copyWith(color: AppPalette.secondaryTextColor),
+                      style: context.textTheme.headlineLarge?.copyWith(
+                        color: AppPalette.secondaryTextColor,
+                      ),
                     ),
                   );
                 },
@@ -113,7 +124,9 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
             ],
           ),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.horizontalPagePadding),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.horizontalPagePadding,
+            ),
             child: Column(
               children: [
                 Expanded(
@@ -131,24 +144,31 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
                             disabledBorder: InputBorder.none,
                             focusedBorder: UnderlineInputBorder(),
                             hintText: 'Say something about this post...',
-                            hintStyle: context.textTheme.headlineSmall?.copyWith(color: AppPalette.hintColor),
+                            hintStyle: context.textTheme.headlineSmall
+                                ?.copyWith(color: AppPalette.hintColor),
                           ),
                         ),
                         SizedBox(height: 20),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: CachedNetworkImage(
-                            imageUrl: '${ApiEndpoints.imageProvider}${widget.images[0]}',
-                            fit: BoxFit.contain,
-                            alignment: Alignment.topCenter,
+                        if (widget.images.isNotEmpty)
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  '${ApiEndpoints.imageProvider}${widget.images[0]}',
+                              fit: BoxFit.contain,
+                              alignment: Alignment.topCenter,
 
-                            width: double.infinity,
-                            placeholder: (context, url) => Container(color: Colors.grey.shade200),
-                            errorWidget: (context, url, error) =>
-                                Container(color: Colors.grey.shade300, child: const Icon(Icons.broken_image)),
+                              width: double.infinity,
+                              placeholder: (context, url) =>
+                                  Container(color: Colors.grey.shade200),
+                              errorWidget: (context, url, error) => Container(
+                                color: Colors.grey.shade300,
+                                child: const Icon(Icons.broken_image),
+                              ),
+                            ),
                           ),
-                        ),
-                        if (widget.images.isNotEmpty && widget.images.length > 1) ...[
+                        if (widget.images.isNotEmpty &&
+                            widget.images.length > 1) ...[
                           const SizedBox(height: 12),
                           MasonryGridView.count(
                             crossAxisCount: 2,
@@ -164,11 +184,16 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
                               return AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 300),
                                 transitionBuilder: (child, animation) {
-                                  return FadeTransition(opacity: animation, child: child);
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  );
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey.shade300),
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
+                                    ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Stack(
@@ -177,8 +202,11 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
                                         borderRadius: BorderRadius.circular(12),
                                         child: Image.network(
                                           '${ApiEndpoints.imageProvider}$image',
-                                          errorBuilder: (context, error, stackTrace) =>
-                                              const Center(child: Icon(Icons.error)),
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  const Center(
+                                                    child: Icon(Icons.error),
+                                                  ),
                                           fit: BoxFit.cover,
                                           height: randomHeight.toDouble(),
                                           width: double.infinity,

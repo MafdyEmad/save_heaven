@@ -21,7 +21,8 @@ abstract interface class HomeRemoteDataSource {
   Future<Either<Failure, void>> updatePost(String postId, String content);
   Future<Either<Failure, void>> reactPost(String postId);
   Future<Either<Failure, void>> unReactPost(String postId);
-  Future<Either<Failure, void>> rePost(String postId, String content);
+  Future<Either<Failure, void>> rePost(String postId);
+  Future<Either<Failure, List<Post>>> getSavedPosts(List<String> ids);
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -149,14 +150,28 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, void>> rePost(String postId, String content) async {
+  Future<Either<Failure, void>> rePost(String postId) async {
     try {
       await apiService.post(
         endpoint: ApiEndpoints.rePost(postId),
         hasToken: true,
-        data: {"content": content},
       );
       return Right(null);
+    } catch (e) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Post>>> getSavedPosts(List<String> ids) async {
+    try {
+      final result = await apiService.post(
+        endpoint: ApiEndpoints.savePosts,
+        hasToken: true,
+        data: {'postIds': ids},
+      );
+      final data = result.data['data'] as List<dynamic>;
+      return Right(data.map((e) => Post.fromJson(e)).toList());
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
     }

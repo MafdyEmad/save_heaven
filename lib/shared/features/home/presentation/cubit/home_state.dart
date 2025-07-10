@@ -68,3 +68,20 @@ final class HomeRePostSuccess extends HomeState {}
 final class HomeRePostLoading extends HomeState {}
 
 final class HomeRePostFail extends HomeState {}
+
+//? GET SAVED POSTS
+final class HomeGetSavedPostsSuccess extends HomeState {
+  final List<Post> posts;
+  const HomeGetSavedPostsSuccess({required this.posts});
+  @override
+  List<Object> get props => [posts];
+}
+
+final class HomeGetSavedPostsLoading extends HomeState {}
+
+final class HomeGetSavedPostsFail extends HomeState {
+  final String message;
+  const HomeGetSavedPostsFail({required this.message});
+  @override
+  List<Object> get props => [message];
+}

@@ -5,7 +5,7 @@ part 'post_hive.g.dart';
 @HiveType(typeId: 1)
 class PostHive extends HiveObject {
   @HiveField(0)
-  bool isFirstTime;
+  List<String> postIds;
 
-  PostHive({required this.isFirstTime});
+  PostHive({required this.postIds});
 }
