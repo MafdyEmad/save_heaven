@@ -31,19 +31,14 @@ class WebSocketServices {
       }
     });
 
-    socket.onDisconnect((_) {
-      debugPrint('⚡️ Socket disconnected');
-    });
+    socket.onDisconnect((_) {});
 
-    socket.onConnectError((err) {
-      debugPrint('❌ Connect error: $err');
-    });
+    socket.onConnectError((err) {});
   }
 
   static bool get isConnected => socket.connected;
 
   static void disconnect() {
-    debugPrint('🧹 Disconnecting socket and clearing listeners');
     socket.disconnect();
     socket.clearListeners();
     _currentUserId = null;
@@ -51,7 +46,6 @@ class WebSocketServices {
 
   /// ✅ General emit for any event
   static void emitEvent(String event, dynamic data) {
-    debugPrint('📤 Emitting event $event with data: $data');
     socket.emit(event, data);
   }
 
@@ -64,12 +58,10 @@ class WebSocketServices {
     }
 
     socket.on(event, (data) {
-      debugPrint('📥 Received event $event with data: $data');
       controller.add(data);
     });
 
     socket.onDisconnect((_) {
-      debugPrint('🧹 Closing stream controller for event $event');
       controller.close();
     });
 

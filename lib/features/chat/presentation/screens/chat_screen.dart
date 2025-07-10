@@ -6,14 +6,21 @@ import 'package:save_heaven/core/services/web_socket.dart';
 import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
-import 'package:save_heaven/features/chat/models/chat_model.dart';
 import 'package:save_heaven/features/chat/models/message.dart';
 
 class ChatScreen extends StatefulWidget {
-  final Chat chat;
+  final String userId;
+  final String name;
+  final String image;
   final String myId;
 
-  const ChatScreen({super.key, required this.chat, required this.myId});
+  const ChatScreen({
+    super.key,
+    required this.myId,
+    required this.userId,
+    required this.name,
+    required this.image,
+  });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -27,7 +34,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     WebSocketServices.emitEvent('getMessages', {
       'senderId': widget.myId,
-      'receiverId': widget.chat.user.id,
+      'receiverId': widget.userId,
     });
   }
 
@@ -58,15 +65,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   width: 65,
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(
-                      ApiEndpoints.imageProvider + widget.chat.user.image,
+                      ApiEndpoints.imageProvider + widget.image,
                     ),
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  widget.chat.user.name,
-                  style: context.textTheme.titleLarge,
-                ),
+                Text(widget.name, style: context.textTheme.titleLarge),
               ],
             ),
 
@@ -205,7 +209,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       if (msgText.isNotEmpty) {
                         WebSocketServices.emitEvent('SendMessage', {
                           "senderId": widget.myId,
-                          "receiverId": widget.chat.user.id,
+                          "receiverId": widget.userId,
                           "message": msgText,
                         });
                         messageController.clear();

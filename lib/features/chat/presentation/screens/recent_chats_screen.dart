@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
 import 'package:save_heaven/core/services/web_socket.dart';
 import 'package:save_heaven/core/utils/api_endpoints.dart';
@@ -8,6 +7,7 @@ import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_text_field.dart';
 import 'package:save_heaven/features/chat/models/chat_model.dart';
 import 'package:save_heaven/features/chat/presentation/screens/chat_screen.dart';
+import 'package:save_heaven/features/chat/presentation/screens/search_screen.dart';
 import 'package:save_heaven/helpers/helpers.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -39,7 +39,13 @@ class _RecentChatsScreenState extends State<RecentChatsScreen> {
         ),
         child: Column(
           children: [
-            CustomTextField(hint: 'Search...'),
+            CustomTextField(
+              hint: 'Search...',
+              readOnly: true,
+              onTap: () {
+                context.push(SearchScreen(myId: user.id));
+              },
+            ),
             Expanded(
               child: StreamBuilder(
                 stream: WebSocketServices.listenEvent('GetChats'),
@@ -79,7 +85,14 @@ class _RecentChatsScreenState extends State<RecentChatsScreen> {
                       final chat = chatList[index];
                       return InkWell(
                         onTap: () {
-                          context.push(ChatScreen(chat: chat, myId: user.id));
+                          context.push(
+                            ChatScreen(
+                              myId: user.id,
+                              userId: chat.user.id,
+                              name: chat.user.name,
+                              image: chat.user.image,
+                            ),
+                          );
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(2),

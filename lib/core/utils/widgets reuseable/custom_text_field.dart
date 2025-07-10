@@ -14,8 +14,11 @@ class CustomTextField extends StatelessWidget {
   final VoidCallback? onTap;
   final Function(String)? onChanged;
 
-  /// ✅ New property to allow only positive numbers.
+  /// ✅ New: Allow only positive numbers.
   final bool isNumbersOnly;
+
+  /// ✅ New: Explicit read-only toggle.
+  final bool readOnly;
 
   const CustomTextField({
     super.key,
@@ -29,7 +32,8 @@ class CustomTextField extends StatelessWidget {
     this.onTap,
     this.onChanged,
     this.maxLines,
-    this.isNumbersOnly = false, // default false
+    this.isNumbersOnly = false,
+    this.readOnly = false, // 👈 NEW default
   });
 
   @override
@@ -43,9 +47,8 @@ class CustomTextField extends StatelessWidget {
         validator: validator,
         obscureText: isPassword ? isVisible : false,
         onTap: onTap,
-        readOnly: onTap != null,
+        readOnly: readOnly,
 
-        /// ✅ If numbers only, use number keyboard and input formatter
         keyboardType: isNumbersOnly ? TextInputType.number : TextInputType.text,
         inputFormatters: isNumbersOnly
             ? [FilteringTextInputFormatter.digitsOnly]
