@@ -21,7 +21,7 @@ abstract interface class HomeRemoteDataSource {
   Future<Either<Failure, void>> updatePost(String postId, String content);
   Future<Either<Failure, void>> reactPost(String postId);
   Future<Either<Failure, void>> unReactPost(String postId);
-  Future<Either<Failure, void>> rePost(String postId);
+  Future<Either<Failure, void>> rePost(String postId, String content);
   Future<Either<Failure, List<Post>>> getSavedPosts(List<String> ids);
 }
 
@@ -150,11 +150,12 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, void>> rePost(String postId) async {
+  Future<Either<Failure, void>> rePost(String postId, String content) async {
     try {
       await apiService.post(
         endpoint: ApiEndpoints.rePost(postId),
         hasToken: true,
+        data: {'content': content},
       );
       return Right(null);
     } catch (e) {

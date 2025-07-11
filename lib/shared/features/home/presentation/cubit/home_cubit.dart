@@ -54,9 +54,9 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  void rePost(String postId) async {
+  void rePost(String postId, String content) async {
     emit(HomeRePostLoading());
-    final result = await _homeRemoteDataSource.rePost(postId);
+    final result = await _homeRemoteDataSource.rePost(postId, content);
     result.fold(
       (fail) => emit(HomeRePostFail()),
       (_) => emit(HomeRePostSuccess()),

@@ -69,27 +69,27 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context) {
               return BlocConsumer<HomeCubit, HomeState>(
                 listener: (context, state) {
-                  if (state is HomeRePostSuccess) {
-                    context.pop();
-                    homeCubit.getPosts();
-                  }
-                  if (state is HomeRePostFail) {
-                    context.pop();
-                    showCustomDialog(
-                      context,
-                      title: 'Error while re-post post',
-                      content: 'Failed to re-post',
-                      confirmText: 'Try again',
-                      cancelText: '',
-                      onConfirm: () {
-                        context.pop();
-                      },
-                      onCancel: () {},
-                    );
-                  }
-                  if (state is HomeRePostLoading) {
-                    showLoading(context);
-                  }
+                  // if (state is HomeRePostSuccess) {
+                  //   context.pop();
+                  //   homeCubit.getPosts(refresh: true);
+                  // }
+                  // if (state is HomeRePostFail) {
+                  //   context.pop();
+                  //   showCustomDialog(
+                  //     context,
+                  //     title: 'Error while re-post post',
+                  //     content: 'Failed to re-post',
+                  //     confirmText: 'Try again',
+                  //     cancelText: '',
+                  //     onConfirm: () {
+                  //       context.pop();
+                  //     },
+                  //     onCancel: () {},
+                  //   );
+                  // }
+                  // if (state is HomeRePostLoading) {
+                  //   showLoading(context);
+                  // }
 
                   if (state is HomeDeletePostsSuccess) {
                     context.pop();
@@ -442,14 +442,14 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               IconButton(
                 onPressed: () {
-                  homeCubit.rePost(post.id);
-                  // context.push(
-                  //   UpdatePostScreen(
-                  //     images: post.images,
-                  //     postId: post.id,
-                  //     isRePost: true,
-                  //   ),
-                  // );
+                  // homeCubit.rePost(post.id);
+                  context.push(
+                    UpdatePostScreen(
+                      images: post.images,
+                      postId: post.id,
+                      isRePost: true,
+                    ),
+                  );
                 },
                 icon: Icon(Icons.repeat, size: 35.sp),
               ),

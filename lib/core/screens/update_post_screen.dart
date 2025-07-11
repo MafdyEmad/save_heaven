@@ -103,7 +103,10 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
                         ? null
                         : () {
                             if (widget.isRePost) {
-                              homeBloc.rePost(widget.postId);
+                              homeBloc.rePost(
+                                widget.postId,
+                                contentController.text.trim(),
+                              );
                               return;
                             }
                             homeBloc.updatePosts(
@@ -149,24 +152,24 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        if (widget.images.isNotEmpty)
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  '${ApiEndpoints.imageProvider}${widget.images[0]}',
-                              fit: BoxFit.contain,
-                              alignment: Alignment.topCenter,
+                        // if (widget.images.isNotEmpty)
+                        //   ClipRRect(
+                        //     borderRadius: BorderRadius.circular(12),
+                        //     child: CachedNetworkImage(
+                        //       imageUrl:
+                        //           '${ApiEndpoints.imageProvider}${widget.images[0]}',
+                        //       fit: BoxFit.contain,
+                        //       alignment: Alignment.topCenter,
 
-                              width: double.infinity,
-                              placeholder: (context, url) =>
-                                  Container(color: Colors.grey.shade200),
-                              errorWidget: (context, url, error) => Container(
-                                color: Colors.grey.shade300,
-                                child: const Icon(Icons.broken_image),
-                              ),
-                            ),
-                          ),
+                        //       width: double.infinity,
+                        //       placeholder: (context, url) =>
+                        //           Container(color: Colors.grey.shade200),
+                        //       errorWidget: (context, url, error) => Container(
+                        //         color: Colors.grey.shade300,
+                        //         child: const Icon(Icons.broken_image),
+                        //       ),
+                        //     ),
+                        //   ),
                         if (widget.images.isNotEmpty &&
                             widget.images.length > 1) ...[
                           const SizedBox(height: 12),
