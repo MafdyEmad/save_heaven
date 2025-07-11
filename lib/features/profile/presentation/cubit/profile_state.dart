@@ -78,3 +78,18 @@ final class DeleteFail extends ProfileState {
 
   const DeleteFail({required this.message});
 }
+
+//? get user
+final class VisitAccountLoading extends ProfileState {}
+
+final class VisitAccountSuccess extends ProfileState {
+  final UserDataResponse user;
+
+  const VisitAccountSuccess({required this.user});
+}
+
+final class VisitAccountFail extends ProfileState {
+  final String message;
+
+  const VisitAccountFail({required this.message});
+}

@@ -5,6 +5,7 @@ class ApiEndpoints {
   static const String posts = '$_base/posts';
   static String getChildren(String id) => '$_base/users/$id/children';
   static const String getUser = '$_base/users/getMe';
+  static const String visitAccount = '$_base/users';
   static const String getOrphanages = '$_base/users/orphanages';
   static String getAllKids(String id) => '$_base/users/$id/children';
   static const String updateUser = '$_base/users/updateMe';

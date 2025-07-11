@@ -13,6 +13,7 @@ import 'package:save_heaven/features/profile/data/models/porfile_model.dart';
 
 abstract interface class ProfileRemoteDataSource {
   Future<Either<Failure, UserDataResponse>> getUser();
+  Future<Either<Failure, UserDataResponse>> getVisitAccount(String id);
   Future<Either<Failure, UserModel>> updateUser({
     required ProfileUpdateparams params,
   });
@@ -174,6 +175,25 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       );
 
       return const Right(null);
+    } on DioException catch (e) {
+      return Left(
+        Failure(
+          message: e.response?.data?['message'] ?? Constants.serverErrorMessage,
+        ),
+      );
+    } catch (e) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserDataResponse>> getVisitAccount(String id) async {
+    try {
+      final result = await apiService.get(
+        endpoint: '${ApiEndpoints.visitAccount}/$id',
+        hasToken: true,
+      );
+      return Right(UserDataResponse.fromJson(result.data['data']));
     } on DioException catch (e) {
       return Left(
         Failure(

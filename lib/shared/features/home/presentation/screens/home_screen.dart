@@ -24,6 +24,7 @@ import 'package:save_heaven/core/widgets/make_post_widget.dart';
 import 'package:save_heaven/features/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:save_heaven/shared/features/home/data/models/post_response.dart';
 import 'package:save_heaven/shared/features/home/presentation/cubit/home_cubit.dart';
+import 'package:save_heaven/shared/features/home/presentation/screens/visit_profile_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -181,6 +182,10 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
+          onTap: () {
+            if (_isMyPost(post)) return;
+            context.push(VisitProfileScreen(id: post.user.id));
+          },
           contentPadding: EdgeInsets.zero,
           leading: ClipOval(
             child: CachedNetworkImage(

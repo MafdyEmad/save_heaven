@@ -8,43 +8,45 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
-import 'package:save_heaven/core/screens/update_post_screen.dart';
+import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
+import 'package:save_heaven/core/services/web_socket.dart';
 import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_colors.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
-import 'package:save_heaven/core/utils/show_dialog.dart';
-import 'package:save_heaven/core/widgets/custom_pop_menu.dart';
+import 'package:save_heaven/features/chat/presentation/screens/chat_screen.dart';
 import 'package:save_heaven/features/profile/data/models/porfile_model.dart';
 import 'package:save_heaven/features/profile/presentation/cubit/profile_cubit.dart';
-import 'package:save_heaven/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:save_heaven/features/profile/presentation/screens/our_kids_screen.dart';
+import 'package:save_heaven/helpers/helpers.dart';
 import 'package:save_heaven/shared/features/home/data/models/post_response.dart';
 import 'package:save_heaven/shared/features/home/presentation/cubit/home_cubit.dart';
 import 'package:save_heaven/shared/features/home/presentation/screens/home_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class VisitProfileScreen extends StatefulWidget {
+  final String id;
+  const VisitProfileScreen({super.key, required this.id});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<VisitProfileScreen> createState() => _VisitProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _VisitProfileScreenState extends State<VisitProfileScreen> {
   final bloc = getIt<ProfileCubit>();
+  final UserHive me = Helpers.user;
   @override
   void initState() {
-    bloc.getUser();
+    bloc.visitAccount(widget.id);
     super.initState();
   }
 
   final states = List.unmodifiable([
-    GetProfileUserLoading,
-    GetProfileUserFail,
-    GetProfileUserSuccess,
+    VisitAccountLoading,
+    VisitAccountFail,
+    VisitAccountSuccess,
   ]);
 
   @override
@@ -54,11 +56,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Builder(
         builder: (context) {
           return Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => context.pop(),
+              ),
+            ),
             body: BlocBuilder<ProfileCubit, ProfileState>(
               buildWhen: (previous, current) =>
                   states.contains(current.runtimeType),
               builder: (context, state) {
-                if (state is GetProfileUserLoading || state is ProfileInitial) {
+                if (state is VisitAccountLoading || state is ProfileInitial) {
                   return Shimmer.fromColors(
                     baseColor: Colors.grey.shade300,
                     highlightColor: Colors.grey.shade100,
@@ -84,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   );
                 }
-                if (state is GetProfileUserFail) {
+                if (state is VisitAccountFail) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -108,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   );
                 }
-                if (state is GetProfileUserSuccess) {
+                if (state is VisitAccountSuccess) {
                   final user = state.user;
                   return DefaultTabController(
                     length: user.user.role != 'Donor' ? 2 : 1,
@@ -358,13 +369,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       borderRadius: BorderRadius.circular(11),
                     ),
                   ),
-                  onPressed: () {
-                    context.push(
-                      EditProfileScreen(userId: user.user.id, user: user),
-                    );
+                  onPressed: () async {
+                    WebSocketServices.connect(me.id).then((_) {
+                      goToChat(user);
+                    });
                   },
                   child: Text(
-                    'Edit Profile',
+                    'Message',
                     style: context.textTheme.headlineLarge?.copyWith(
                       color: Colors.white,
                     ),
@@ -385,7 +396,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context.push(
                         OurKidsScreen(
                           id: user.user.orphanage,
-                          isMyAccount: true,
+                          isMyAccount: false,
                         ),
                       );
                     },
@@ -401,7 +412,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
 
-        SizedBox(height: 20),
         // Expanded(child: TabBarView(children: screens)),
       ],
     );
@@ -434,11 +444,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               errorWidget: (_, __, ___) => const Icon(Icons.person),
             ),
           ),
-          trailing: GestureDetector(
-            onTapDown: (details) =>
-                _showPostOptions(details.globalPosition, post),
-            child: const Icon(Icons.more_horiz, color: Colors.grey),
-          ),
+
           title: Text(post.user.name, style: context.textTheme.headlineMedium),
           subtitle: Text(
             DateTime.now().difference(post.createdAt).inDays == 0
@@ -702,51 +708,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _showPostOptions(Offset position, Post post) {
-    CustomPopupMenu.show(
-      context: context,
-      position: position,
-      items: [
-        ListTile(
-          leading: const Icon(Icons.edit),
-          title: Text('Edit Post', style: context.textTheme.headlineSmall),
-          onTap: () {
-            CustomPopupMenu.hide();
-            context.push(
-              UpdatePostScreen(images: post.images, postId: post.id),
-            );
-          },
-        ),
-
-        ListTile(
-          leading: const Icon(Icons.delete, color: Colors.red),
-          title: Text(
-            'Delete post',
-            style: context.textTheme.headlineSmall?.copyWith(color: Colors.red),
-          ),
-          onTap: () {
-            showCustomDialog(
-              context,
-              title: 'Deleting post',
-              content: 'Your are sure to delete this post',
-              confirmText: 'Delete',
-              cancelText: 'cancel',
-              cancelTextColor: AppPalette.primaryColor,
-              onConfirm: () {
-                context.pop();
-                getIt<HomeCubit>().deletePosts(post.id);
-              },
-              onCancel: () {
-                context.pop();
-              },
-            );
-            CustomPopupMenu.hide();
-          },
-        ),
-      ],
-    );
-  }
-
   String _formatCount(int count) {
     if (count >= 1000000) {
       return '${(count / 1000000).toStringAsFixed(1)}M';
@@ -754,5 +715,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return '${(count / 1000).toStringAsFixed(1)}K';
     }
     return count.toString();
+  }
+
+  void goToChat(UserDataResponse user) {
+    context.push(
+      ChatScreen(
+        myId: me.id,
+        userId: user.user.id,
+        name: user.user.name,
+        image: user.user.image,
+      ),
+    );
   }
 }

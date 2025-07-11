@@ -9,13 +9,15 @@ import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/show_loading.dart';
 import 'package:save_heaven/core/utils/snack_bar.dart';
+import 'package:save_heaven/features/adoption/presentation/pages/adoption_procedures_page.dart';
 import 'package:save_heaven/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:save_heaven/features/profile/presentation/screens/add_orphan_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 class OurKidsScreen extends StatefulWidget {
   final String id;
-  const OurKidsScreen({super.key, required this.id});
+  final bool isMyAccount;
+  const OurKidsScreen({super.key, required this.id, required this.isMyAccount});
 
   @override
   State<OurKidsScreen> createState() => _OurKidsScreenState();
@@ -41,13 +43,15 @@ class _OurKidsScreenState extends State<OurKidsScreen> {
       child: Builder(
         builder: (context) {
           return Scaffold(
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: AppPalette.primaryColor,
-              child: const Icon(Icons.add, color: Colors.white),
-              onPressed: () {
-                context.push(AddOrphanScreen(id: widget.id));
-              },
-            ),
+            floatingActionButton: widget.isMyAccount
+                ? FloatingActionButton(
+                    backgroundColor: AppPalette.primaryColor,
+                    child: const Icon(Icons.add, color: Colors.white),
+                    onPressed: () {
+                      context.push(AddOrphanScreen(id: widget.id));
+                    },
+                  )
+                : null,
             appBar: AppBar(
               centerTitle: true,
               title: Text('Our Kids', style: context.textTheme.titleLarge),
@@ -179,33 +183,55 @@ class _OurKidsScreenState extends State<OurKidsScreen> {
                                         child.name,
                                         style: context.textTheme.headlineLarge,
                                       ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          context.push(
-                                            AddOrphanScreen(
-                                              kid: state.children[index],
-                                              id: widget.id,
-                                            ),
-                                          );
-                                        },
-                                        child: Text(
-                                          'Edit info',
-                                          style: context.textTheme.headlineSmall
-                                              ?.copyWith(color: Colors.white),
+
+                                      if (widget.isMyAccount) ...[
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            context.push(
+                                              AddOrphanScreen(
+                                                kid: state.children[index],
+                                                id: widget.id,
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            'Edit info',
+                                            style: context
+                                                .textTheme
+                                                .headlineSmall
+                                                ?.copyWith(color: Colors.white),
+                                          ),
                                         ),
-                                      ),
-                                      OutlinedButton(
-                                        onPressed: () {
-                                          profileCubit.deleteKid(
-                                            state.children[index].id,
-                                          );
-                                        },
-                                        child: Text(
-                                          'Delete',
-                                          style:
-                                              context.textTheme.headlineSmall,
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            profileCubit.deleteKid(
+                                              state.children[index].id,
+                                            );
+                                          },
+                                          child: Text(
+                                            'Delete',
+                                            style:
+                                                context.textTheme.headlineSmall,
+                                          ),
                                         ),
-                                      ),
+                                      ] else ...[
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            context.push(
+                                              AdoptionProceduresPage(
+                                                child: state.children[index],
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            'Adopt',
+                                            style: context
+                                                .textTheme
+                                                .headlineSmall
+                                                ?.copyWith(color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
                                     ],
                                   ),
                                 );

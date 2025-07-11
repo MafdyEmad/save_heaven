@@ -66,4 +66,13 @@ class ProfileCubit extends Cubit<ProfileState> {
       (user) => emit(DeleteSuccess()),
     );
   }
+
+  void visitAccount(String id) async {
+    emit(VisitAccountLoading());
+    final result = await profileRemoteDataSource.getVisitAccount(id);
+    result.fold(
+      (error) => emit(VisitAccountFail(message: error.message)),
+      (user) => emit(VisitAccountSuccess(user: user)),
+    );
+  }
 }
