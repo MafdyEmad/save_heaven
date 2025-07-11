@@ -45,4 +45,16 @@ class ProfileCubit extends Cubit<ProfileState> {
       (user) => emit(AddNewOrphanSuccess()),
     );
   }
+
+  void updateOrphan(OrphanParams params, String id) async {
+    emit(AddNewOrphanLoading());
+    final result = await profileRemoteDataSource.updateOrphan(
+      params: params,
+      id: id,
+    );
+    result.fold(
+      (error) => emit(AddNewOrphanFail(message: error.message)),
+      (user) => emit(AddNewOrphanSuccess()),
+    );
+  }
 }

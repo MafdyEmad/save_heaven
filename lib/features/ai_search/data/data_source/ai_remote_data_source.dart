@@ -20,11 +20,6 @@ class AiRemoteDataSourceImpl implements AiRemoteDataSource {
   Future<Either<Failure, void>> aiSearch(String query) async {
     try {
       print('asdsadasdas');
-      final result = await http.post(
-        Uri.parse(ApiEndpoints.pythonAi),
-        body: jsonEncode({'text': query}),
-      );
-      print(result);
       return Right(null);
     } on DioException catch (e) {
       return Left(

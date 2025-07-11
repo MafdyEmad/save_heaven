@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:save_heaven/core/config/app_palette.dart';
+import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
@@ -13,10 +14,13 @@ import 'package:save_heaven/core/utils/snack_bar.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_button.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/custom_text_field.dart';
 import 'package:save_heaven/features/profile/data/data_source/profile_remote_data_source.dart';
+import 'package:save_heaven/features/profile/data/models/child_model.dart';
 import 'package:save_heaven/features/profile/presentation/cubit/profile_cubit.dart';
 
 class AddOrphanScreen extends StatefulWidget {
-  const AddOrphanScreen({super.key});
+  final ChildModel? kid;
+  final String? id;
+  const AddOrphanScreen({super.key, this.kid, this.id});
 
   @override
   State<AddOrphanScreen> createState() => _AddOrphanScreenState();
@@ -38,6 +42,25 @@ class _AddOrphanScreenState extends State<AddOrphanScreen> {
   final TextEditingController birthdateController = TextEditingController();
 
   @override
+  void initState() {
+    if (widget.kid != null) {
+      nameController.text = widget.kid!.name;
+      birthdateController.text = DateFormat(
+        'yyyy-MM-dd',
+      ).format(widget.kid!.birthdate);
+      gender = widget.kid!.gender;
+      religion = widget.kid!.religion;
+      hairColor = widget.kid!.hairColor;
+      hairStyle = widget.kid!.hairStyle;
+      skinTone = widget.kid!.skinTone;
+      eyeColor = widget.kid!.eyeColor;
+      personality = widget.kid!.personality;
+      setState(() {});
+    }
+    super.initState();
+  }
+
+  @override
   void dispose() {
     nameController.dispose();
     birthdateController.dispose();
@@ -46,6 +69,24 @@ class _AddOrphanScreenState extends State<AddOrphanScreen> {
 
   void submitForm() {
     if (formKey.currentState!.validate()) {
+      if (widget.kid != null) {
+        bloc.updateOrphan(
+          OrphanParams(
+            name: nameController.text.trim(),
+            birthdate: birthdateController.text,
+            gender: gender!,
+            religion: religion!,
+            hairColor: hairColor!,
+            hairStyle: hairStyle!,
+            skinTone: skinTone!,
+            eyeColor: eyeColor!,
+            personality: personality!,
+            image: image == null ? null : File(image!.path),
+          ),
+          widget.kid!.id,
+        );
+        return;
+      }
       bloc.addNewOrphan(
         OrphanParams(
           name: nameController.text.trim(),
@@ -75,6 +116,9 @@ class _AddOrphanScreenState extends State<AddOrphanScreen> {
             context.pop();
             context.pop();
             showSnackBar(context, 'Orphan added successfully');
+            if (widget.id != null) {
+              bloc.getOurKids(widget.id!);
+            }
           } else if (state is AddNewOrphanFail) {
             context.pop();
             showSnackBar(context, state.message);
@@ -103,8 +147,14 @@ class _AddOrphanScreenState extends State<AddOrphanScreen> {
                     children: [
                       Center(
                         child: FormField<XFile>(
-                          validator: (_) =>
-                              image == null ? 'Please upload a photo' : null,
+                          validator: (_) {
+                            if (widget.kid != null) {
+                              return null;
+                            }
+                            return image == null
+                                ? 'Please upload a photo'
+                                : null;
+                          },
                           builder: (field) {
                             return Column(
                               children: [
@@ -126,7 +176,15 @@ class _AddOrphanScreenState extends State<AddOrphanScreen> {
                                     decoration: BoxDecoration(
                                       border: Border.all(),
                                       shape: BoxShape.circle,
-                                      image: image == null
+                                      image: widget.kid != null && image == null
+                                          ? DecorationImage(
+                                              image: NetworkImage(
+                                                ApiEndpoints.imageProvider +
+                                                    widget.kid!.image,
+                                              ),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : image == null
                                           ? null
                                           : DecorationImage(
                                               image: FileImage(
@@ -137,7 +195,9 @@ class _AddOrphanScreenState extends State<AddOrphanScreen> {
                                     ),
                                     width: context.width * .4,
                                     height: context.width * .4,
-                                    child: image == null
+                                    child: widget.kid != null
+                                        ? null
+                                        : image == null
                                         ? Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
@@ -600,7 +660,12 @@ class _AddOrphanScreenState extends State<AddOrphanScreen> {
                       ),
                       SizedBox(height: 32),
 
-                      CustomButton(text: 'Add Orphan', onPressed: submitForm),
+                      CustomButton(
+                        text: widget.kid != null
+                            ? 'Update Orphan'
+                            : 'Add Orphan',
+                        onPressed: submitForm,
+                      ),
                     ],
                   ),
                 ),

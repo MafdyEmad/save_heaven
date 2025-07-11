@@ -162,8 +162,11 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       }
       return Right(user);
     } on DioException catch (e) {
-      return Left(Failure(message: e.response?.data['message']));
-      // return Left(Failure(message: Constants.serverErrorMessage));
+      try {
+        return Left(Failure(message: e.response?.data['message']));
+      } catch (e) {
+        return Left(Failure(message: Constants.serverErrorMessage));
+      }
     } catch (e) {
       return Left(Failure(message: Constants.serverErrorMessage));
     }

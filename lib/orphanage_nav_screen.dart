@@ -75,7 +75,7 @@ class _OrphanageNavScreenState extends State<OrphanageNavScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppPalette.primaryColor,
         onPressed: () {
-          context.push(const AddOrphanScreen());
+          context.push(AddOrphanScreen());
         },
         shape: CircleBorder(),
         child: Icon(Icons.add, color: Colors.white),

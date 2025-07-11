@@ -17,6 +17,10 @@ abstract interface class ProfileRemoteDataSource {
     required ProfileUpdateparams params,
   });
   Future<Either<Failure, void>> addNewOrphan({required OrphanParams params});
+  Future<Either<Failure, void>> updateOrphan({
+    required OrphanParams params,
+    required String id,
+  });
   Future<Either<Failure, List<ChildModel>>> getOurKids(String id);
 }
 
@@ -57,6 +61,9 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
           hasToken: true,
         );
       } else {
+        print('11111111111111111111111111111111');
+        print(params.image!);
+        print('11111111111111111111111111111111');
         result = await apiService.updateFormData(
           files: [params.image!],
           endpoint: ApiEndpoints.updateUser,
@@ -88,7 +95,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }) async {
     try {
       await apiService.sendFormData(
-        files: [params.image],
+        files: [params.image!],
         endpoint: ApiEndpoints.children,
         fileFieldName: 'image',
         fields: params.toJson(),
@@ -127,6 +134,39 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       return Left(Failure(message: Constants.serverErrorMessage));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> updateOrphan({
+    required OrphanParams params,
+    required String id,
+  }) async {
+    try {
+      if (params.image == null) {
+        await apiService.put(
+          endpoint: '${ApiEndpoints.children}/$id',
+          data: params.toJson(),
+        );
+      } else {
+        await apiService.updateFormData(
+          files: [params.image!],
+          endpoint: '${ApiEndpoints.children}/$id',
+          fileFieldName: 'image',
+          fields: params.toJson(),
+        );
+      }
+
+      return const Right(null);
+    } on DioException catch (e) {
+      print(e);
+      return Left(
+        Failure(
+          message: e.response?.data?['message'] ?? Constants.serverErrorMessage,
+        ),
+      );
+    } catch (e) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
 }
 
 class ProfileUpdateparams {
@@ -154,7 +194,7 @@ class ProfileUpdateparams {
 class OrphanParams {
   final String name;
   final String birthdate;
-  final File image;
+  final File? image;
   final String gender;
   final String religion;
   final String hairColor;
@@ -166,7 +206,7 @@ class OrphanParams {
   OrphanParams({
     required this.name,
     required this.birthdate,
-    required this.image,
+    this.image,
     required this.gender,
     required this.religion,
     required this.hairColor,

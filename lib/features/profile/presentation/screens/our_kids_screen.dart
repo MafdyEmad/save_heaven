@@ -43,7 +43,7 @@ class _OurKidsScreenState extends State<OurKidsScreen> {
               backgroundColor: AppPalette.primaryColor,
               child: const Icon(Icons.add, color: Colors.white),
               onPressed: () {
-                context.push(const AddOrphanScreen());
+                context.push(AddOrphanScreen(id: widget.id));
               },
             ),
             appBar: AppBar(
@@ -125,6 +125,7 @@ class _OurKidsScreenState extends State<OurKidsScreen> {
                                         AppDimensions.horizontalPagePadding,
                                     mainAxisSpacing:
                                         AppDimensions.horizontalPagePadding,
+                                    childAspectRatio: .7,
                                   ),
                               itemBuilder: (context, index) {
                                 final child = children[index];
@@ -165,11 +166,33 @@ class _OurKidsScreenState extends State<OurKidsScreen> {
                                         style: context.textTheme.headlineLarge,
                                       ),
                                       ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          context.push(
+                                            AddOrphanScreen(
+                                              kid: state.children[index],
+                                              id: widget.id,
+                                            ),
+                                          );
+                                        },
                                         child: Text(
                                           'Edit info',
                                           style: context.textTheme.headlineSmall
                                               ?.copyWith(color: Colors.white),
+                                        ),
+                                      ),
+                                      OutlinedButton(
+                                        onPressed: () {
+                                          context.push(
+                                            AddOrphanScreen(
+                                              kid: state.children[index],
+                                              id: widget.id,
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          'Delete',
+                                          style:
+                                              context.textTheme.headlineSmall,
                                         ),
                                       ),
                                     ],

@@ -1,13 +1,11 @@
 class ApiEndpoints {
-  static const String _base = 'https://13b00460fd2a.ngrok-free.app/api/v1';
-  static const String _pythonBase = 'http://192.168.1.2:5000';
-  static const String socketUrl = 'ws://13b00460fd2a.ngrok-free.app';
-  static const String imageProvider = 'https://13b00460fd2a.ngrok-free.app';
+  static const String _base = 'https://9a0bb7f8d82e.ngrok-free.app/api/v1';
+  static const String socketUrl = 'ws://9a0bb7f8d82e.ngrok-free.app';
+  static const String imageProvider = 'https://9a0bb7f8d82e.ngrok-free.app';
   static const String posts = '$_base/posts';
   static String getChildren(String id) => '$_base/users/$id/children';
   static const String getUser = '$_base/users/getMe';
   static const String getOrphanages = '$_base/users/orphanages';
-  static const String pythonAi = '$_pythonBase/predict';
   static String getAllKids(String id) => '$_base/users/$id/children';
   static const String updateUser = '$_base/users/updateMe';
   static const String adopt = '$_base/adoption-requests';
