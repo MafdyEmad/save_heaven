@@ -85,12 +85,14 @@ class OrphanageDonationRemoteDataSourceImpl
       final allDonations = [...itemDonations, ...moneyDonations];
       return Right(allDonations);
     } on DioException catch (e) {
+      print(e);
       return Left(
         Failure(
           message: e.response?.data?['message'] ?? Constants.serverErrorMessage,
         ),
       );
     } catch (e) {
+      print(e);
       return Left(Failure(message: Constants.serverErrorMessage));
     }
   }

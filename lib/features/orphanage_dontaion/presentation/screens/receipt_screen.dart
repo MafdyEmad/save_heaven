@@ -48,10 +48,13 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
             SizedBox(height: 20),
             _buildInformations(
               'date',
-              DateFormat('MMMM dd, yyyy').format(DateTime.now()),
+              DateFormat('MMMM dd, yyyy').format(widget.item.createdAt),
             ),
             Divider(height: 50),
-            _buildInformations('Receipt number', 'd-23-233'),
+            _buildInformations(
+              'Receipt number',
+              widget.item.receiptNumber.substring(0, 4),
+            ),
             Divider(height: 50),
             Align(
               alignment: AlignmentDirectional.centerStart,
@@ -65,29 +68,55 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                     ),
                   ),
                   Text(
-                    'clothes',
+                    widget.item.itemType ?? '',
                     style: context.textTheme.headlineLarge?.copyWith(
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Text(
-                    'Quantity: 10 pieces',
-                    style: context.textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.w400,
+                  if (widget.item.itemType == 'money')
+                    Text(
+                      '${widget.item.amount}\$',
+                      style: context.textTheme.headlineLarge?.copyWith(
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'Washed and packed: Yes',
-                    style: context.textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.w400,
+                  if (widget.item.itemType == 'food')
+                    Text(
+                      'Food quantity: ${widget.item.foodQuantity}',
+                      style: context.textTheme.headlineLarge?.copyWith(
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
+                  if (widget.item.itemType == 'clothes')
+                    Text(
+                      '${widget.item.piecesCount} Pieces',
+                      style: context.textTheme.headlineLarge?.copyWith(
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  if (widget.item.itemType == 'clothes')
+                    Text(
+                      'Clothing condition: ${widget.item.clothingCondition}',
+                      style: context.textTheme.headlineLarge?.copyWith(
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  if (widget.item.itemType == 'food')
+                    Text(
+                      'Packed and ready for collection: ${widget.item.isReadyForPickup == true ? 'Yes' : 'No'}',
+                      style: context.textTheme.headlineLarge?.copyWith(
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                 ],
               ),
             ),
 
             Divider(height: 50),
-            _buildInformations('donation method', ' picked up from home'),
+            _buildInformations(
+              'donation method',
+              widget.item.deliveryMethod ?? '',
+            ),
           ],
         ),
       ),

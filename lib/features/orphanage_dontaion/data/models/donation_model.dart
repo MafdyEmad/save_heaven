@@ -8,8 +8,12 @@ class DonationModel {
 
   // Item donation fields
   final String? itemType;
+  final String? foodQuantity;
+  final int? piecesCount;
   final String? deliveryMethod;
   final DateTime? deliveryDate;
+  final String? clothingCondition;
+  final bool? isReadyForPickup;
   final String? status;
 
   // Money donation fields
@@ -25,9 +29,13 @@ class DonationModel {
     required this.receiptNumber,
     required this.createdAt,
     this.itemType,
+    this.foodQuantity,
+    this.piecesCount,
     this.deliveryMethod,
     this.deliveryDate,
     this.status,
+    this.clothingCondition,
+    this.isReadyForPickup,
     this.amount,
     this.paymentMethod,
     this.donationType,
@@ -52,6 +60,10 @@ class DonationModel {
           : null,
       paymentMethod: json['paymentMethod'],
       donationType: json['donationType'],
+      foodQuantity: json['foodQuantity'] ?? '',
+      piecesCount: json['piecesCount'] ?? 0,
+      clothingCondition: json['clothingCondition'] ?? '',
+      isReadyForPickup: json['isReadyForPickup'] ?? false,
     );
   }
 

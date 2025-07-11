@@ -194,7 +194,7 @@ class _DonationReceiptsScreeState extends State<DonationReceiptsScree> {
                                               ),
                                               TextSpan(
                                                 text:
-                                                    '#${item.id.substring(0, 4)}',
+                                                    '#${item.receiptNumber.substring(0, 8)}',
                                                 style: context
                                                     .textTheme
                                                     .headlineLarge

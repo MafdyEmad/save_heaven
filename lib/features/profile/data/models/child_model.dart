@@ -46,7 +46,7 @@ class ChildModel {
       orphanage: json['orphanage'] == null
           ? Orphanage(id: '', name: '')
           : Orphanage.fromJson(json['orphanage']),
-      personality: json['personality'] as String,
+      personality: json['personality'] ?? '',
       createdAt: json['createdAt'] == null
           ? DateTime.now()
           : DateTime.parse(json['createdAt']),

@@ -5,6 +5,7 @@ import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/core/utils/widgets%20reuseable/circle_back_button.dart';
 import 'package:save_heaven/features/auth/presentation/views/orphanage_signup_view.dart';
 import 'package:save_heaven/features/auth/presentation/views/user_signup_view.dart';
+import 'package:save_heaven/shared/features/home/presentation/screens/home_screen.dart';
 import '../../../../core/utils/widgets reuseable/custom_button.dart';
 
 class SignUpAsBody extends StatelessWidget {
@@ -57,7 +58,7 @@ class SignUpAsBody extends StatelessWidget {
             CustomButton(
               text: 'Guest',
               onPressed: () {
-                context.push(UserSignupView());
+                context.push(HomeScreen(isGuest: true));
               },
             ),
           ],

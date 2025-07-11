@@ -30,7 +30,8 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final bool isGuest;
+  const HomeScreen({super.key, this.isGuest = false});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -38,16 +39,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final HomeCubit homeCubit;
-  final String token = HiveBoxes.secureBox.getAt(0);
+  late final String token;
   late final UserHive user;
   final notificationBloc = getIt<NotificationCubit>();
   final postsBox = HiveBoxes.postsBox;
   @override
   void initState() {
     homeCubit = getIt<HomeCubit>()..getPosts();
-
-    final userId = JwtDecoder.decode(token)['userId'];
-    user = HiveBoxes.userBox.get(userId);
+    if (!widget.isGuest) {
+      token = HiveBoxes.secureBox.getAt(0);
+      final userId = JwtDecoder.decode(token)['userId'];
+      user = HiveBoxes.userBox.get(userId);
+    }
     super.initState();
   }
 
@@ -62,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocProvider.value(
       value: homeCubit,
       child: Scaffold(
+        appBar: widget.isGuest ? AppBar() : null,
         body: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppDimensions.horizontalPagePadding,
@@ -70,28 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context) {
               return BlocConsumer<HomeCubit, HomeState>(
                 listener: (context, state) {
-                  // if (state is HomeRePostSuccess) {
-                  //   context.pop();
-                  //   homeCubit.getPosts(refresh: true);
-                  // }
-                  // if (state is HomeRePostFail) {
-                  //   context.pop();
-                  //   showCustomDialog(
-                  //     context,
-                  //     title: 'Error while re-post post',
-                  //     content: 'Failed to re-post',
-                  //     confirmText: 'Try again',
-                  //     cancelText: '',
-                  //     onConfirm: () {
-                  //       context.pop();
-                  //     },
-                  //     onCancel: () {},
-                  //   );
-                  // }
-                  // if (state is HomeRePostLoading) {
-                  //   showLoading(context);
-                  // }
-
                   if (state is HomeDeletePostsSuccess) {
                     context.pop();
                     homeCubit.getPosts(refresh: true);
@@ -153,17 +135,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     child: ListView.separated(
                       padding: EdgeInsets.only(bottom: 20.h),
-                      itemCount: posts.posts.length + 1,
+                      itemCount: widget.isGuest
+                          ? posts.posts.length
+                          : posts.posts.length + 1,
                       separatorBuilder: (context, index) =>
                           index == 0 ? SizedBox.shrink() : Divider(height: 30),
                       itemBuilder: (context, index) {
                         if (index == 0) {
-                          return MakePostWidget(
-                            image: ApiEndpoints.imageProvider + user.image!,
-                            name: user.name,
-                          );
+                          if (!widget.isGuest) {
+                            return MakePostWidget(
+                              image: ApiEndpoints.imageProvider + user.image!,
+                              name: user.name,
+                            );
+                          }
                         }
-                        final post = posts.posts[index - 1];
+                        final post = widget.isGuest
+                            ? posts.posts[index]
+                            : posts.posts[index - 1];
                         return _buildPost(post);
                       },
                     ),
@@ -183,6 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         ListTile(
           onTap: () {
+            if (widget.isGuest) return;
             if (_isMyPost(post)) return;
             context.push(VisitProfileScreen(id: post.user.id));
           },
@@ -196,11 +185,13 @@ class _HomeScreenState extends State<HomeScreen> {
               errorWidget: (_, __, ___) => const Icon(Icons.person),
             ),
           ),
-          trailing: GestureDetector(
-            onTapDown: (details) =>
-                _showPostOptions(details.globalPosition, post),
-            child: const Icon(Icons.more_horiz, color: Colors.grey),
-          ),
+          trailing: widget.isGuest
+              ? null
+              : GestureDetector(
+                  onTapDown: (details) =>
+                      _showPostOptions(details.globalPosition, post),
+                  child: const Icon(Icons.more_horiz, color: Colors.grey),
+                ),
           title: Text(post.user.name, style: context.textTheme.headlineMedium),
           subtitle: Text(
             DateTime.now().difference(post.createdAt).inDays == 0
@@ -212,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (didRePost(post))
           Text(post.content, style: context.textTheme.headlineLarge),
         _buildPostContent(post),
-        _buildPostActions(post),
+        if (!widget.isGuest) _buildPostActions(post),
       ],
     );
   }
@@ -512,45 +503,47 @@ class _HomeScreenState extends State<HomeScreen> {
               CustomPopupMenu.hide();
             },
           ),
-        if (!_isMyPost(post))
-          Builder(
-            builder: (context) {
-              final savedPosts = (postsBox.get(user.id) as List<String>?) ?? [];
-              return ListTile(
-                leading: Icon(
-                  Icons.bookmark,
-                  color: savedPosts.contains(post.id)
-                      ? Colors.red
-                      : Colors.grey,
-                ),
-                title: Text(
-                  savedPosts.contains(post.id) ? 'Unsave post' : 'Save Post',
-                  style: context.textTheme.headlineSmall,
-                ),
-                onTap: () {
-                  final userId = user.id;
-                  final postId = post.id;
+        if (!widget.isGuest)
+          if (!_isMyPost(post))
+            Builder(
+              builder: (context) {
+                final savedPosts =
+                    (postsBox.get(user.id) as List<String>?) ?? [];
+                return ListTile(
+                  leading: Icon(
+                    Icons.bookmark,
+                    color: savedPosts.contains(post.id)
+                        ? Colors.red
+                        : Colors.grey,
+                  ),
+                  title: Text(
+                    savedPosts.contains(post.id) ? 'Unsave post' : 'Save Post',
+                    style: context.textTheme.headlineSmall,
+                  ),
+                  onTap: () {
+                    final userId = user.id;
+                    final postId = post.id;
 
-                  // Get the user's saved posts, or empty list if none
-                  final savedPosts =
-                      (postsBox.get(userId) as List<String>?) ?? [];
+                    // Get the user's saved posts, or empty list if none
+                    final savedPosts =
+                        (postsBox.get(userId) as List<String>?) ?? [];
 
-                  // Check if the post is saved
-                  final isSaved = savedPosts.contains(postId);
+                    // Check if the post is saved
+                    final isSaved = savedPosts.contains(postId);
 
-                  if (!isSaved) {
-                    savedPosts.add(postId);
-                  } else {
-                    savedPosts.remove(postId);
-                  }
+                    if (!isSaved) {
+                      savedPosts.add(postId);
+                    } else {
+                      savedPosts.remove(postId);
+                    }
 
-                  // Save the updated list back under the user ID key
-                  postsBox.put(userId, savedPosts);
-                  CustomPopupMenu.hide();
-                },
-              );
-            },
-          ),
+                    // Save the updated list back under the user ID key
+                    postsBox.put(userId, savedPosts);
+                    CustomPopupMenu.hide();
+                  },
+                );
+              },
+            ),
         // if (!_isMyPost(post))
         // ListTile(
         //   leading: const Icon(Icons.report_gmailerrorred_outlined, color: Colors.red),
