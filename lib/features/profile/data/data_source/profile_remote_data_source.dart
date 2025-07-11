@@ -22,6 +22,7 @@ abstract interface class ProfileRemoteDataSource {
     required String id,
   });
   Future<Either<Failure, List<ChildModel>>> getOurKids(String id);
+  Future<Either<Failure, void>> deleteKid(String id);
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -61,9 +62,6 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
           hasToken: true,
         );
       } else {
-        print('11111111111111111111111111111111');
-        print(params.image!);
-        print('11111111111111111111111111111111');
         result = await apiService.updateFormData(
           files: [params.image!],
           endpoint: ApiEndpoints.updateUser,
@@ -130,7 +128,6 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         ),
       );
     } catch (e) {
-      print(e);
       return Left(Failure(message: Constants.serverErrorMessage));
     }
   }
@@ -158,6 +155,26 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       return const Right(null);
     } on DioException catch (e) {
       print(e);
+      return Left(
+        Failure(
+          message: e.response?.data?['message'] ?? Constants.serverErrorMessage,
+        ),
+      );
+    } catch (e) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteKid(String id) async {
+    try {
+      await apiService.delete(
+        endpoint: '${ApiEndpoints.children}/$id',
+        hasToken: true,
+      );
+
+      return const Right(null);
+    } on DioException catch (e) {
       return Left(
         Failure(
           message: e.response?.data?['message'] ?? Constants.serverErrorMessage,

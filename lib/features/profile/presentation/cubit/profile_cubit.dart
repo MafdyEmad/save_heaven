@@ -57,4 +57,13 @@ class ProfileCubit extends Cubit<ProfileState> {
       (user) => emit(AddNewOrphanSuccess()),
     );
   }
+
+  void deleteKid(String id) async {
+    emit(DeleteLoading());
+    final result = await profileRemoteDataSource.deleteKid(id);
+    result.fold(
+      (error) => emit(DeleteFail(message: error.message)),
+      (user) => emit(DeleteSuccess()),
+    );
+  }
 }

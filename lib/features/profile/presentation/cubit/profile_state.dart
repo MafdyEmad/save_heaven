@@ -65,3 +65,16 @@ final class GetOurKidsFail extends ProfileState {
 
   const GetOurKidsFail({required this.message});
 }
+//? DELETE KID
+
+final class DeleteLoading extends ProfileState {}
+
+final class DeleteSuccess extends ProfileState {
+  const DeleteSuccess();
+}
+
+final class DeleteFail extends ProfileState {
+  final String message;
+
+  const DeleteFail({required this.message});
+}

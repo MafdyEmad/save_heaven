@@ -7,6 +7,8 @@ import 'package:save_heaven/core/utils/api_endpoints.dart';
 import 'package:save_heaven/core/utils/app_dimensions.dart';
 import 'package:save_heaven/core/utils/dependence.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
+import 'package:save_heaven/core/utils/show_loading.dart';
+import 'package:save_heaven/core/utils/snack_bar.dart';
 import 'package:save_heaven/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:save_heaven/features/profile/presentation/screens/add_orphan_screen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -54,7 +56,19 @@ class _OurKidsScreenState extends State<OurKidsScreen> {
               padding: const EdgeInsets.symmetric(
                 horizontal: AppDimensions.horizontalPagePadding,
               ),
-              child: BlocBuilder<ProfileCubit, ProfileState>(
+              child: BlocConsumer<ProfileCubit, ProfileState>(
+                listener: (context, state) {
+                  if (state is DeleteSuccess) {
+                    context.pop();
+                    showSnackBar(context, 'Kid deleted successfully');
+                    profileCubit.getOurKids(widget.id);
+                  } else if (state is DeleteFail) {
+                    context.pop();
+                    showSnackBar(context, state.message);
+                  } else if (state is DeleteLoading) {
+                    showLoading(context);
+                  }
+                },
                 buildWhen: (previous, current) =>
                     states.contains(current.runtimeType),
                 builder: (context, state) {
@@ -182,11 +196,8 @@ class _OurKidsScreenState extends State<OurKidsScreen> {
                                       ),
                                       OutlinedButton(
                                         onPressed: () {
-                                          context.push(
-                                            AddOrphanScreen(
-                                              kid: state.children[index],
-                                              id: widget.id,
-                                            ),
+                                          profileCubit.deleteKid(
+                                            state.children[index].id,
                                           );
                                         },
                                         child: Text(
