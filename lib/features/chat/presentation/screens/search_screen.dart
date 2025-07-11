@@ -109,7 +109,6 @@ class _SearchScreenState extends State<SearchScreen> {
                         users = users
                             .where((user) => user.id != widget.myId)
                             .toList();
-
                         if (users.isEmpty) {
                           return Center(
                             child: Text(
@@ -195,9 +194,9 @@ class _User {
 
   factory _User.fromJson(Map<String, dynamic> map) {
     return _User(
-      id: map['_id'] as String,
-      name: map['name'] as String,
-      image: map['image'] as String,
+      id: map['_id'] ?? '',
+      name: map['name'] ?? '',
+      image: map['image'] ?? '',
     );
   }
 }

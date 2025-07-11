@@ -55,23 +55,21 @@ class _DonationHomePageState extends State<DonationHomePage> {
             body: Builder(
               builder: (context) {
                 if (state is DonationGetOrphanageLoading) {
-                  return Expanded(
-                    child: GridView.builder(
-                      padding: EdgeInsets.all(width * 0.03),
-                      itemCount: 10,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: width * 0.03,
-                        mainAxisSpacing: width * 0.03,
-                        childAspectRatio: 0.75,
-                      ),
-                      itemBuilder: (_, index) => Shimmer.fromColors(
-                        baseColor: Colors.grey.shade300,
-                        highlightColor: Colors.grey.shade100,
-                        child: Container(
-                          width: double.infinity,
-                          color: Colors.white,
-                        ),
+                  return GridView.builder(
+                    padding: EdgeInsets.all(width * 0.03),
+                    itemCount: 10,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: width * 0.03,
+                      mainAxisSpacing: width * 0.03,
+                      childAspectRatio: 0.75,
+                    ),
+                    itemBuilder: (_, index) => Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.white,
                       ),
                     ),
                   );
