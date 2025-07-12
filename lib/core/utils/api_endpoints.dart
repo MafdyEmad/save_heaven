@@ -24,4 +24,6 @@ class ApiEndpoints {
   static const String donationsMony = '$_base/donations';
   static const String signUp = '$_base/auth/signup';
   static const String login = '$_base/auth/login';
+  static const String sendOTP = '$_base/auth/forgotPassword';
+  static const String resetPassword = '$_base/auth/resetPassword';
 }

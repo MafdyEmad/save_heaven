@@ -11,6 +11,7 @@ import 'package:save_heaven/core/utils/widgets%20reuseable/custom_text_field.dar
 import 'package:save_heaven/donor_nav_screen.dart';
 import 'package:save_heaven/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:save_heaven/features/auth/presentation/manager/Password%20Visibility%20Cubit/password_visibility_cubit.dart';
+import 'package:save_heaven/features/auth/presentation/views/forget_passwrod_screen.dart';
 import 'package:save_heaven/features/auth/presentation/views/sign_up_as_view.dart';
 import 'package:save_heaven/features/auth/presentation/widgets/components/bottom_curve.dart';
 import 'package:save_heaven/orphanage_nav_screen.dart';
@@ -21,7 +22,11 @@ class LoginBody extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final loginStates = List.unmodifiable([LoginLoading, LoginFail, LoginSuccess]);
+  final loginStates = List.unmodifiable([
+    LoginLoading,
+    LoginFail,
+    LoginSuccess,
+  ]);
   final cubit = getIt<AuthCubit>();
   @override
   Widget build(BuildContext context) {
@@ -34,7 +39,8 @@ class LoginBody extends StatelessWidget {
       child: Builder(
         builder: (context) {
           return BlocConsumer<AuthCubit, AuthState>(
-            buildWhen: (previous, current) => loginStates.contains(current.runtimeType),
+            buildWhen: (previous, current) =>
+                loginStates.contains(current.runtimeType),
             listener: (context, state) {
               if (state is LoginSuccess) {
                 state.user.role == 'Orphanage'
@@ -69,7 +75,10 @@ class LoginBody extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(height: height * 0.05),
-                              Image.asset(AssetsImages.hand, height: height * 0.08),
+                              Image.asset(
+                                AssetsImages.hand,
+                                height: height * 0.08,
+                              ),
                               SizedBox(height: height * 0.03),
                               Text(
                                 'Welcome Back!',
@@ -96,14 +105,31 @@ class LoginBody extends StatelessWidget {
                                     isPassword: true,
                                     isVisible: isVisible,
                                     validator: Validators.password,
-                                    onToggleVisibility: () =>
-                                        context.read<PasswordVisibilityCubit>().toggleVisibility(),
+                                    onToggleVisibility: () => context
+                                        .read<PasswordVisibilityCubit>()
+                                        .toggleVisibility(),
                                   );
                                 },
                               ),
+                              Align(
+                                alignment: AlignmentDirectional.topEnd,
+                                child: TextButton(
+                                  onPressed: () {
+                                    context.push(const ForgetPasswordScreen());
+                                  },
+                                  child: Text(
+                                    'Forgot Password?',
+                                    style: TextStyle(color: AppColors.primary),
+                                  ),
+                                ),
+                              ),
                               SizedBox(height: height * 0.03),
                               state is LoginLoading
-                                  ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
+                                  ? const Center(
+                                      child: CircularProgressIndicator(
+                                        color: AppColors.primary,
+                                      ),
+                                    )
                                   : CustomButton(
                                       text: 'Log In',
                                       onPressed: () {
@@ -121,7 +147,12 @@ class LoginBody extends StatelessWidget {
                               Row(
                                 children: const [
                                   Expanded(child: Divider()),
-                                  Padding(padding: EdgeInsets.symmetric(horizontal: 8.0), child: Text('OR')),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.0,
+                                    ),
+                                    child: Text('OR'),
+                                  ),
                                   Expanded(child: Divider()),
                                 ],
                               ),
@@ -131,7 +162,10 @@ class LoginBody extends StatelessWidget {
                                 children: [
                                   const Text(
                                     "Don't have an account? ",
-                                    style: TextStyle(color: AppColors.gray, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                      color: AppColors.gray,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   GestureDetector(
                                     onTap: () {
@@ -139,7 +173,10 @@ class LoginBody extends StatelessWidget {
                                     },
                                     child: Text(
                                       "Sign Up",
-                                      style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -28,6 +28,11 @@ abstract interface class AuthRemoteDataSource {
     required String email,
     required String password,
   });
+  Future<Either<Failure, int>> sendOTP({required String email});
+  Future<Either<Failure, void>> resetPassword({
+    required String password,
+    required String email,
+  });
 }
 
 class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
@@ -161,6 +166,49 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
         await HiveBoxes.secureBox.add(token);
       }
       return Right(user);
+    } on DioException catch (e) {
+      try {
+        return Left(Failure(message: e.response?.data['message']));
+      } catch (e) {
+        return Left(Failure(message: Constants.serverErrorMessage));
+      }
+    } catch (e) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> sendOTP({required String email}) async {
+    try {
+      final response = await apiService.post(
+        endpoint: ApiEndpoints.sendOTP,
+        hasToken: false,
+        data: {'email': email},
+      );
+      return Right(int.parse(response.data['otp']));
+    } on DioException catch (e) {
+      try {
+        return Left(Failure(message: e.response?.data['message']));
+      } catch (e) {
+        return Left(Failure(message: Constants.serverErrorMessage));
+      }
+    } catch (e) {
+      return Left(Failure(message: Constants.serverErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> resetPassword({
+    required String password,
+    required String email,
+  }) async {
+    try {
+      await apiService.put(
+        endpoint: ApiEndpoints.resetPassword,
+        hasToken: false,
+        data: {'newPassword': password, 'email': email},
+      );
+      return const Right(null);
     } on DioException catch (e) {
       try {
         return Left(Failure(message: e.response?.data['message']));

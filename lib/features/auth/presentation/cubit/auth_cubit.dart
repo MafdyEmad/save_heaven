@@ -45,7 +45,38 @@ class AuthCubit extends Cubit<AuthState> {
 
   void login({required String email, required String password}) async {
     emit(LoginLoading());
-    final result = await _authRemoteDataSource.login(email: email, password: password);
-    result.fold((error) => emit(LoginFail(message: error.message)), (user) => emit(LoginSuccess(user: user)));
+    final result = await _authRemoteDataSource.login(
+      email: email,
+      password: password,
+    );
+    result.fold(
+      (error) => emit(LoginFail(message: error.message)),
+      (user) => emit(LoginSuccess(user: user)),
+    );
+  }
+
+  void sendOTP({required String email}) async {
+    emit(SendOTPLoading());
+    final result = await _authRemoteDataSource.sendOTP(email: email);
+    result.fold(
+      (error) => emit(SendOTPFail(message: error.message)),
+      (otp) => emit(SendOTPSuccess(otp: otp)),
+    );
+  }
+
+  void resetPassword({required String password, required String email}) async {
+    emit(ResetPasswordLoading());
+    final result = await _authRemoteDataSource.resetPassword(
+      email: email,
+      password: password,
+    );
+    result.fold(
+      (error) => emit(ResetPasswordFail(message: error.message)),
+      (_) => emit(ResetPasswordSuccess()),
+    );
+  }
+
+  void resetState() async {
+    emit(AuthInitial());
   }
 }

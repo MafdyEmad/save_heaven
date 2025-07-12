@@ -53,3 +53,31 @@ final class LoginSuccess extends AuthState {
 
   const LoginSuccess({required this.user});
 }
+
+//? SEND OTP
+final class SendOTPLoading extends AuthState {}
+
+final class SendOTPFail extends AuthState {
+  final String message;
+
+  const SendOTPFail({required this.message});
+}
+
+final class SendOTPSuccess extends AuthState {
+  final int otp;
+
+  const SendOTPSuccess({required this.otp});
+}
+
+//? RESET PASSWORD
+final class ResetPasswordLoading extends AuthState {}
+
+final class ResetPasswordFail extends AuthState {
+  final String message;
+
+  const ResetPasswordFail({required this.message});
+}
+
+final class ResetPasswordSuccess extends AuthState {
+  const ResetPasswordSuccess();
+}

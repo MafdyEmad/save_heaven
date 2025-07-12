@@ -7,7 +7,6 @@ import 'package:save_heaven/core/config/assets_manager.dart';
 import 'package:save_heaven/core/hive/adapters/app_config_adapter/app_config_model.dart';
 import 'package:save_heaven/core/hive/adapters/user_adapter/user_hive.dart';
 import 'package:save_heaven/core/hive/hive_boxes/hive_boxes.dart';
-import 'package:save_heaven/core/services/web_socket.dart';
 import 'package:save_heaven/core/utils/extensions.dart';
 import 'package:save_heaven/donor_nav_screen.dart';
 import 'package:save_heaven/features/auth/presentation/views/start_journey_view.dart';
