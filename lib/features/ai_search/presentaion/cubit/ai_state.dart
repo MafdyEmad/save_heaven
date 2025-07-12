@@ -11,7 +11,11 @@ final class AiInitial extends AiState {}
 
 final class AiLoading extends AiState {}
 
-final class AiSuccess extends AiState {}
+final class AiSuccess extends AiState {
+  final List<ChildModel> children;
+
+  const AiSuccess({required this.children});
+}
 
 final class AiFail extends AiState {
   final String message;

@@ -1,11 +1,12 @@
 class ApiEndpoints {
-  static const String _base = 'https://9a0bb7f8d82e.ngrok-free.app/api/v1';
-  static const String socketUrl = 'ws://9a0bb7f8d82e.ngrok-free.app';
-  static const String imageProvider = 'https://9a0bb7f8d82e.ngrok-free.app';
+  static const String _base = 'https://89b4ac269353.ngrok-free.app/api/v1';
+  static const String socketUrl = 'ws://89b4ac269353.ngrok-free.app';
+  static const String imageProvider = 'https://89b4ac269353.ngrok-free.app';
   static const String posts = '$_base/posts';
   static String getChildren(String id) => '$_base/users/$id/children';
   static const String getUser = '$_base/users/getMe';
   static const String visitAccount = '$_base/users';
+  static const String aiSearch = '$_base/ai_search';
   static const String getOrphanages = '$_base/users/orphanages';
   static String getAllKids(String id) => '$_base/users/$id/children';
   static const String updateUser = '$_base/users/updateMe';
